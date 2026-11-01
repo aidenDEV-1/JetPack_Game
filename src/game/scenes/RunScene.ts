@@ -7,10 +7,12 @@ import { updateRunMotion } from '../systems/RunMotionSystem';
 import { PlayerEntity } from '../../features/player/PlayerEntity';
 import { getProgression } from '../../features/progression/DistanceProgression';
 import { BackgroundController } from '../../features/background/BackgroundController';
+import { BoosterController } from '../../features/booster/BoosterController';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
   private readonly pauseSystem = new PauseSystem();
+  private readonly boosterController = new BoosterController();
   private keyboard!: KeyboardController;
   private player!: PlayerEntity;
   private playerVelocityY = 0;
@@ -26,7 +28,6 @@ export class RunScene extends Phaser.Scene {
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.keyboard = new KeyboardController(this);
-    this.runState.start();
     window.addEventListener('blur', this.pauseFromFocusLoss);
     document.addEventListener('visibilitychange', this.pauseFromFocusLoss);
   }
@@ -34,6 +35,7 @@ export class RunScene extends Phaser.Scene {
   public update(_time: number, delta: number): void {
     if (this.pauseSystem.isPaused() || this.runState.snapshot().phase !== 'running') return;
     const progression = getProgression(this.runState.snapshot().distanceMeters);
+    this.boosterController.tick(delta);
     const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier;
     this.runState.setSpeed(worldSpeed);
     this.backgroundController.update(delta, worldSpeed, progression.segmentIndex);
@@ -51,8 +53,15 @@ export class RunScene extends Phaser.Scene {
     });
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
-    this.player.setAnimation(motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
+    this.player.setBoosting(this.boosterController.isActive());
+    this.player.setAnimation(this.boosterController.isActive() ? 'boosting' : motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
+  }
+
+  public beginRun(): void {
+    this.runState.start();
+    this.boosterController.startInitial();
+    this.player.setBoosting(true);
   }
 
   public pauseFromSettings(): void { this.pauseRun(); }

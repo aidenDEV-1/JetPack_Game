@@ -42,3 +42,18 @@ button { font: inherit; }
 .settings-action { border: 1px solid #688bb7; border-radius: 10px; padding: 12px; background: #172d48; color: #f7fbff; cursor: pointer; font-weight: 700; }
 .settings-action.danger { border-color: #9d5363; color: #ffb8c4; }
 .resume-countdown { display: grid; place-items: center; height: 90px; color: #f7c948; font-size: 64px; font-weight: 900; }
+.start-overlay, .clock-overlay { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; align-content: center; gap: 12px; background: linear-gradient(180deg, rgba(5, 11, 20, 0.18), rgba(5, 11, 20, 0.82)); text-align: center; }
+.start-overlay h1 { max-width: 700px; margin: 0; color: #f7c948; font-size: clamp(28px, 5vw, 64px); }
+.start-overlay p:not(.eyebrow) { margin: 0 0 16px; color: #e4eef9; font-size: clamp(14px, 2vw, 22px); }
+.start-button { border: 2px solid #f7c948; border-radius: 14px; padding: 16px 28px; background: #f7c948; color: #101820; cursor: pointer; font-size: 18px; font-weight: 900; box-shadow: 0 10px 30px rgba(247, 201, 72, 0.3); }
+.clock-overlay { background: rgba(5, 11, 20, 0.76); }
+.wall-clock { display: grid; place-items: center; width: clamp(170px, 25vw, 280px); height: clamp(170px, 25vw, 280px); border: 12px solid #dce8f5; border-radius: 50%; background: #152b46; color: #f7c948; font-size: clamp(28px, 5vw, 56px); font-weight: 900; box-shadow: 0 0 50px rgba(247, 201, 72, 0.4); }
+.clock-overlay p { color: #fff; font-size: 22px; font-weight: 900; }
+.results-panel { position: absolute; inset: 50% auto auto 50%; z-index: 12; width: min(560px, calc(100% - 40px)); transform: translate(-50%, -50%); padding: 30px; border: 1px solid #688bb7; border-radius: 20px; background: #0d1d31; box-shadow: 0 20px 70px rgba(0, 0, 0, 0.52); text-align: center; }
+.results-panel h2 { margin: 6px 0 20px; color: #f7c948; font-size: clamp(26px, 4vw, 42px); }
+.results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.results-grid span { display: grid; gap: 4px; padding: 12px; border-radius: 10px; background: #172d48; color: #a9bfd8; font-size: 12px; }
+.results-grid strong { color: #f7fbff; font-size: 22px; }
+.save-pending { margin: 16px 0; color: #ffcf73; }
+.save-pending button, .results-actions button { border: 1px solid #688bb7; border-radius: 10px; padding: 10px 14px; background: #172d48; color: #fff; cursor: pointer; }
+.results-actions { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }

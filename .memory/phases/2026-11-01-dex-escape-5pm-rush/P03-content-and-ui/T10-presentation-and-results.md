@@ -1,6 +1,6 @@
 # Task: T10 Presentation and Results
 
-## Status: pending
+## Status: done
 
 ## Goal
 로그인 후 5시 정각 시작 연출과 충돌·결과 연출을 연결해 게임의 핵심 감정 흐름을 완성한다.
@@ -60,6 +60,6 @@ Task: T10-presentation-and-results
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
