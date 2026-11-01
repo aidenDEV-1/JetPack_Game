@@ -22,10 +22,9 @@ export class RunScene extends Phaser.Scene {
   public constructor() { super('RunScene'); }
 
   public create(): void {
-    const { width, height } = this.scale;
+    const { width } = this.scale;
     this.backgroundController = new BackgroundController(this);
-    this.add.rectangle(width / 2, height / 2, width, height, 0x0a1728).setDepth(-20);
-    this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0);
+    this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.keyboard = new KeyboardController(this);
     window.addEventListener('blur', this.pauseFromFocusLoss);
@@ -38,7 +37,7 @@ export class RunScene extends Phaser.Scene {
     this.boosterController.tick(delta);
     const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier;
     this.runState.setSpeed(worldSpeed);
-    this.backgroundController.update(delta, worldSpeed, progression.segmentIndex);
+    this.backgroundController.update(delta, worldSpeed, this.runState.snapshot().distanceMeters);
     const motion = updateRunMotion({
       y: this.player.y,
       velocityY: this.playerVelocityY,
