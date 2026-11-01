@@ -12,6 +12,8 @@ import { BoosterController } from '../../features/booster/BoosterController';
 import { CollectibleField } from '../../features/items/CollectibleField';
 import type { ItemKind } from '../../features/items/itemTypes';
 import { showItemPickupFeedback } from '../../features/items/ItemPickupFeedback';
+import { ObstacleField } from '../../features/obstacles/ObstacleField';
+import type { CollisionOutcome } from '../../features/obstacles/CollisionResolver';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -24,6 +26,7 @@ export class RunScene extends Phaser.Scene {
   private floorLine!: Phaser.GameObjects.Line;
   private backgroundController!: BackgroundController;
   private collectibleField!: CollectibleField;
+  private obstacleField!: ObstacleField;
   private lastSnapshotAt = -Infinity;
   private lastSnapshotKey = '';
 
@@ -37,9 +40,10 @@ export class RunScene extends Phaser.Scene {
     this.backgroundController = new BackgroundController(this);
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
+    this.obstacleField = new ObstacleField(this, { onHit: (outcome) => this.handleObstacleHit(outcome) });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
-      onShieldPickupSpawned: () => undefined,
+      onShieldPickupSpawned: () => this.obstacleField.setShieldPickupAhead(true),
     });
     this.keyboard = new KeyboardController(this);
     this.registerDevItemHook();
@@ -76,6 +80,18 @@ export class RunScene extends Phaser.Scene {
     this.player.setAnimation(booster.active ? 'boosting' : motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
     this.collectibleField.update(delta, this.runState.snapshot().distanceMeters, worldSpeed, this.player.getCollisionBounds());
+    this.obstacleField.update(
+      delta,
+      {
+        distanceMeters: this.runState.snapshot().distanceMeters,
+        speed: worldSpeed,
+        hasShieldPickupAhead: this.collectibleField.hasShieldPickupAhead(),
+        forcedPatternUsedInSegment: false,
+      },
+      this.player.getCollisionBounds(),
+      booster.active,
+      this.runState.snapshot().hasShield,
+    );
     this.emitSnapshot();
   }
 
@@ -101,6 +117,7 @@ export class RunScene extends Phaser.Scene {
   public getSnapshot() { return this.runState.snapshot(); }
 
   public spawnDemoItems(): void { this.collectibleField.spawnDemoItems(); }
+  public spawnDemoObstacle(): void { this.obstacleField.spawnDemoObstacle(); }
 
   private readonly pauseFromFocusLoss = (): void => {
     if (document.visibilityState === 'hidden' || !document.hasFocus()) this.pauseRun();
@@ -129,12 +146,26 @@ export class RunScene extends Phaser.Scene {
     this.emitSnapshot(true);
   }
 
+  private handleObstacleHit(outcome: CollisionOutcome): void {
+    if (outcome === 'blocked-by-shield' && this.boosterController.consumeShield()) {
+      this.runState.setShield(false);
+      this.collectibleField.setShieldHeld(false);
+      this.emitSnapshot(true);
+      return;
+    }
+    if (outcome !== 'crash') return;
+    this.runState.crash();
+    this.emitSnapshot(true);
+    void this.player.crash();
+  }
+
   private registerDevItemHook(): void {
     if (!import.meta.env.DEV) return;
     window.__5PM_RUSH_TEST_API__ = {
       ...window.__5PM_RUSH_TEST_API__,
       getSnapshot: () => this.getSnapshot(),
       spawnDemoItems: () => this.spawnDemoItems(),
+      spawnDemoObstacle: () => this.spawnDemoObstacle(),
     };
   }
 

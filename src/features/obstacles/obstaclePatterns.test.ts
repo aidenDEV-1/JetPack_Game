@@ -6,8 +6,8 @@ describe('obstacle patterns', () => {
   it('only exposes the forced pattern after a shield pickup and once per segment', () => {
     const spawner = new ObstacleSpawner();
     expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: false, forcedPatternUsedInSegment: false })).toBe(false);
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(true);
-    const forced = spawner.choosePattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false }, () => 0.99);
+    expect(spawner.canUseForcedPattern({ distanceMeters: 1100, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(true);
+    const forced = spawner.choosePattern({ distanceMeters: 1100, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false }, () => 0.99);
     expect(forced?.requiresShield).toBe(true);
     expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(false);
   });
@@ -16,7 +16,7 @@ describe('obstacle patterns', () => {
     const spawner = new ObstacleSpawner();
     for (let distance = 0; distance <= 10000; distance += 100) {
       const pattern = spawner.choosePattern({ distanceMeters: distance, speed: 300, hasShieldPickupAhead: distance >= 400, forcedPatternUsedInSegment: false }, () => 0.99);
-      if (pattern?.requiresShield) expect(distance).toBeGreaterThanOrEqual(400);
+      if (pattern?.requiresShield) expect(distance).toBeGreaterThanOrEqual(1100);
     }
   });
 

@@ -7,10 +7,10 @@
 [P02 Playable World Loop](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/phase.md)
 
 ## Active Task
-[T06 Obstacle Field and Collision](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/T06-obstacle-field-and-collision.md)
+[T07 Booster Flight](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/T07-booster-flight.md)
 
 ## Status
-- T05 구현·검증 완료
+- T06 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T06 청사진을 읽고 `src/features/obstacles/ObstacleEntity.ts`, `src/features/obstacles/ObstacleField.ts`, `src/game/scenes/RunScene.ts`의 장애물 생성·충돌 구현 시작
+T07 청사진을 읽고 `src/features/booster/BoosterFlightController.ts`, `src/features/booster/BoosterController.ts`, `src/game/scenes/RunScene.ts`의 실제 부스터 비행 구현 시작

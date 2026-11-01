@@ -6,7 +6,7 @@ export class ObstacleSpawner {
 
   public choosePattern(context: SpawnContext, random: () => number = Math.random): ObstaclePattern | null {
     const segment = Math.floor(context.distanceMeters / 1000);
-    const forcedEligible = context.hasShieldPickupAhead && !context.forcedPatternUsedInSegment && !this.forcedPatternUsedBySegment.has(segment);
+    const forcedEligible = context.distanceMeters >= 1100 && context.hasShieldPickupAhead && !context.forcedPatternUsedInSegment && !this.forcedPatternUsedBySegment.has(segment);
     if (forcedEligible && random() >= 0.85) {
       this.forcedPatternUsedBySegment.add(segment);
       return obstaclePatterns.find((pattern) => pattern.requiresShield)!;
@@ -17,7 +17,7 @@ export class ObstacleSpawner {
 
   public canUseForcedPattern(context: SpawnContext): boolean {
     const segment = Math.floor(context.distanceMeters / 1000);
-    return context.hasShieldPickupAhead && !context.forcedPatternUsedInSegment && !this.forcedPatternUsedBySegment.has(segment);
+    return context.distanceMeters >= 1100 && context.hasShieldPickupAhead && !context.forcedPatternUsedInSegment && !this.forcedPatternUsedBySegment.has(segment);
   }
 
   public validateReachability(gaps: PlayableGap[]): boolean { return isReachablePattern(gaps); }

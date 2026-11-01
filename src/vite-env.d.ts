@@ -15,5 +15,6 @@ interface Window {
   __5PM_RUSH_TEST_API__?: {
     getSnapshot?: () => import('./game/state/GameState').RunState;
     spawnDemoItems?: () => void;
+    spawnDemoObstacle?: () => void;
   };
 }
