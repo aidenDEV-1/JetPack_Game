@@ -12,3 +12,10 @@ export interface PlayerVisualState {
   boosting: boolean;
   gray: boolean;
 }
+
+export interface PlayerCollisionBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}

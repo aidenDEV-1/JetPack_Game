@@ -1,16 +1,16 @@
 import Phaser from 'phaser';
+import { gameAssetKeys } from '../../content/assets/gameAssets';
 import { PlayerAnimationController } from './playerAnimations';
+import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
 
 export class PlayerEntity extends Phaser.GameObjects.Container {
   private readonly controller = new PlayerAnimationController();
-  private readonly bodyShape: Phaser.GameObjects.Ellipse;
-  private readonly face: Phaser.GameObjects.Ellipse;
-  private readonly hat: Phaser.GameObjects.Arc;
-  private readonly glasses: Phaser.GameObjects.Graphics;
-  private readonly bag: Phaser.GameObjects.Rectangle;
-  private readonly flame: Phaser.GameObjects.Triangle;
-  private readonly boostAura: Phaser.GameObjects.Arc;
+  private readonly sprite: Phaser.GameObjects.Sprite;
+  private readonly flame: Phaser.GameObjects.Sprite;
+  private readonly boostAura: Phaser.GameObjects.Sprite;
+  private readonly boostTrail: Phaser.GameObjects.Sprite;
+  private currentAnimation: PlayerAnimation | null = null;
   private crashStarted = false;
 
   public constructor(scene: Phaser.Scene, config: PlayerConfig) {
@@ -18,44 +18,63 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     scene.add.existing(this);
     this.setScale(config.scale);
 
-    this.bodyShape = scene.add.ellipse(0, 22, 58, 80, 0xf1bf91);
-    this.face = scene.add.ellipse(0, -8, 52, 58, 0xf3c49b);
-    this.hat = scene.add.arc(0, -42, 38, 180, 360, false, 0xd8a84d).setStrokeStyle(6, 0x9c6b2b);
-    this.glasses = scene.add.graphics();
-    this.glasses.lineStyle(3, 0x3b2116, 1);
-    this.glasses.strokeCircle(-13, -9, 10);
-    this.glasses.strokeCircle(13, -9, 10);
-    this.glasses.lineBetween(-3, -9, 3, -9);
-    this.bag = scene.add.rectangle(-39, 17, 26, 48, 0x7a421f).setStrokeStyle(4, 0x3b2116);
-    this.flame = scene.add.triangle(-39, 52, 0, 30, 14, 0, 28, 30, 0xff8a24);
-    this.boostAura = scene.add.arc(-8, 8, 63, 0, 360, false, 0x52c7ff, 0.18).setStrokeStyle(4, 0x52c7ff, 0.8);
-    this.add([this.boostAura, this.bag, this.flame, this.bodyShape, this.face, this.hat, this.glasses]);
+    this.boostTrail = scene.add.sprite(-110, 10, gameAssetKeys.boosterVfxSheet, 2)
+      .setScale(0.32, 0.2)
+      .setAlpha(0.9);
+    this.boostAura = scene.add.sprite(0, 0, gameAssetKeys.boosterVfxSheet, 1)
+      .setScale(0.2)
+      .setAlpha(0.8);
+    this.flame = scene.add.sprite(-78, 18, gameAssetKeys.boosterVfxSheet, 0)
+      .setScale(0.18, 0.25);
+    this.sprite = scene.add.sprite(0, 0, gameAssetKeys.playerSheet, 0).setScale(PLAYER_SPRITE_SCALE);
+    this.add([this.boostTrail, this.boostAura, this.flame, this.sprite]);
+    this.boostTrail.setVisible(false);
     this.boostAura.setVisible(false);
+    this.flame.setVisible(false);
     this.setAnimation('running');
   }
 
   public setAnimation(state: PlayerAnimation): void {
     this.controller.setAnimation(state);
     const visual = this.controller.snapshot();
-    this.flame.setVisible(state !== 'running' && state !== 'fallen');
-    this.bodyShape.setAngle(state === 'running' ? 0 : -8);
-    this.boostAura.setVisible(visual.boosting);
+    this.applyAnimation(visual.animation);
+    this.boostAura.setVisible(visual.boosting && !visual.gray);
+    this.boostTrail.setVisible(visual.boosting && !visual.gray);
+    this.flame.setVisible(visual.boosting && !visual.gray);
     this.applyGray(visual.gray);
   }
 
   public setBoosting(value: boolean): void {
     this.controller.setBoosting(value);
     const visual = this.controller.snapshot();
-    this.boostAura.setVisible(visual.boosting);
-    this.flame.setScale(visual.boosting ? 1.5 : 1);
+    this.applyAnimation(visual.animation);
+    this.boostAura.setVisible(visual.boosting && !visual.gray);
+    this.boostTrail.setVisible(visual.boosting && !visual.gray);
+    this.flame.setVisible(visual.boosting && !visual.gray);
+    this.boostAura.setAlpha(visual.boosting ? 0.9 : 0);
+    this.flame.setScale(visual.boosting ? 0.24 : 0.18, visual.boosting ? 0.34 : 0.25);
+    this.applyGray(visual.gray);
   }
 
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
 
+  public getCollisionBounds(): Phaser.Geom.Rectangle {
+    const scale = this.scaleX;
+    return new Phaser.Geom.Rectangle(
+      this.x + PLAYER_COLLISION_BOUNDS.x * scale,
+      this.y + PLAYER_COLLISION_BOUNDS.y * scale,
+      PLAYER_COLLISION_BOUNDS.width * scale,
+      PLAYER_COLLISION_BOUNDS.height * scale,
+    );
+  }
+
   public async crash(): Promise<void> {
     if (this.crashStarted || !this.controller.beginCrash()) return;
     this.crashStarted = true;
-    this.setAnimation('crashing');
+    this.applyAnimation('crashing');
+    this.boostAura.setVisible(false);
+    this.boostTrail.setVisible(false);
+    this.flame.setVisible(false);
     await new Promise<void>((resolve) => {
       this.scene.tweens.add({
         targets: this,
@@ -70,11 +89,18 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.setAnimation('fallen');
   }
 
+  private applyAnimation(state: PlayerAnimation): void {
+    if (this.currentAnimation === state) return;
+    this.sprite.play(PLAYER_ANIMATION_KEYS[state], true);
+    this.currentAnimation = state;
+  }
+
   private applyGray(gray: boolean): void {
-    const color = gray ? 0x8a929c : 0xf1bf91;
-    this.bodyShape.setFillStyle(color);
-    this.face.setFillStyle(gray ? 0x9aa1aa : 0xf3c49b);
-    this.hat.setFillStyle(gray ? 0x7e858d : 0xd8a84d);
-    this.bag.setFillStyle(gray ? 0x565b62 : 0x7a421f);
+    const tint = gray ? 0x7e8791 : 0xffffff;
+    this.sprite.setTint(tint);
+    this.flame.setTint(gray ? 0x707780 : 0xffffff);
+    this.boostAura.setTint(gray ? 0x707780 : 0xffffff);
+    this.boostTrail.setTint(gray ? 0x707780 : 0xffffff);
   }
 }
+

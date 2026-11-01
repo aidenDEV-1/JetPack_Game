@@ -16,4 +16,12 @@ describe('player animation states', () => {
     expect(controller.snapshot().animation).toBe('boosting');
     expect(controller.snapshot().boosting).toBe(true);
   });
+
+  it('does not leave the fallen state when a later animation is requested', () => {
+    const controller = new PlayerAnimationController();
+    controller.finishCrash();
+    controller.setAnimation('running');
+    expect(controller.snapshot().animation).toBe('fallen');
+    expect(controller.snapshot().gray).toBe(true);
+  });
 });

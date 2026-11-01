@@ -7,10 +7,10 @@
 [P01 Visual Asset Foundation](./phases/2026-11-01-5pm-rush-playable-content/P01-visual-asset-foundation/phase.md)
 
 ## Active Task
-[T02 Character Rendering](./phases/2026-11-01-5pm-rush-playable-content/P01-visual-asset-foundation/T02-character-rendering.md)
+[T03 Parallax Background](./phases/2026-11-01-5pm-rush-playable-content/P01-visual-asset-foundation/T03-parallax-background.md)
 
 ## Status
-- T01 구현·검증 완료
+- T02 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T02 청사진을 읽고 `src/features/player/PlayerEntity.ts`, `src/features/player/playerAssetConfig.ts`, `src/game/scenes/BootScene.ts`의 sprite animation 연동 구현 시작
+T03 청사진을 읽고 `src/content/backgroundSegments.ts`, `src/content/backgroundLayers.ts`, `src/features/background/BackgroundController.ts`의 이미지 패럴랙스 연동 구현 시작
