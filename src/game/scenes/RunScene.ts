@@ -4,12 +4,13 @@ import { GameState } from '../state/GameState';
 import { KeyboardController } from '../input/KeyboardController';
 import { PauseSystem } from '../systems/PauseSystem';
 import { updateRunMotion } from '../systems/RunMotionSystem';
+import { PlayerEntity } from '../../features/player/PlayerEntity';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
   private readonly pauseSystem = new PauseSystem();
   private keyboard!: KeyboardController;
-  private player!: Phaser.GameObjects.Rectangle;
+  private player!: PlayerEntity;
   private playerVelocityY = 0;
   private floorLine!: Phaser.GameObjects.Line;
 
@@ -19,7 +20,7 @@ export class RunScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, width, height, 0x0a1728);
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0);
-    this.player = this.add.rectangle(GAME_CONFIG.playerX, GAME_CONFIG.floorY - 42, 70, 84, 0xf7c948);
+    this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.keyboard = new KeyboardController(this);
     this.runState.start();
     window.addEventListener('blur', this.pauseFromFocusLoss);
@@ -33,8 +34,8 @@ export class RunScene extends Phaser.Scene {
       velocityY: this.playerVelocityY,
       deltaSeconds: delta / 1000,
       thrusting: this.keyboard.isThrusting(),
-      floorY: GAME_CONFIG.floorY - this.player.height / 2,
-      ceilingY: GAME_CONFIG.ceilingY + this.player.height / 2,
+      floorY: GAME_CONFIG.floorY - 55,
+      ceilingY: GAME_CONFIG.ceilingY + 55,
       gravity: GAME_CONFIG.gravity,
       liftAcceleration: GAME_CONFIG.liftAcceleration,
       maxUpwardVelocity: GAME_CONFIG.maxUpwardVelocity,
@@ -42,6 +43,7 @@ export class RunScene extends Phaser.Scene {
     });
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
+    this.player.setAnimation(motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
     this.runState.addDistance((GAME_CONFIG.baseSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
   }
 

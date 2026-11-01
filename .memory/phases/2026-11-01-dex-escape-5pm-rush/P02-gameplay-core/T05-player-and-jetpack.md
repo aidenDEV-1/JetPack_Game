@@ -1,6 +1,6 @@
 # Task: T05 Player and Jetpack
 
-## Status: pending
+## Status: done
 
 ## Goal
 사진 기반 얼굴 특징을 가진 캐릭터, 밀짚모자, 갈색 가죽가방 제트팩을 독립 레이어와 애니메이션 상태로 구현한다.
@@ -60,6 +60,6 @@ Task: T05-player-and-jetpack
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
