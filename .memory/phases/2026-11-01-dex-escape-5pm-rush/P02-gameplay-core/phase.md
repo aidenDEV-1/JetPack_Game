@@ -4,7 +4,7 @@
 
 | Task | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| T04 | `pending` | Phaser 캔버스·게임 상태·입력·거리·일시정지 기반 구현 | [T04](./T04-game-shell-and-physics.md) |
+| T04 | `in_progress 🔵` | Phaser 캔버스·게임 상태·입력·거리·일시정지 기반 구현 | [T04](./T04-game-shell-and-physics.md) |
 | T05 | `pending` | 캐릭터 얼굴·밀짚모자·가죽가방 제트팩과 이동 애니메이션 구현 | [T05](./T05-player-and-jetpack.md) |
 | T06 | `pending` | 코인·방어막·DEX 토큰 이동 패턴·5초 부스터 구현 | [T06](./T06-items-and-booster.md) |
 | T07 | `pending` | 레이저·미사일·몬스터·강제 충돌 패턴과 충돌 판정 구현 | [T07](./T07-obstacles-and-collision.md) |
@@ -12,4 +12,4 @@
 
 ## Progress
 
-- done: 0/5 (blocked until P01 is complete)
+- done: 0/5 (active: T04)

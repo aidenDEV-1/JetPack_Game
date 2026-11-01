@@ -13,6 +13,9 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
+    "@azure/cosmos": "^4.9.0",
+    "@azure/functions": "^4.7.2",
+    "@azure/identity": "^4.11.0",
     "phaser": "^3.90.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

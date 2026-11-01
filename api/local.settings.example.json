@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "COSMOS_ENDPOINT": "",
+    "COSMOS_DATABASE": "jetpack-game",
+    "COSMOS_CONTAINER": "player-records",
+    "COSMOS_CONNECTION_STRING": "",
+    "COMPANY_TENANT_ID": ""
+  }
+}

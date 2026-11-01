@@ -1,6 +1,6 @@
 # Task: T03 Cosmos Score API
 
-## Status: pending
+## Status: done
 
 ## Goal
 인증된 사용자의 최고 기록과 누적 코인을 Azure Cosmos DB에 저장하고, 결과 화면에 필요한 TOP 10 랭킹을 반환하는 Azure Functions API 계약을 만든다.
@@ -94,6 +94,6 @@ Task: T03-cosmos-score-api
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
