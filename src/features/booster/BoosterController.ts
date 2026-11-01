@@ -43,4 +43,8 @@ export class BoosterController {
   public isInvincible(): boolean { return this.state.active; }
   public isActive(): boolean { return this.state.active; }
   public snapshot(): BoosterState { return { ...this.state }; }
+
+  public reset(): void {
+    this.state = { active: false, remainingMs: 0, tokenCount: 0, hasShield: false };
+  }
 }

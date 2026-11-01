@@ -27,4 +27,8 @@ export class PlayerAnimationController {
     this.state.gray = true;
     this.state.boosting = false;
   }
+
+  public reset(): void {
+    this.state = { animation: 'running', boosting: false, gray: false };
+  }
 }

@@ -54,6 +54,12 @@ export class BoosterFlightController {
     };
   }
 
+  public reset(): void {
+    this.active = false;
+    this.elapsedMs = 0;
+    this.playerX = GAME_CONFIG.playerX;
+  }
+
   private getPhase(): BoosterFlightPhase {
     if (!this.active) return 'idle';
     if (this.elapsedMs < TRAVEL_OUT_MS) return 'travelling-out';

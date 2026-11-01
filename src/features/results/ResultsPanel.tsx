@@ -8,6 +8,7 @@ export interface ResultViewModel {
   isNewBest: boolean;
   isRankOne: boolean;
   savePending: boolean;
+  leaderboardAvailable: boolean;
 }
 
 interface ResultsPanelProps extends ResultViewModel {
@@ -16,7 +17,7 @@ interface ResultsPanelProps extends ResultViewModel {
   onLeaderboard: () => void;
 }
 
-export function ResultsPanel({ distanceMeters, runCoins, totalCoins, bestDistanceMeters, isNewBest, isRankOne, savePending, onRetry, onReplay, onLeaderboard }: ResultsPanelProps) {
+export function ResultsPanel({ distanceMeters, runCoins, totalCoins, bestDistanceMeters, isNewBest, isRankOne, savePending, leaderboardAvailable, onRetry, onReplay, onLeaderboard }: ResultsPanelProps) {
   return (
     <section className="results-panel" aria-labelledby="results-title">
       <p className="eyebrow">RUN COMPLETE</p>
@@ -28,7 +29,7 @@ export function ResultsPanel({ distanceMeters, runCoins, totalCoins, bestDistanc
         <span>최고 기록<strong>{Math.floor(bestDistanceMeters)}M</strong></span>
       </div>
       {savePending ? <div className="save-pending">저장 대기 중 <button type="button" onClick={onRetry}>저장 재시도</button></div> : null}
-      <div className="results-actions"><button type="button" onClick={onReplay}>다시 도전</button><button type="button" onClick={onLeaderboard}>랭킹 보기</button></div>
+      <div className="results-actions"><button type="button" onClick={onReplay}>다시 도전</button><button type="button" onClick={onLeaderboard} disabled={!leaderboardAvailable}>랭킹 보기</button></div>
     </section>
   );
 }

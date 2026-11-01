@@ -32,6 +32,6 @@ export interface LeaderboardResponse {
 export type SaveState =
   | { status: 'idle' }
   | { status: 'saving'; result: GameRunResult }
-  | { status: 'pending'; result: GameRunResult; message: string }
+  | { status: 'pending'; result: GameRunResult; message: string; response?: SaveRunResponse }
   | { status: 'saved'; result: GameRunResult; response: SaveRunResponse; leaderboard: LeaderboardResponse }
   | { status: 'error'; result: GameRunResult; message: string };

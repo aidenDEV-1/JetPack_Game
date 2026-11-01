@@ -25,9 +25,9 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 실제 일러스트·아이템·배경 에셋과 Phaser 로딩/렌더링 기반 구축 | [P01](../phases/2026-11-01-5pm-rush-playable-content/P01-visual-asset-foundation/phase.md) |
-| P02 | `pending` | 아이템·장애물·부스터를 RunScene의 실제 플레이 루프에 연결 | [P02](../phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/phase.md) |
-| P03 | `pending` | 충돌 결과·기록 저장·HUD 연결 및 회귀 검증 | [P03](../phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/phase.md) |
+| P01 | `done ✅` | 실제 일러스트·아이템·배경 에셋과 Phaser 로딩/렌더링 기반 구축 | [P01](../phases/2026-11-01-5pm-rush-playable-content/P01-visual-asset-foundation/phase.md) |
+| P02 | `done ✅` | 아이템·장애물·부스터를 RunScene의 실제 플레이 루프에 연결 | [P02](../phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/phase.md) |
+| P03 | `in_progress` | 충돌 결과·기록 저장·HUD 연결 및 회귀 검증 | [P03](../phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/phase.md) |
 
 ## Execution Order
 

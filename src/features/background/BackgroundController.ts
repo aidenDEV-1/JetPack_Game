@@ -64,6 +64,16 @@ export class BackgroundController {
   public getCurrentSegment(): number { return this.currentSegment; }
   public getCurrentScene(): BackgroundSceneKey | null { return this.currentScene; }
 
+  public reset(): void {
+    this.layers.forEach(({ definition, items }) => {
+      items.forEach((tile, index) => {
+        tile.x = definition.repeatWidth * index;
+        tile.sprite.x = tile.x + definition.repeatWidth / 2;
+      });
+    });
+    this.applyScene('office', 0);
+  }
+
   private applyScene(sceneKey: BackgroundSceneKey, segmentIndex: number): void {
     this.currentScene = sceneKey;
     this.currentSegment = segmentIndex;

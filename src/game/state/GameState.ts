@@ -13,8 +13,10 @@ export interface RunState {
 
 export class GameState {
   private state: RunState;
+  private readonly baseSpeed: number;
 
   public constructor(baseSpeed: number) {
+    this.baseSpeed = baseSpeed;
     this.state = {
       phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: baseSpeed,
       hasShield: false, boosterActive: false, boosterRemainingMs: 0,
@@ -37,6 +39,10 @@ export class GameState {
 
   public crash(): void {
     if (this.state.phase === 'running' || this.state.phase === 'paused') this.state.phase = 'crashed';
+  }
+
+  public finishResults(): void {
+    if (this.state.phase === 'crashed') this.state.phase = 'results';
   }
 
   public addDistance(meters: number): void {
@@ -66,7 +72,7 @@ export class GameState {
 
   public reset(): void {
     this.state = {
-      phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: this.state.speed,
+      phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: this.baseSpeed,
       hasShield: false, boosterActive: false, boosterRemainingMs: 0,
     };
   }

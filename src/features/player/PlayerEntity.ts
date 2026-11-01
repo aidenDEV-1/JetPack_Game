@@ -12,10 +12,14 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   private readonly boostTrail: Phaser.GameObjects.Sprite;
   private currentAnimation: PlayerAnimation | null = null;
   private crashStarted = false;
+  private readonly initialX: number;
+  private readonly initialY: number;
 
   public constructor(scene: Phaser.Scene, config: PlayerConfig) {
     super(scene, config.x, config.floorY - 74);
     scene.add.existing(this);
+    this.initialX = config.x;
+    this.initialY = config.floorY - 74;
     this.setScale(config.scale);
 
     this.boostTrail = scene.add.sprite(-110, 10, gameAssetKeys.boosterVfxSheet, 2)
@@ -87,6 +91,18 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     });
     this.controller.finishCrash();
     this.setAnimation('fallen');
+  }
+
+  public reset(): void {
+    this.scene.tweens.killTweensOf(this);
+    this.x = this.initialX;
+    this.y = this.initialY;
+    this.angle = 0;
+    this.crashStarted = false;
+    this.controller.reset();
+    this.currentAnimation = null;
+    this.setAnimation('running');
+    this.setBoosting(false);
   }
 
   private applyAnimation(state: PlayerAnimation): void {

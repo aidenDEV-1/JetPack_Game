@@ -16,12 +16,14 @@ import { ObstacleField } from '../../features/obstacles/ObstacleField';
 import type { CollisionOutcome } from '../../features/obstacles/CollisionResolver';
 import { BoosterFlightController } from '../../features/booster/BoosterFlightController';
 import { showBoosterFeedback } from '../../features/booster/BoosterFeedback';
+import { ResultsController } from '../../features/results/ResultsController';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
   private readonly pauseSystem = new PauseSystem();
   private readonly boosterController = new BoosterController();
   private readonly boosterFlight = new BoosterFlightController();
+  private readonly resultsController = new ResultsController();
   private readonly bridge: GameBridge;
   private keyboard!: KeyboardController;
   private player!: PlayerEntity;
@@ -32,6 +34,8 @@ export class RunScene extends Phaser.Scene {
   private obstacleField!: ObstacleField;
   private lastSnapshotAt = -Infinity;
   private lastSnapshotKey = '';
+  private crashHandled = false;
+  private runEndNotified = false;
 
   public constructor(bridge: GameBridge) {
     super('RunScene');
@@ -100,6 +104,7 @@ export class RunScene extends Phaser.Scene {
   }
 
   public beginRun(): void {
+    if (this.runState.snapshot().phase !== 'ready') return;
     this.runState.start();
     this.boosterController.startInitial();
     this.boosterFlight.activate();
@@ -107,6 +112,22 @@ export class RunScene extends Phaser.Scene {
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs);
     this.player.setBoosting(true);
+    this.emitSnapshot(true);
+  }
+
+  public restartRun(): void {
+    this.pauseSystem.reset();
+    this.runState.reset();
+    this.resultsController.reset();
+    this.boosterController.reset();
+    this.boosterFlight.reset();
+    this.collectibleField.reset();
+    this.obstacleField.reset();
+    this.backgroundController.reset();
+    this.playerVelocityY = 0;
+    this.crashHandled = false;
+    this.runEndNotified = false;
+    this.player.reset();
     this.emitSnapshot(true);
   }
 
@@ -170,9 +191,21 @@ export class RunScene extends Phaser.Scene {
       return;
     }
     if (outcome !== 'crash') return;
+    if (this.crashHandled) return;
+    this.crashHandled = true;
+    this.resultsController.beginCrash();
     this.runState.crash();
     this.emitSnapshot(true);
-    void this.player.crash();
+    const crashAnimation = this.player.crash();
+    void crashAnimation.then(() => {
+      this.resultsController.finishCrash();
+      if (this.resultsController.getPhase() !== 'results' || this.runEndNotified) return;
+      this.runEndNotified = true;
+      this.runState.finishResults();
+      const snapshot = this.runState.snapshot();
+      this.emitSnapshot(true);
+      this.bridge.onRunEnd(snapshot);
+    });
   }
 
   private registerDevItemHook(): void {

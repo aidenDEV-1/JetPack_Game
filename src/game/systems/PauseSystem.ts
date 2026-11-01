@@ -27,4 +27,9 @@ export class PauseSystem {
     if (this.countdownTimer) clearTimeout(this.countdownTimer);
     this.countdownTimer = null;
   }
+
+  public reset(): void {
+    this.cancel();
+    this.paused = false;
+  }
 }

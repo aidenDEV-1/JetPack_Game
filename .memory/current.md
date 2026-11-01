@@ -7,10 +7,10 @@
 [P03 Results and Regression](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/phase.md)
 
 ## Active Task
-[T08 Results and Records](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/T08-results-and-records.md)
+[T09 Playable Regression Validation](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/T09-playable-regression-validation.md)
 
 ## Status
-- T07 구현·검증 완료
+- T08 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T08 청사진을 읽고 `src/game/scenes/RunScene.ts`, `src/app/GameShell.tsx`, `src/features/results/ResultsPanel.tsx`, `src/features/records/RecordCoordinator.ts`의 crash 결과/기록 저장 연결 구현 시작
+T09 청사진을 읽고 mock 로그인 기반 전체 플레이 E2E, asset 404/console error 회귀 검사, production guard와 콘텐츠 유지보수 문서 구현 시작

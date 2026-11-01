@@ -1,6 +1,6 @@
 # Task: T08 Results and Records
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -81,7 +81,7 @@ Task: T08-results-and-records
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: feat(results): connect crashes to saved run results
 

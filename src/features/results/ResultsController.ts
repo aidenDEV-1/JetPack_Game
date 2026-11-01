@@ -6,4 +6,5 @@ export class ResultsController {
   public beginCrash(): void { if (this.phase === 'playing') this.phase = 'crash-animation'; }
   public finishCrash(): void { if (this.phase === 'crash-animation') this.phase = 'results'; }
   public getPhase(): ResultPhase { return this.phase; }
+  public reset(): void { this.phase = 'playing'; }
 }
