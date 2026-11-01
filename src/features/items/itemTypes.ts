@@ -1,3 +1,5 @@
+import type Phaser from 'phaser';
+
 export type ItemKind = 'coin' | 'shield' | 'token';
 export type TokenPattern = 'vertical' | 'horizontal' | 'wave' | 'orbit';
 
@@ -6,6 +8,13 @@ export interface ItemEntityContract {
   pattern?: TokenPattern;
   collect(): boolean;
   isCollected(): boolean;
+  getCollisionBounds(): Phaser.Geom.Rectangle;
+}
+
+export interface ItemPickupEvent {
+  kind: ItemKind;
+  x: number;
+  y: number;
 }
 
 export interface ItemInventory {

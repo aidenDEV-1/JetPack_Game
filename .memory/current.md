@@ -7,10 +7,10 @@
 [P02 Playable World Loop](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/phase.md)
 
 ## Active Task
-[T05 Collectible Field](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/T05-collectible-field.md)
+[T06 Obstacle Field and Collision](./phases/2026-11-01-5pm-rush-playable-content/P02-playable-world-loop/T06-obstacle-field-and-collision.md)
 
 ## Status
-- T04 구현·검증 완료
+- T05 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T05 청사진을 읽고 `src/features/items/ItemEntity.ts`, `src/features/items/CollectibleField.ts`, `src/game/scenes/RunScene.ts`의 실제 아이템 생성·수집 구현 시작
+T06 청사진을 읽고 `src/features/obstacles/ObstacleEntity.ts`, `src/features/obstacles/ObstacleField.ts`, `src/game/scenes/RunScene.ts`의 장애물 생성·충돌 구현 시작

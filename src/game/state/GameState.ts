@@ -53,6 +53,10 @@ export class GameState {
     this.state.tokenCount = Math.min(3, this.state.tokenCount + 1);
   }
 
+  public setTokenCount(value: number): void {
+    this.state.tokenCount = Math.min(3, Math.max(0, Math.floor(value)));
+  }
+
   public setShield(value: boolean): void { this.state.hasShield = value; }
 
   public setBooster(active: boolean, remainingMs: number): void {

@@ -1,35 +1,50 @@
 import Phaser from 'phaser';
+import { gameAssetKeys } from '../../content/assets/gameAssets';
 import type { ItemEntityContract, ItemKind, TokenPattern } from './itemTypes';
 import { getTokenPosition } from './movementPatterns';
+
+const ITEM_FRAMES: Record<ItemKind, number> = { coin: 0, shield: 1, token: 2 };
+const ITEM_SCALES: Record<ItemKind, number> = { coin: 0.095, shield: 0.105, token: 0.11 };
 
 export class ItemEntity extends Phaser.GameObjects.Container implements ItemEntityContract {
   public readonly kind: ItemKind;
   public readonly pattern?: TokenPattern;
   private collected = false;
   private readonly origin: { x: number; y: number };
-  private readonly icon: Phaser.GameObjects.Arc;
+  private worldX: number;
+  private elapsedMs = 0;
+  private readonly icon: Phaser.GameObjects.Sprite;
 
   public constructor(scene: Phaser.Scene, kind: ItemKind, x: number, y: number, pattern?: TokenPattern) {
     super(scene, x, y);
     this.kind = kind;
     this.pattern = pattern;
     this.origin = { x, y };
+    this.worldX = x;
     scene.add.existing(this);
-    this.icon = scene.add.arc(0, 0, kind === 'token' ? 18 : 14, 0, 360, false, kind === 'coin' ? 0xf7c948 : kind === 'shield' ? 0x52c7ff : 0x0b3e8a);
-    this.icon.setStrokeStyle(3, kind === 'token' ? 0xffffff : 0x183a5f);
+    this.icon = scene.add.sprite(0, 0, gameAssetKeys.itemsSheet, ITEM_FRAMES[kind]).setScale(ITEM_SCALES[kind]);
     this.add(this.icon);
-    if (kind === 'token') {
-      const label = scene.add.text(0, 0, 'DEX.', { color: '#ffffff', fontSize: '8px', fontStyle: 'bold' }).setOrigin(0.5);
-      this.add(label);
-    }
   }
 
-  public update(elapsedMs: number): void {
-    if (this.collected || this.kind !== 'token' || !this.pattern) return;
-    const position = getTokenPosition(this.pattern, this.origin, elapsedMs);
-    this.x = position.x;
-    this.y = position.y;
-    this.angle += 1.2;
+  public update(deltaMs: number, worldSpeed: number, elapsedMs: number): void {
+    if (this.collected) return;
+    this.elapsedMs = elapsedMs;
+    this.worldX -= worldSpeed * Math.max(0, deltaMs) / 1000;
+    if (this.kind === 'token' && this.pattern) {
+      const position = getTokenPosition(this.pattern, { x: this.worldX, y: this.origin.y }, elapsedMs, 42);
+      this.x = position.x;
+      this.y = position.y;
+      this.angle = (elapsedMs / 12) % 360;
+      return;
+    }
+    this.x = this.worldX;
+  }
+
+  public getCollisionBounds(): Phaser.Geom.Rectangle {
+    const bounds = this.getBounds();
+    const insetX = bounds.width * 0.12;
+    const insetY = bounds.height * 0.12;
+    return new Phaser.Geom.Rectangle(bounds.x + insetX, bounds.y + insetY, bounds.width - insetX * 2, bounds.height - insetY * 2);
   }
 
   public collect(): boolean {
@@ -40,4 +55,6 @@ export class ItemEntity extends Phaser.GameObjects.Container implements ItemEnti
   }
 
   public isCollected(): boolean { return this.collected; }
+  public getElapsedMs(): number { return this.elapsedMs; }
 }
+
