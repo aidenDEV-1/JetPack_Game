@@ -1,6 +1,6 @@
 # Task: T09 UI and Audio
 
-## Status: pending
+## Status: done
 
 ## Goal
 레퍼런스의 어두운 패널형 스타일을 유지하면서 최신 웹 게임 수준의 선명한 한국어 HUD, 음소거, 설정, 일시정지 UI를 구현한다.
@@ -57,6 +57,6 @@ Task: T09-ui-and-audio
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

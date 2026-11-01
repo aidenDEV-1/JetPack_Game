@@ -7,10 +7,10 @@
 [P02 Gameplay Core](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md)
 
 ## Active Task
-[T09 UI and Audio](./phases/2026-11-01-dex-escape-5pm-rush/P03-content-and-ui/T09-ui-and-audio.md)
+[T10 Presentation and Results](./phases/2026-11-01-dex-escape-5pm-rush/P03-content-and-ui/T10-presentation-and-results.md)
 
 ## Status
-- T08 완료 및 검증 통과
+- T09 완료 및 검증 통과
 
 ## Next Step (IMPORTANT)
-T09 청사진을 읽고 고품질 한국어 HUD·설정·음소거·일시정지 UI 구현 시작
+T10 청사진을 읽고 5시 시계·알람·부스터·충돌·결과 연출 구현 시작

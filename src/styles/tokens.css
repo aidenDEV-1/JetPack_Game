@@ -25,3 +25,20 @@ button { font: inherit; }
 .primary-button, .secondary-button { border: 0; border-radius: 12px; padding: 14px 20px; cursor: pointer; font-weight: 700; }
 .primary-button { background: #f7c948; color: #101820; }
 .secondary-button { border: 1px solid #688bb7; background: rgba(13, 30, 52, 0.8); color: #f7fbff; }
+.game-hud { position: absolute; inset: 0 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 22px; pointer-events: none; }
+.hud-score-panel, .hud-status-panel { display: grid; gap: 3px; padding: 10px 14px; border: 1px solid rgba(143, 183, 230, 0.42); border-radius: 12px; background: rgba(5, 11, 20, 0.74); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24); }
+.hud-label { color: #8fb7e6; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; }
+.hud-distance { color: #f7fbff; font-size: clamp(22px, 3vw, 34px); line-height: 1; letter-spacing: 0.04em; }
+.hud-coins { color: #f7c948; font-weight: 700; }
+.hud-status-panel { display: flex; align-items: center; margin-left: auto; }
+.hud-pill { padding: 5px 8px; border-radius: 999px; color: #b4c8df; font-size: 12px; background: rgba(31, 56, 86, 0.7); }
+.hud-pill.active { color: #08111f; background: #52c7ff; }
+.hud-settings-button { pointer-events: auto; width: 44px; height: 44px; border: 1px solid #688bb7; border-radius: 12px; background: rgba(5, 11, 20, 0.82); color: #fff; cursor: pointer; font-size: 20px; }
+.settings-backdrop { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; background: rgba(3, 7, 13, 0.62); }
+.settings-menu { width: min(360px, calc(100% - 40px)); display: grid; gap: 12px; padding: 24px; border: 1px solid #688bb7; border-radius: 18px; background: #0d1d31; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+.settings-heading { display: flex; align-items: center; justify-content: space-between; color: #f7fbff; }
+.settings-heading h2 { margin: 0; }
+.icon-button { border: 0; background: transparent; color: #c7d7e9; cursor: pointer; font-size: 28px; }
+.settings-action { border: 1px solid #688bb7; border-radius: 10px; padding: 12px; background: #172d48; color: #f7fbff; cursor: pointer; font-weight: 700; }
+.settings-action.danger { border-color: #9d5363; color: #ffb8c4; }
+.resume-countdown { display: grid; place-items: center; height: 90px; color: #f7c948; font-size: 64px; font-weight: 900; }
