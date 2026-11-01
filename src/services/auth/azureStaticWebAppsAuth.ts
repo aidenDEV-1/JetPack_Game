@@ -39,9 +39,16 @@ export function isCompanyTenant(user: AuthenticatedUser, companyTenantId = impor
 export class AzureStaticWebAppsAuthService implements AuthService {
   public async getCurrentUser(): Promise<AuthenticatedUser | null> {
     const response = await fetch(AUTH_ME_URL, { headers: { Accept: 'application/json' } });
+    if (response.status === 404) return null;
     if (!response.ok) throw new Error(`인증 세션 조회에 실패했습니다. (${response.status})`);
 
-    const payload = (await response.json()) as StaticWebAppsMeResponse;
+    let payload: StaticWebAppsMeResponse;
+    try {
+      payload = (await response.json()) as StaticWebAppsMeResponse;
+    } catch {
+      // Vite local development has no /.auth/me endpoint; treat it as signed out.
+      return null;
+    }
     return payload.clientPrincipal ? normalizePrincipal(payload.clientPrincipal) : null;
   }
 

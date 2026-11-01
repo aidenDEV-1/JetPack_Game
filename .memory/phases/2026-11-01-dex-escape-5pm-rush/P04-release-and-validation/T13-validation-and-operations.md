@@ -1,6 +1,6 @@
 # Task: T13 Validation and Operations
 
-## Status: pending
+## Status: done
 
 ## Goal
 게임 핵심 루프와 인증·저장·랭킹·배포를 검증하고, 이후 11개 콘텐츠 요소를 독립적으로 수정·추가할 수 있는 운영 문서를 남긴다.
@@ -58,6 +58,6 @@ Task: T13-validation-and-operations
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

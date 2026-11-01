@@ -17,10 +17,10 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 프로젝트 기반, Entra 인증, Azure 데이터 계약과 저장 API | [P01](../phases/2026-11-01-dex-escape-5pm-rush/P01-foundation-and-cloud/phase.md) |
-| P02 | `pending` | Phaser 게임 루프, 이동, 아이템, 부스터, 장애물, 배경 진행 | [P02](../phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md) |
-| P03 | `pending` | 고품질 한국어 UI, 캐릭터·에셋 분리, 결과·랭킹·오디오 연출 | [P03](../phases/2026-11-01-dex-escape-5pm-rush/P03-content-and-ui/phase.md) |
-| P04 | `pending` | Azure 배포, CI/CD, 통합 검증, 운영 문서 | [P04](../phases/2026-11-01-dex-escape-5pm-rush/P04-release-and-validation/phase.md) |
+| P01 | `done ✅` | 프로젝트 기반, Entra 인증, Azure 데이터 계약과 저장 API | [P01](../phases/2026-11-01-dex-escape-5pm-rush/P01-foundation-and-cloud/phase.md) |
+| P02 | `done ✅` | Phaser 게임 루프, 이동, 아이템, 부스터, 장애물, 배경 진행 | [P02](../phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md) |
+| P03 | `done ✅` | 고품질 한국어 UI, 캐릭터·에셋 분리, 결과·랭킹·오디오 연출 | [P03](../phases/2026-11-01-dex-escape-5pm-rush/P03-content-and-ui/phase.md) |
+| P04 | `done ✅` | Azure 배포, CI/CD, 통합 검증, 운영 문서 | [P04](../phases/2026-11-01-dex-escape-5pm-rush/P04-release-and-validation/phase.md) |
 
 ## Non-goals for Initial Release
 

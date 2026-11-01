@@ -9,3 +9,5 @@ coverage/
 *.tsbuildinfo
 .agents/
 .codeburn/
+test-results/
+playwright-report/
