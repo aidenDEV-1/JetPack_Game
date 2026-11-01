@@ -4,13 +4,13 @@
 [덱스 탈출 넘버원 5PM RUSH](./plans/2026-11-01-dex-escape-5pm-rush.md)
 
 ## Active Phase
-[P02 Gameplay Core](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md)
+[P04 Release and Validation](./phases/2026-11-01-dex-escape-5pm-rush/P04-release-and-validation/phase.md)
 
 ## Active Task
-[T11 Records and Leaderboard](./phases/2026-11-01-dex-escape-5pm-rush/P03-content-and-ui/T11-records-and-leaderboard.md)
+[T12 Azure Deployment](./phases/2026-11-01-dex-escape-5pm-rush/P04-release-and-validation/T12-azure-deployment.md)
 
 ## Status
-- T10 완료 및 검증 통과
+- T11 완료 및 검증 통과
 
 ## Next Step (IMPORTANT)
-T11 청사진을 읽고 Cosmos 저장·최고 기록·누적 코인·TOP 10 랭킹 연결 시작
+T12 청사진을 읽고 Azure 리소스·Key Vault·Managed Identity·Static Web Apps 배포 구성 시작

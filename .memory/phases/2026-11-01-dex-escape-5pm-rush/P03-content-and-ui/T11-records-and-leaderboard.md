@@ -1,6 +1,6 @@
 # Task: T11 Records and Leaderboard
 
-## Status: pending
+## Status: done
 
 ## Goal
 게임 종료 결과를 Azure API에 저장하고, 결과 화면에서 TOP 10과 현재 사용자 순위를 표시한다.
@@ -61,6 +61,6 @@ Task: T11-records-and-leaderboard
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
