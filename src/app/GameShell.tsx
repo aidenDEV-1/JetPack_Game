@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type Phaser from 'phaser';
 import type { GameBridge } from '../game/PhaserGame';
+import type { RunState } from '../game/state/GameState';
 import type { RunScene } from '../game/scenes/RunScene';
 import { azureStaticWebAppsAuth } from '../services/auth/azureStaticWebAppsAuth';
 import { GameHud } from '../features/hud/GameHud';
@@ -15,13 +16,13 @@ export function GameShell() {
   const gameRef = useRef<Phaser.Game | null>(null);
   const [gameReady, setGameReady] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [hud] = useState(initialHud);
+  const [hud, setHud] = useState(initialHud);
   const [muted, setMuted] = useState(audioController.isMuted());
   const [countdown, setCountdown] = useState<number | null>(null);
   const [started, setStarted] = useState(false);
   const [clockValue, setClockValue] = useState<'4:59:59' | '5:00:00'>('4:59:59');
   const [clockVisible, setClockVisible] = useState(false);
-  const [paused, setPaused] = useState(false);
+  const paused = hud.paused;
 
   useEffect(() => {
     let disposed = false;
@@ -29,7 +30,13 @@ export function GameShell() {
 
     void import('../game/PhaserGame').then(({ createPhaserGame }) => {
       if (disposed || !gameRootRef.current) return;
-      const bridge: GameBridge = { onReady: () => setGameReady(true) };
+      const bridge: GameBridge = {
+        onReady: () => setGameReady(true),
+        onStateChange: (snapshot) => {
+          if (!disposed) setHud(toHudViewModel(snapshot));
+        },
+        onRunEnd: () => undefined,
+      };
       const game = createPhaserGame(gameRootRef.current, bridge);
       gameRef.current = game;
       destroyGame = () => game.destroy(true);
@@ -48,9 +55,9 @@ export function GameShell() {
     return scene ? scene as RunScene : null;
   };
 
-  const pause = () => { getRunScene()?.pauseFromSettings(); setPaused(true); };
+  const pause = () => { getRunScene()?.pauseFromSettings(); };
   const resume = () => {
-    getRunScene()?.resumeFromSettings((value) => setCountdown(value), () => { setCountdown(null); setPaused(false); });
+    getRunScene()?.resumeFromSettings((value) => setCountdown(value), () => { setCountdown(null); });
   };
   const toggleMute = () => setMuted(audioController.toggleMute());
   const startGame = async () => {
@@ -74,4 +81,16 @@ export function GameShell() {
       </section>
     </main>
   );
+}
+
+function toHudViewModel(snapshot: RunState) {
+  return {
+    distanceMeters: snapshot.distanceMeters,
+    runCoins: snapshot.runCoins,
+    tokenCount: snapshot.tokenCount,
+    hasShield: snapshot.hasShield,
+    boosterActive: snapshot.boosterActive,
+    boosterRemainingMs: snapshot.boosterRemainingMs,
+    paused: snapshot.phase === 'paused',
+  };
 }

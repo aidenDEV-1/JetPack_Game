@@ -1,6 +1,6 @@
 # Task: T04 Live Run State and HUD
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -87,7 +87,7 @@ Task: T04-live-run-state-and-hud
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
 

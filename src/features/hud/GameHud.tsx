@@ -5,7 +5,7 @@ interface GameHudProps extends HudViewModel {
   onSettings: () => void;
 }
 
-export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, muted, onSettings }: GameHudProps) {
+export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, boosterActive, boosterRemainingMs, muted, onSettings }: GameHudProps) {
   return (
     <div className="game-hud" aria-label="게임 정보">
       <div className="hud-score-panel">
@@ -16,6 +16,7 @@ export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, muted
       <div className="hud-status-panel">
         <span className={hasShield ? 'hud-pill active' : 'hud-pill'}>방어막 {hasShield ? '보유' : '없음'}</span>
         <span className="hud-pill">DEX 토큰 {tokenCount}/3</span>
+        {boosterActive ? <span className="hud-pill active">BOOSTER {Math.ceil(boosterRemainingMs / 1000)}s</span> : null}
       </div>
       <button className="hud-settings-button" type="button" aria-label="설정 열기" onClick={onSettings}>
         {muted ? '🔇' : '⚙️'}
