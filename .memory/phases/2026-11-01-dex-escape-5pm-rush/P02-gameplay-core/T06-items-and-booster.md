@@ -1,6 +1,6 @@
 # Task: T06 Items and Booster
 
-## Status: pending
+## Status: done
 
 ## Goal
 코인·방어막·DEX 토큰 수집과 토큰 3개 소모형 5초 부스터를 구현한다.
@@ -68,6 +68,6 @@ Task: T06-items-and-booster
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

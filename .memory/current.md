@@ -7,10 +7,10 @@
 [P02 Gameplay Core](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md)
 
 ## Active Task
-[T06 Items and Booster](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/T06-items-and-booster.md)
+[T07 Obstacles and Collision](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/T07-obstacles-and-collision.md)
 
 ## Status
-- T05 완료 및 검증 통과
+- T06 완료 및 검증 통과
 
 ## Next Step (IMPORTANT)
-T06 청사진을 읽고 코인·방어막·DEX 토큰 이동 패턴·5초 부스터 구현 시작
+T07 청사진을 읽고 레이저·미사일·몬스터·강제 충돌 패턴과 충돌 판정 구현 시작
