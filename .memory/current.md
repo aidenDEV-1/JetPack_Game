@@ -7,10 +7,10 @@
 [P02 Gameplay Core](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/phase.md)
 
 ## Active Task
-[T07 Obstacles and Collision](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/T07-obstacles-and-collision.md)
+[T08 Background Speed and Spawn](./phases/2026-11-01-dex-escape-5pm-rush/P02-gameplay-core/T08-background-speed-and-spawn.md)
 
 ## Status
-- T06 완료 및 검증 통과
+- T07 완료 및 검증 통과
 
 ## Next Step (IMPORTANT)
-T07 청사진을 읽고 레이저·미사일·몬스터·강제 충돌 패턴과 충돌 판정 구현 시작
+T08 청사진을 읽고 1,000m 구간 배경·무한 횡스크롤·속도 증가 구현 시작

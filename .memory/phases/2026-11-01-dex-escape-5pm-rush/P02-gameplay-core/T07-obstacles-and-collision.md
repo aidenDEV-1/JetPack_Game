@@ -1,6 +1,6 @@
 # Task: T07 Obstacles and Collision
 
-## Status: pending
+## Status: done
 
 ## Goal
 수직·가로 레이저, 미사일, 몬스터와 방어막 소비·게임 종료 충돌 규칙을 구현한다.
@@ -67,6 +67,6 @@ Task: T07-obstacles-and-collision
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
