@@ -1,6 +1,6 @@
 # Task: T04 Game Shell and Physics
 
-## Status: pending
+## Status: done
 
 ## Goal
 16:9 Phaser 게임 캔버스에 스페이스바 상승·중력 하강·거리 누적·상한 반발·바닥 달리기·일시정지 상태를 구현한다.
@@ -63,6 +63,6 @@ Task: T04-game-shell-and-physics
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

@@ -24,5 +24,6 @@ export class BootScene extends Phaser.Scene {
       fontSize: '22px',
     }).setOrigin(0.5);
     this.bridge.onReady();
+    this.scene.start('RunScene');
   }
 }
