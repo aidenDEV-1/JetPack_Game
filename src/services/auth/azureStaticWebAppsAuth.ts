@@ -9,6 +9,18 @@ import type {
 const AUTH_ME_URL = '/.auth/me';
 const LOGIN_URL = '/.auth/login/aad?post_login_redirect_uri=/';
 const LOGOUT_URL = '/.auth/logout?post_logout_redirect_uri=/';
+const DEV_MOCK_USER: AuthenticatedUser = {
+  userId: 'local-dev-user',
+  displayName: '로컬 테스트 사용자',
+  email: 'local-dev@example.invalid',
+  tenantId: 'local-dev-tenant',
+};
+
+let devMockSignedIn = false;
+
+export function isDevMockAuthEnabled(): boolean {
+  return import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEV_MOCK_AUTH === 'true';
+}
 
 function claimValue(claims: StaticWebAppsClaim[] | undefined, names: string[]): string | null {
   const claim = claims?.find((item) => {
@@ -33,11 +45,13 @@ export function normalizePrincipal(principal: StaticWebAppsPrincipal): Authentic
 }
 
 export function isCompanyTenant(user: AuthenticatedUser, companyTenantId = import.meta.env.VITE_COMPANY_TENANT_ID ?? ''): boolean {
+  if (isDevMockAuthEnabled() && user.userId === DEV_MOCK_USER.userId) return true;
   return companyTenantId.length > 0 && user.tenantId.toLowerCase() === companyTenantId.toLowerCase();
 }
 
 export class AzureStaticWebAppsAuthService implements AuthService {
   public async getCurrentUser(): Promise<AuthenticatedUser | null> {
+    if (isDevMockAuthEnabled()) return devMockSignedIn ? DEV_MOCK_USER : null;
     const response = await fetch(AUTH_ME_URL, { headers: { Accept: 'application/json' } });
     if (response.status === 404) return null;
     if (!response.ok) throw new Error(`인증 세션 조회에 실패했습니다. (${response.status})`);
@@ -53,10 +67,19 @@ export class AzureStaticWebAppsAuthService implements AuthService {
   }
 
   public login(): void {
+    if (isDevMockAuthEnabled()) {
+      devMockSignedIn = true;
+      return;
+    }
     window.location.assign(LOGIN_URL);
   }
 
   public logout(): void {
+    if (isDevMockAuthEnabled()) {
+      devMockSignedIn = false;
+      window.location.reload();
+      return;
+    }
     window.location.assign(LOGOUT_URL);
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState, type PropsWithChildren } from 'react';
 import { authCopy } from './authCopy.ko';
-import { isCompanyTenant } from '../../services/auth/azureStaticWebAppsAuth';
+import { isCompanyTenant, isDevMockAuthEnabled } from '../../services/auth/azureStaticWebAppsAuth';
 import type { AuthenticatedUser, AuthService } from '../../services/auth/types';
 
 type AuthState =
@@ -37,7 +37,11 @@ export function AuthGate({ authService, children }: AuthGateProps) {
 
   if (state.status === 'loading') return <AuthShell><p>{authCopy.loading}</p></AuthShell>;
   if (state.status === 'signed-out') {
-    return <AuthShell><button className="primary-button" onClick={() => authService.login()}>{authCopy.login}</button><p>{authCopy.loginDescription}</p></AuthShell>;
+    const login = async () => {
+      authService.login();
+      if (isDevMockAuthEnabled()) await loadSession();
+    };
+    return <AuthShell><button className="primary-button" onClick={() => void login()}>{isDevMockAuthEnabled() ? authCopy.devLogin : authCopy.login}</button><p>{authCopy.loginDescription}</p></AuthShell>;
   }
   if (state.status === 'denied') {
     return <AuthShell><p>{authCopy.accessDenied}</p><button className="secondary-button" onClick={() => authService.logout()}>{authCopy.logout}</button></AuthShell>;

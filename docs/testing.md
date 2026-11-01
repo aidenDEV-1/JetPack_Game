@@ -8,6 +8,16 @@
 - `npm run test:run`: 물리, 아이템, 부스터, 장애물, 인증 파서, 시작 연출, 결과 문구, 저장 상태, 랭킹 정렬 검증.
 - `npx playwright test tests/e2e`: 로컬 로그인 게이트와 staging smoke test. `E2E_BASE_URL`을 지정하면 Entra 인증 계정이 필요한 테스트가 활성화된다.
 
+## 개발용 mock 로그인
+
+Azure 연결 전 로컬 게임을 확인하려면 프로젝트 루트의 `.env.local`에 다음 값을 추가한다.
+
+```dotenv
+VITE_ENABLE_DEV_MOCK_AUTH=true
+```
+
+개발 서버를 다시 시작한 뒤 `http://localhost:5173`에서 `개발용 mock 로그인`을 누르면 `로컬 테스트 사용자`로 게임에 들어갈 수 있다. `import.meta.env.DEV`일 때만 동작하므로 production build에서는 활성화되지 않는다. Azure 연결 후에는 `.env.local`의 값을 `false`로 바꾸거나 삭제한다.
+
 ## 브라우저 수동 테스트
 
 최신 Chrome과 Microsoft Edge에서 1280×720, 1366×768, 1920×1080을 확인한다.
