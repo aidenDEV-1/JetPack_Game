@@ -1,6 +1,6 @@
 # Task: T07 Booster Flight
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -85,7 +85,7 @@ Task: T07-booster-flight
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
 

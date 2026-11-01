@@ -14,11 +14,14 @@ import type { ItemKind } from '../../features/items/itemTypes';
 import { showItemPickupFeedback } from '../../features/items/ItemPickupFeedback';
 import { ObstacleField } from '../../features/obstacles/ObstacleField';
 import type { CollisionOutcome } from '../../features/obstacles/CollisionResolver';
+import { BoosterFlightController } from '../../features/booster/BoosterFlightController';
+import { showBoosterFeedback } from '../../features/booster/BoosterFeedback';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
   private readonly pauseSystem = new PauseSystem();
   private readonly boosterController = new BoosterController();
+  private readonly boosterFlight = new BoosterFlightController();
   private readonly bridge: GameBridge;
   private keyboard!: KeyboardController;
   private player!: PlayerEntity;
@@ -57,10 +60,11 @@ export class RunScene extends Phaser.Scene {
     if (this.pauseSystem.isPaused() || state.phase !== 'running') return;
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
-    const booster = this.boosterController.snapshot();
-    const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier;
+    const flight = this.boosterFlight.update(delta);
+    const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier * flight.worldSpeedMultiplier;
+    this.player.x = flight.playerX;
     this.runState.setSpeed(worldSpeed);
-    this.runState.setBooster(booster.active, booster.remainingMs);
+    this.runState.setBooster(flight.active, flight.remainingMs);
     this.backgroundController.update(delta, worldSpeed, state.distanceMeters);
     const motion = updateRunMotion({
       y: this.player.y,
@@ -76,8 +80,8 @@ export class RunScene extends Phaser.Scene {
     });
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
-    this.player.setBoosting(booster.active);
-    this.player.setAnimation(booster.active ? 'boosting' : motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
+    this.player.setBoosting(flight.active);
+    this.player.setAnimation(flight.active ? 'boosting' : motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
     this.collectibleField.update(delta, this.runState.snapshot().distanceMeters, worldSpeed, this.player.getCollisionBounds());
     this.obstacleField.update(
@@ -89,7 +93,7 @@ export class RunScene extends Phaser.Scene {
         forcedPatternUsedInSegment: false,
       },
       this.player.getCollisionBounds(),
-      booster.active,
+      flight.active,
       this.runState.snapshot().hasShield,
     );
     this.emitSnapshot();
@@ -98,6 +102,8 @@ export class RunScene extends Phaser.Scene {
   public beginRun(): void {
     this.runState.start();
     this.boosterController.startInitial();
+    this.boosterFlight.activate();
+    showBoosterFeedback(this);
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs);
     this.player.setBoosting(true);
@@ -118,6 +124,13 @@ export class RunScene extends Phaser.Scene {
 
   public spawnDemoItems(): void { this.collectibleField.spawnDemoItems(); }
   public spawnDemoObstacle(): void { this.obstacleField.spawnDemoObstacle(); }
+  public activateDemoBooster(): void {
+    this.boosterController.activate();
+    this.boosterFlight.activate();
+    showBoosterFeedback(this);
+    this.runState.setBooster(true, this.boosterFlight.snapshot().remainingMs);
+    this.emitSnapshot(true);
+  }
 
   private readonly pauseFromFocusLoss = (): void => {
     if (document.visibilityState === 'hidden' || !document.hasFocus()) this.pauseRun();
@@ -134,7 +147,10 @@ export class RunScene extends Phaser.Scene {
     if (kind === 'coin') this.runState.collectCoin(1);
     if (kind === 'token') {
       this.runState.collectToken();
-      this.boosterController.collectToken();
+      if (this.boosterController.collectToken()) {
+        this.boosterFlight.activate();
+        showBoosterFeedback(this);
+      }
       this.runState.setTokenCount(this.boosterController.snapshot().tokenCount);
     }
     if (kind === 'shield' && this.boosterController.collectShield()) {
@@ -166,6 +182,8 @@ export class RunScene extends Phaser.Scene {
       getSnapshot: () => this.getSnapshot(),
       spawnDemoItems: () => this.spawnDemoItems(),
       spawnDemoObstacle: () => this.spawnDemoObstacle(),
+      activateBooster: () => this.activateDemoBooster(),
+      getBoosterSnapshot: () => this.boosterFlight.snapshot(),
     };
   }
 

@@ -16,5 +16,7 @@ interface Window {
     getSnapshot?: () => import('./game/state/GameState').RunState;
     spawnDemoItems?: () => void;
     spawnDemoObstacle?: () => void;
+    activateBooster?: () => void;
+    getBoosterSnapshot?: () => { active: boolean; phase: string; playerX: number; worldSpeedMultiplier: number; remainingMs: number };
   };
 }

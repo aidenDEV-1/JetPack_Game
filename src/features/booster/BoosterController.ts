@@ -7,12 +7,14 @@ export class BoosterController {
 
   public startInitial(): void { this.activate(); }
 
-  public collectToken(): void {
+  public collectToken(): boolean {
     this.state.tokenCount += 1;
     if (this.state.tokenCount >= 3) {
       this.state.tokenCount = 0;
       this.activate();
+      return true;
     }
+    return false;
   }
 
   public collectShield(): boolean {
