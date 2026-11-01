@@ -1,0 +1,66 @@
+import type { AssetDefinition } from '../../services/assetRegistry';
+
+const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'] as const;
+const backgroundLayers = ['far', 'mid', 'near'] as const;
+const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> = {
+  office: 'office',
+  security: 'security',
+  city: 'city',
+  'subway-entrance': 'subway',
+  'subway-inside': 'subway',
+  'subway-exit': 'subway',
+  rooftop: 'rooftop',
+};
+
+export const gameAssetKeys = {
+  playerSheet: 'player-spritesheet',
+  boosterVfxSheet: 'booster-vfx-spritesheet',
+  itemsSheet: 'items-spritesheet',
+  obstaclesSheet: 'obstacles-spritesheet',
+  backgrounds: Object.fromEntries(
+    backgroundScenes.map((scene) => [scene, Object.fromEntries(backgroundLayers.map((layer) => [layer, `background-${scene}-${layer}`]))]),
+  ) as Record<(typeof backgroundScenes)[number], Record<(typeof backgroundLayers)[number], string>>,
+} as const;
+
+const backgroundDefinitions: AssetDefinition[] = backgroundScenes.flatMap((scene) => backgroundLayers.map((layer) => ({
+  key: gameAssetKeys.backgrounds[scene][layer],
+  path: `/assets/backgrounds/${backgroundFileByScene[scene]}.png`,
+  kind: 'image' as const,
+})));
+
+export const gameAssetDefinitions: AssetDefinition[] = [
+  {
+    key: gameAssetKeys.playerSheet,
+    path: '/assets/player/player-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 384,
+    frameHeight: 170,
+    frameCount: 24,
+  },
+  {
+    key: gameAssetKeys.boosterVfxSheet,
+    path: '/assets/ui/booster-vfx-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 724,
+    frameHeight: 724,
+    frameCount: 3,
+  },
+  {
+    key: gameAssetKeys.itemsSheet,
+    path: '/assets/items/items-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 512,
+    frameHeight: 512,
+    frameCount: 3,
+  },
+  {
+    key: gameAssetKeys.obstaclesSheet,
+    path: '/assets/obstacles/obstacles-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 512,
+    frameHeight: 512,
+    frameCount: 6,
+  },
+  ...backgroundDefinitions,
+];
+

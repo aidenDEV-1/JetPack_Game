@@ -1,8 +1,10 @@
 export const playerAssetKeys = {
+  spriteSheet: 'player-spritesheet',
   face: 'player-face',
   strawHat: 'player-straw-hat',
   leatherJetpack: 'player-leather-jetpack',
   jetpackFlame: 'player-jetpack-flame',
+  boosterVfxSheet: 'booster-vfx-spritesheet',
 } as const;
 
 export const playerAssetDescriptions = {
@@ -10,4 +12,6 @@ export const playerAssetDescriptions = {
   strawHat: '머리카락이 보이지 않도록 깊게 눌러쓴 밀짚모자',
   leatherJetpack: '갈색 가죽가방 형태의 제트팩',
   jetpackFlame: '가방 하단의 주황색 제트팩 불꽃',
+  spriteSheet: '첨부 얼굴 특징을 반영한 24프레임 게임용 캐릭터 일러스트 스프라이트 시트',
+  boosterVfxSheet: '제트팩 불꽃·무적 aura·고속 비행 trail 투명 이펙트 시트',
 } as const;

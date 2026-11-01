@@ -4,6 +4,7 @@ import { RunScene } from './scenes/RunScene';
 
 export interface GameBridge {
   onReady: () => void;
+  onAssetError?: (message: string) => void;
 }
 
 export function createPhaserGame(parent: HTMLElement, bridge: GameBridge): Phaser.Game {
