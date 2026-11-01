@@ -4,9 +4,9 @@
 
 | Task | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| T12 | `in_progress 🔵` | Azure 리소스 설정, Key Vault, Managed Identity, Static Web Apps 배포 | [T12](./T12-azure-deployment.md) |
-| T13 | `pending` | 단위·통합·브라우저 검증과 운영·콘텐츠 추가 문서 작성 | [T13](./T13-validation-and-operations.md) |
+| T12 | `done ✅` | Azure 리소스 설정, Key Vault, Managed Identity, Static Web Apps 배포 | [T12](./T12-azure-deployment.md) |
+| T13 | `in_progress 🔵` | 단위·통합·브라우저 검증과 운영·콘텐츠 추가 문서 작성 | [T13](./T13-validation-and-operations.md) |
 
 ## Progress
 
-- done: 0/2 (active: T12)
+- done: 1/2 (active: T13)

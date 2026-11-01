@@ -1,6 +1,6 @@
 # Task: T12 Azure Deployment
 
-## Status: pending
+## Status: done
 
 ## Goal
 Azure 구독에 Static Web Apps, Functions, Cosmos DB를 배포하고 회사 Entra ID·Managed Identity·Key Vault 기반 운영 구성을 완성한다.
@@ -59,6 +59,6 @@ Task: T12-azure-deployment
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
