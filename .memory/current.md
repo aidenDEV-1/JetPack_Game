@@ -10,7 +10,7 @@
 [T09 Playable Regression Validation](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/T09-playable-regression-validation.md)
 
 ## Status
-- T08 구현·검증 완료
+- T09 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T09 청사진을 읽고 mock 로그인 기반 전체 플레이 E2E, asset 404/console error 회귀 검사, production guard와 콘텐츠 유지보수 문서 구현 시작
+현재 계획의 모든 Task 구현·검증 완료. 다음 작업은 새 요구사항이 생길 때 새 계획을 생성한다.

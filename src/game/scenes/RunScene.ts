@@ -17,6 +17,7 @@ import type { CollisionOutcome } from '../../features/obstacles/CollisionResolve
 import { BoosterFlightController } from '../../features/booster/BoosterFlightController';
 import { showBoosterFeedback } from '../../features/booster/BoosterFeedback';
 import { ResultsController } from '../../features/results/ResultsController';
+import { registerGameTestApi } from '../test/GameTestApi';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -53,7 +54,7 @@ export class RunScene extends Phaser.Scene {
       onShieldPickupSpawned: () => this.obstacleField.setShieldPickupAhead(true),
     });
     this.keyboard = new KeyboardController(this);
-    this.registerDevItemHook();
+    this.registerDevTestApi();
     window.addEventListener('blur', this.pauseFromFocusLoss);
     document.addEventListener('visibilitychange', this.pauseFromFocusLoss);
     this.emitSnapshot(true);
@@ -153,6 +154,13 @@ export class RunScene extends Phaser.Scene {
     this.emitSnapshot(true);
   }
 
+  public deactivateDemoBooster(): void {
+    this.boosterController.reset();
+    this.boosterFlight.reset();
+    this.runState.setBooster(false, 0);
+    this.emitSnapshot(true);
+  }
+
   private readonly pauseFromFocusLoss = (): void => {
     if (document.visibilityState === 'hidden' || !document.hasFocus()) this.pauseRun();
   };
@@ -208,16 +216,18 @@ export class RunScene extends Phaser.Scene {
     });
   }
 
-  private registerDevItemHook(): void {
-    if (!import.meta.env.DEV) return;
-    window.__5PM_RUSH_TEST_API__ = {
-      ...window.__5PM_RUSH_TEST_API__,
+  private registerDevTestApi(): void {
+    registerGameTestApi({
       getSnapshot: () => this.getSnapshot(),
       spawnDemoItems: () => this.spawnDemoItems(),
       spawnDemoObstacle: () => this.spawnDemoObstacle(),
       activateBooster: () => this.activateDemoBooster(),
+      deactivateBooster: () => this.deactivateDemoBooster(),
+      forceCrash: () => {
+        if (this.runState.snapshot().phase === 'running') this.handleObstacleHit('crash');
+      },
       getBoosterSnapshot: () => this.boosterFlight.snapshot(),
-    };
+    });
   }
 
   private emitSnapshot(force = false): void {

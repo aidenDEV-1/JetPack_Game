@@ -6,7 +6,7 @@
 - `npm run typecheck`: 프론트엔드 타입 검증.
 - `npm exec tsc -- -p api/tsconfig.json --noEmit`: Functions 타입 검증.
 - `npm run test:run`: 물리, 아이템, 부스터, 장애물, 인증 파서, 시작 연출, 결과 문구, 저장 상태, 랭킹 정렬 검증.
-- `npx playwright test tests/e2e`: 로컬 로그인 게이트와 staging smoke test. `E2E_BASE_URL`을 지정하면 Entra 인증 계정이 필요한 테스트가 활성화된다.
+- `VITE_ENABLE_DEV_MOCK_AUTH=true npm run test:e2e`: mock 로그인부터 시작·아이템·부스터·충돌·결과 저장까지 재현하고, 에셋 404/console error와 production guard를 확인한다. `E2E_BASE_URL`을 지정하면 Entra 인증 계정이 필요한 테스트가 활성화된다.
 
 ## 개발용 mock 로그인
 
@@ -33,3 +33,9 @@ VITE_ENABLE_DEV_MOCK_AUTH=true
 9. 결과 저장, 저장 실패 재시도, TOP 10과 현재 순위를 확인한다.
 
 실제 Entra·Cosmos·Azure 배포 확인은 회사 staging 리소스와 테스트 계정이 준비된 뒤 수행한다.
+
+## 결정적 로컬 E2E hook
+
+개발 서버에서만 `window.__5PM_RUSH_TEST_API__`가 등록된다. `getSnapshot()`은 bridge 상태를 반환하고, `spawnDemoItems()`, `spawnDemoObstacle()`, `activateBooster()`, `deactivateBooster()`, `forceCrash()`는 실제 Phaser 장면의 이벤트를 호출한다. 테스트가 끝나면 GameShell unmount에서 hook을 삭제하며 production build에는 이 API가 포함되지 않는다.
+
+Playwright는 1280×720 화면을 캡처하고 `/assets/` 응답 오류와 uncaught console error를 실패로 처리한다. 캡처 이미지는 `test-results/` 아래에만 생성되므로 저장소에는 커밋하지 않는다.

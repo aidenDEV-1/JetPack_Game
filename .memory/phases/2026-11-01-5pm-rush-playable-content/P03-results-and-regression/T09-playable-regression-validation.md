@@ -1,6 +1,6 @@
 # Task: T09 Playable Regression Validation
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -97,7 +97,7 @@ Task: T09-playable-regression-validation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: test(game): verify playable assets and run loop end to end
 

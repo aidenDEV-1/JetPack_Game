@@ -14,6 +14,7 @@ import { StartSequence } from '../features/start/StartSequence';
 import { RecordCoordinator } from '../features/records/RecordCoordinator';
 import { ResultsPanel } from '../features/results/ResultsPanel';
 import { LeaderboardPanel } from '../features/leaderboard/LeaderboardPanel';
+import { clearGameTestApi } from '../game/test/GameTestApi';
 
 interface RunResultState {
   result: GameRunResult;
@@ -65,6 +66,7 @@ export function GameShell() {
     return () => {
       disposed = true;
       audioController.stop();
+      clearGameTestApi();
       destroyGame?.();
     };
   }, []);
