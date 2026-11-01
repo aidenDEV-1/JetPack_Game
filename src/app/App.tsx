@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { createPhaserGame, type GameBridge } from '../game/PhaserGame';
+import { AuthGate } from '../features/auth/AuthGate';
+import { azureStaticWebAppsAuth } from '../services/auth/azureStaticWebAppsAuth';
 
 export function App() {
+  return <AuthGate authService={azureStaticWebAppsAuth}><GameShell /></AuthGate>;
+}
+
+function GameShell() {
   const gameRootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

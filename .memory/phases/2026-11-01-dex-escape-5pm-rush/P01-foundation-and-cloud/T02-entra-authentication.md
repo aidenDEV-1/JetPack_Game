@@ -1,6 +1,6 @@
 # Task: T02 Entra Authentication
 
-## Status: pending
+## Status: done
 
 ## Goal
 Azure Static Web Apps 기본 Entra ID 인증을 연결하고 회사 테넌트 사용자만 React 앱과 API에 접근하도록 보호한다.
@@ -72,6 +72,6 @@ Task: T02-entra-authentication
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
