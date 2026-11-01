@@ -5,6 +5,8 @@ import { KeyboardController } from '../input/KeyboardController';
 import { PauseSystem } from '../systems/PauseSystem';
 import { updateRunMotion } from '../systems/RunMotionSystem';
 import { PlayerEntity } from '../../features/player/PlayerEntity';
+import { getProgression } from '../../features/progression/DistanceProgression';
+import { BackgroundController } from '../../features/background/BackgroundController';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -13,12 +15,14 @@ export class RunScene extends Phaser.Scene {
   private player!: PlayerEntity;
   private playerVelocityY = 0;
   private floorLine!: Phaser.GameObjects.Line;
+  private backgroundController!: BackgroundController;
 
   public constructor() { super('RunScene'); }
 
   public create(): void {
     const { width, height } = this.scale;
-    this.add.rectangle(width / 2, height / 2, width, height, 0x0a1728);
+    this.backgroundController = new BackgroundController(this);
+    this.add.rectangle(width / 2, height / 2, width, height, 0x0a1728).setDepth(-20);
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.keyboard = new KeyboardController(this);
@@ -29,6 +33,10 @@ export class RunScene extends Phaser.Scene {
 
   public update(_time: number, delta: number): void {
     if (this.pauseSystem.isPaused() || this.runState.snapshot().phase !== 'running') return;
+    const progression = getProgression(this.runState.snapshot().distanceMeters);
+    const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier;
+    this.runState.setSpeed(worldSpeed);
+    this.backgroundController.update(delta, worldSpeed, progression.segmentIndex);
     const motion = updateRunMotion({
       y: this.player.y,
       velocityY: this.playerVelocityY,
@@ -44,7 +52,7 @@ export class RunScene extends Phaser.Scene {
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
     this.player.setAnimation(motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
-    this.runState.addDistance((GAME_CONFIG.baseSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
+    this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
   }
 
   public pauseFromSettings(): void { this.pauseRun(); }

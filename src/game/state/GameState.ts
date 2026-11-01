@@ -36,4 +36,6 @@ export class GameState {
   public addDistance(meters: number): void {
     if (this.state.phase === 'running') this.state.distanceMeters += Math.max(0, meters);
   }
+
+  public setSpeed(speed: number): void { this.state.speed = Math.max(0, speed); }
 }

@@ -1,6 +1,6 @@
 # Task: T08 Background Speed and Spawn
 
-## Status: pending
+## Status: done
 
 ## Goal
 거리 기반 무한 횡스크롤, 1,000m별 5개 배경 구간, 15% 속도 증가와 5,000m 최대 속도를 구현한다.
@@ -60,6 +60,6 @@ Task: T08-background-speed-and-spawn
 ```
 
 ## Progress
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending
