@@ -39,7 +39,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       style: getBoosterStyle(DEFAULT_BOOSTER_STYLE_ID),
       anchor: PLAYER_JETPACK_ANCHOR,
     });
-    this.sprite = scene.add.sprite(0, 0, gameAssetKeys.playerSheet, 0).setScale(PLAYER_SPRITE_SCALE);
+    this.sprite = scene.make.sprite({ key: gameAssetKeys.playerSheet, frame: 0, add: false }).setScale(PLAYER_SPRITE_SCALE);
     this.add([this.jetpack, this.sprite]);
     this.setAnimation('running');
   }
