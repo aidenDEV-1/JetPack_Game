@@ -11,8 +11,12 @@
 | T05 | `done ✅` | 보라색 몬스터를 보안 드론/전기 장애물/미사일/회전 장애물 아트로 통일 | [T05](./T05-security-obstacle-art-direction.md) |
 | T06 | `done ✅` | 웹 대시보드형 HUD를 선명한 아케이드 HUD와 부스터 게이지로 교체 | [T06](./T06-arcade-hud-redesign.md) |
 | T07 | `done ✅` | 패럴랙스·먼지·착지·수집·레이저·충돌 연출을 pooled feedback으로 통합 | [T07](./T07-parallax-and-feedback-polish.md) |
-| T08 | `in_progress 🔵` | 전체 시각 회귀, 상태 snapshot, asset/console/production guard 검증 | [T08](./T08-visual-polish-regression-validation.md) |
+| T08 | `done ✅` | 전체 시각 회귀, 상태 snapshot, asset/console/production guard 검증 | [T08](./T08-visual-polish-regression-validation.md) |
 
 ## Progress
 
-- done: 7/8 (active: T08)
+- done: 8/8 (active: none)
+
+## Phase Status
+
+- `complete ✅`

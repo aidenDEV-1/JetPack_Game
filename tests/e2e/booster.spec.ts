@@ -31,7 +31,8 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
   expect(boosterVisual?.bodyTextureKey).toBe('player-spritesheet');
   expect(boosterVisual?.collisionBounds.width).toBe(84);
   expect(boosterVisual?.collisionBounds.height).toBe(68);
-  await page.screenshot({ path: testInfo.outputPath('rocket-booster-isolated.png') });
+  await page.screenshot({ path: testInfo.outputPath('player-animation-flight.png') });
+  await page.screenshot({ path: testInfo.outputPath('rocket-booster-attached.png') });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.deactivateBooster?.());
   const returned = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.());
   expect(returned).toMatchObject({ active: false, playerX: 220 });

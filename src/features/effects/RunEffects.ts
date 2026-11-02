@@ -5,6 +5,15 @@ import { BOOSTER_FEEDBACK_COLOR, BOOSTER_FEEDBACK_LABEL } from '../booster/Boost
 
 type EffectKind = 'dust' | 'pickup' | 'crash' | 'booster';
 
+export interface RunEffectsDebugSnapshot {
+  dustPoolSize: number;
+  pickupPoolSize: number;
+  crashPoolSize: number;
+  boosterPoolSize: number;
+  activeCount: number;
+  hasPersistentTrail: false;
+}
+
 interface PooledVisual {
   object: Phaser.GameObjects.Container;
   shape: Phaser.GameObjects.Graphics;
@@ -86,6 +95,17 @@ export class RunEffects {
     this.pickupIndex = 0;
     this.crashIndex = 0;
     this.boosterIndex = 0;
+  }
+
+  public getDebugSnapshot(): RunEffectsDebugSnapshot {
+    return {
+      dustPoolSize: this.dustPool.length,
+      pickupPoolSize: this.pickupPool.length,
+      crashPoolSize: this.crashPool.length,
+      boosterPoolSize: this.boosterPool.length,
+      activeCount: this.pools.reduce((count, pool) => count + pool.filter((visual) => visual.object.visible).length, 0),
+      hasPersistentTrail: false,
+    };
   }
 
   public destroy(): void {

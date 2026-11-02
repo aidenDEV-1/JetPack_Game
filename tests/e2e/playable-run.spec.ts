@@ -27,11 +27,14 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
   await expect(page.getByText('5:00:00')).toBeVisible({ timeout: 3_500 });
   await expect.poll(() => getRunSnapshot(page).then((snapshot) => snapshot?.phase), { timeout: 8_000 }).toBe('running');
   await expect.poll(() => getBoosterSnapshot(page).then((snapshot) => snapshot?.active), { timeout: 2_000 }).toBe(true);
+  await expect.poll(() => getEffectsSnapshot(page).then((snapshot) => snapshot?.dustPoolSize), { timeout: 2_000 }).toBe(12);
+  const effects = await getEffectsSnapshot(page);
+  expect(effects).toMatchObject({ pickupPoolSize: 8, crashPoolSize: 16, boosterPoolSize: 2, hasPersistentTrail: false });
   const beforeMotion = await getRunSnapshot(page);
   await page.waitForTimeout(600);
   const afterMotion = await getRunSnapshot(page);
   expect(afterMotion?.distanceMeters ?? 0).toBeGreaterThan(beforeMotion?.distanceMeters ?? 0);
-  const screenshot = await page.screenshot({ path: testInfo.outputPath('playable-background.png') });
+  const screenshot = await page.screenshot({ path: testInfo.outputPath('hud-arcade.png') });
   diagnostics.screenshotBytes = screenshot.byteLength;
 
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoItems?.());
@@ -45,6 +48,7 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoObstacle?.());
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.forceCrash?.());
   await expect.poll(() => getRunSnapshot(page).then((snapshot) => snapshot?.phase), { timeout: 3_000 }).toBe('crashed');
+  await page.screenshot({ path: testInfo.outputPath('crash-feedback.png') });
   await expect(page.getByRole('heading', { name: '멋쟁이네~' })).toBeVisible({ timeout: 5_000 });
 
   expect(diagnostics.assetFailures).toEqual([]);
@@ -80,4 +84,8 @@ async function getRunSnapshot(page: Page) {
 
 async function getBoosterSnapshot(page: Page) {
   return page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.());
+}
+
+async function getEffectsSnapshot(page: Page) {
+  return page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getEffectsSnapshot?.());
 }

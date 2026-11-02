@@ -1,6 +1,6 @@
 # Task: T08 Visual Polish Regression Validation
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -126,6 +126,6 @@ Task: T08-visual-polish-regression-validation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: `pending` (이번 단계에서 생성)

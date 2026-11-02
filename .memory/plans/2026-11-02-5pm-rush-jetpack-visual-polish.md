@@ -1,5 +1,7 @@
 # Plan: 5PM RUSH Jetpack Joyride급 비주얼·애니메이션 고도화
 
+## Status: complete ✅
+
 ## Goal
 
 기존 React + Phaser 3 + TypeScript 게임 아키텍처와 Entra ID/Azure 기록 저장을 유지하면서, 현재 실행 화면의 캐릭터 사각형·중복 렌더링·잔상 문제를 제거하고 Jetpack Joyride급의 명확한 2D 아케이드 연출로 개선한다. 1280×720 mock 로그인 플레이 화면에서 캐릭터 얼굴과 밀짚모자는 현재 승인된 디자인을 유지하고, RUN/TAKEOFF/FLY/FALL/LAND/HIT/DEAD 애니메이션이 실제 상태에 맞게 전환되며, 가방형 제트팩·로켓 변환·불꽃·레이저·보안 장애물·HUD·수집/충돌 이펙트가 동일한 네이비/메탈/에너지 코어 아트 디렉션으로 보이게 한다.

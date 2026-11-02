@@ -255,6 +255,8 @@ export class RunScene extends Phaser.Scene {
       },
       getPlayerVisualSnapshot: () => this.player.getVisualDebugSnapshot(),
       getObstacleVisualSnapshot: () => this.obstacleField.getVisualDebugSnapshot(),
+      getEffectsSnapshot: () => this.runEffects.getDebugSnapshot(),
+      getBackgroundSnapshot: () => this.backgroundController.getTransitionSnapshot(),
       getBoosterSnapshot: () => this.boosterFlight.snapshot(),
     });
   }

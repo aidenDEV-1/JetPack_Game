@@ -59,6 +59,19 @@ export interface GameTestApi {
     collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
     warning: { visible: boolean; x: number; y: number; alpha: number; label: '← 위험' };
   }>;
+  getEffectsSnapshot?: () => {
+    dustPoolSize: number;
+    pickupPoolSize: number;
+    crashPoolSize: number;
+    boosterPoolSize: number;
+    activeCount: number;
+    hasPersistentTrail: false;
+  };
+  getBackgroundSnapshot?: () => {
+    scene: string;
+    segment: number;
+    transitionProgress: number;
+  };
   getBoosterSnapshot?: () => BoosterTestSnapshot;
 }
 
