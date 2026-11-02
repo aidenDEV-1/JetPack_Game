@@ -22,6 +22,11 @@ export interface GameTestApi {
     jetpackAttachmentCount: number;
     hasPersistentTrail: boolean;
     flameVisible: boolean;
+    boosterStyleId: string;
+    boosterMode: string;
+    rocketFormVisible: boolean;
+    rocketFormParent: 'player-entity';
+    hasDetachedBoosterRoot: false;
   };
   getObstacleVisualSnapshot?: () => Array<{
     kind: string;

@@ -5,7 +5,6 @@ export const playerAssetKeys = {
   leatherJetpack: 'player-leather-jetpack',
   boosterFormsSheet: 'booster-forms-spritesheet',
   jetpackFlame: 'player-jetpack-flame',
-  boosterVfxSheet: 'booster-vfx-spritesheet',
 } as const;
 
 export const playerAssetDescriptions = {
@@ -15,5 +14,4 @@ export const playerAssetDescriptions = {
   boosterFormsSheet: '가방이 로켓으로 변환되는 투명 부스터 폼 스프라이트 시트',
   jetpackFlame: '가방 하단의 주황색 제트팩 불꽃',
   spriteSheet: '첨부 얼굴 특징을 반영한 24프레임 게임용 캐릭터 일러스트 스프라이트 시트',
-  boosterVfxSheet: '제트팩 불꽃·무적 aura·고속 비행 trail 투명 이펙트 시트',
 } as const;

@@ -12,13 +12,22 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
   expect(outbound?.active).toBe(true);
   expect(outbound?.playerX ?? 0).toBeGreaterThan(220);
   const boosterVisual = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.());
-  expect(boosterVisual).toMatchObject({ jetpackAttachmentCount: 1, hasPersistentTrail: false, flameVisible: true });
+  expect(boosterVisual).toMatchObject({
+    jetpackAttachmentCount: 1,
+    hasPersistentTrail: false,
+    flameVisible: true,
+    boosterStyleId: 'leather-rocket',
+    rocketFormVisible: true,
+    rocketFormParent: 'player-entity',
+    hasDetachedBoosterRoot: false,
+  });
   expect(boosterVisual?.collisionBounds.width).toBe(84);
   expect(boosterVisual?.collisionBounds.height).toBe(68);
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.deactivateBooster?.());
   const returned = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.());
   expect(returned).toMatchObject({ active: false, playerX: 220 });
-  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().flameVisible)).toBe(false);
+  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().rocketFormVisible)).toBe(false);
+  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().boosterMode)).toBe('normal');
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.activateBooster?.());
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.().active)).toBe(true);
 });

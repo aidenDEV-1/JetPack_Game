@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
+import { DEFAULT_BOOSTER_STYLE_ID, getBoosterStyle } from '../booster/boosterStyleCatalog';
 import { JetpackAttachment } from './JetpackAttachment';
+import type { BoosterFormMode } from './JetpackAttachment';
 import { PlayerAnimationController } from './playerAnimations';
 import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
@@ -10,6 +12,11 @@ export interface PlayerVisualDebugSnapshot {
   jetpackAttachmentCount: number;
   hasPersistentTrail: boolean;
   flameVisible: boolean;
+  boosterStyleId: string;
+  boosterMode: BoosterFormMode;
+  rocketFormVisible: boolean;
+  rocketFormParent: 'player-entity';
+  hasDetachedBoosterRoot: false;
 }
 
 export class PlayerEntity extends Phaser.GameObjects.Container {
@@ -29,11 +36,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.setScale(config.scale);
 
     this.jetpack = new JetpackAttachment(scene, {
-      textureKey: gameAssetKeys.boosterVfxSheet,
-      flameFrame: 0,
+      style: getBoosterStyle(DEFAULT_BOOSTER_STYLE_ID),
       anchor: PLAYER_JETPACK_ANCHOR,
-      scaleX: 0.24,
-      scaleY: 0.34,
     });
     this.sprite = scene.add.sprite(0, 0, gameAssetKeys.playerSheet, 0).setScale(PLAYER_SPRITE_SCALE);
     this.add([this.jetpack, this.sprite]);
@@ -44,7 +48,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.controller.setAnimation(state);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.jetpack.setActive(visual.boosting && !visual.gray);
+    this.jetpack.setBoosting(visual.boosting && !visual.gray);
     this.jetpack.setGray(visual.gray);
     this.applyGray(visual.gray);
   }
@@ -53,7 +57,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.controller.setBoosting(value);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.jetpack.setActive(visual.boosting && !visual.gray);
+    this.jetpack.setBoosting(visual.boosting && !visual.gray);
     this.jetpack.setGray(visual.gray);
     this.applyGray(visual.gray);
   }
@@ -62,11 +66,17 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
 
   public getVisualDebugSnapshot(): PlayerVisualDebugSnapshot {
     const bounds = this.getCollisionBounds();
+    const booster = this.jetpack.getVisualSnapshot();
     return {
       collisionBounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height },
       jetpackAttachmentCount: 1,
       hasPersistentTrail: false,
-      flameVisible: this.jetpack.visible,
+      flameVisible: booster.rocketFormVisible,
+      boosterStyleId: booster.styleId,
+      boosterMode: booster.mode,
+      rocketFormVisible: booster.rocketFormVisible,
+      rocketFormParent: booster.rocketFormParent,
+      hasDetachedBoosterRoot: booster.hasDetachedBoosterRoot,
     };
   }
 
@@ -84,7 +94,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     if (this.crashStarted || !this.controller.beginCrash()) return;
     this.crashStarted = true;
     this.applyAnimation('crashing');
-    this.jetpack.setActive(false);
+    this.jetpack.setBoosting(false);
     await new Promise<void>((resolve) => {
       this.scene.tweens.add({
         targets: this,

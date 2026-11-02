@@ -7,10 +7,10 @@
 [P01 Rocket Booster and Laser Redesign](./phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/phase.md)
 
 ## Active Task
-[T02 Attached Rocket Booster Transform](./phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/T02-attached-rocket-booster-transform.md)
+[T03 Laser Span and Hazard Visual Redesign](./phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/T03-laser-span-and-hazard-visual-redesign.md)
 
 ## Status
-- T01 구현·검증 완료
+- T01~T02 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T02 청사진을 읽고 `src/features/player/JetpackAttachment.ts`, `src/features/player/PlayerEntity.ts`, `src/features/booster/` 로컬 로켓 변환 계층 구현 시작
+T03 청사진을 읽고 `src/features/obstacles/laserSpanResolver.ts`, `src/features/obstacles/LaserHazardVisual.ts`, `src/features/obstacles/ObstacleEntity.ts` 레이저 span·고대비 hazard 렌더링 구현 시작

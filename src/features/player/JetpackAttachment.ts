@@ -1,50 +1,121 @@
 import Phaser from 'phaser';
+import type { BoosterStyleDefinition, BoosterStyleId } from '../booster/boosterStyleTypes';
 
-export interface JetpackAnchor {
-  x: number;
-  y: number;
-}
+export type BoosterFormMode = 'normal' | 'transforming-in' | 'boosting' | 'transforming-out';
 
 export interface JetpackAttachmentConfig {
-  textureKey: string;
-  flameFrame: number;
-  anchor: JetpackAnchor;
-  scaleX: number;
-  scaleY: number;
+  style: BoosterStyleDefinition;
+  anchor: { x: number; y: number };
 }
 
+export interface BoosterFormVisualSnapshot {
+  styleId: BoosterStyleId;
+  mode: BoosterFormMode;
+  rocketFormVisible: boolean;
+  rocketFormParent: 'player-entity';
+  hasDetachedBoosterRoot: false;
+}
+
+const MORPH_DURATION_MS = 140;
+
 export class JetpackAttachment extends Phaser.GameObjects.Container {
-  private readonly flame: Phaser.GameObjects.Sprite;
-  private readonly anchor: JetpackAnchor;
-  private readonly flameScale: { x: number; y: number };
+  private readonly formSprite: Phaser.GameObjects.Sprite;
+  private style: BoosterStyleDefinition;
+  private mode: BoosterFormMode = 'normal';
 
   public constructor(scene: Phaser.Scene, config: JetpackAttachmentConfig) {
     super(scene, config.anchor.x, config.anchor.y);
-    scene.add.existing(this);
-    this.anchor = { ...config.anchor };
-    this.flameScale = { x: config.scaleX, y: config.scaleY };
-    this.flame = scene.add.sprite(0, 0, config.textureKey, config.flameFrame)
-      .setScale(config.scaleX, config.scaleY);
-    this.add(this.flame);
-    this.setActive(false);
+    this.style = config.style;
+    this.formSprite = scene.make.sprite({
+      key: config.style.textureKey,
+      frame: config.style.frameStart,
+      add: false,
+    }).setScale(config.style.scaleX, config.style.scaleY);
+    this.add(this.formSprite);
+    this.formSprite.setVisible(false);
+    this.ensureAnimation(scene);
   }
 
-  public override setActive(active: boolean): this {
-    super.setActive(active);
-    this.setVisible(active);
-    return this;
+  public setStyle(style: BoosterStyleDefinition): void {
+    this.setBoosting(false);
+    this.style = style;
+    this.formSprite.setTexture(style.textureKey, style.frameStart);
+    this.formSprite.setScale(style.scaleX, style.scaleY);
+    this.ensureAnimation(this.scene);
+  }
+
+  public setBoosting(active: boolean): void {
+    if (active) {
+      if (this.mode === 'boosting' || this.mode === 'transforming-in') return;
+      this.scene.tweens.killTweensOf(this.formSprite);
+      this.mode = 'transforming-in';
+      this.formSprite.stop();
+      this.formSprite.setFrame(this.style.frameStart);
+      this.formSprite.setVisible(true);
+      this.formSprite.setAlpha(0);
+      this.formSprite.setScale(this.style.scaleX * 0.88, this.style.scaleY * 0.88);
+      this.scene.tweens.add({
+        targets: this.formSprite,
+        alpha: 1,
+        scaleX: this.style.scaleX,
+        scaleY: this.style.scaleY,
+        duration: MORPH_DURATION_MS,
+        ease: 'Cubic.easeOut',
+        onComplete: () => {
+          this.mode = 'boosting';
+          this.formSprite.play(this.animationKey(), true);
+        },
+      });
+      return;
+    }
+    this.scene.tweens.killTweensOf(this.formSprite);
+    this.formSprite.stop();
+    this.mode = 'transforming-out';
+    this.formSprite.setVisible(false);
+    this.formSprite.setAlpha(1);
+    this.formSprite.setScale(this.style.scaleX, this.style.scaleY);
+    this.mode = 'normal';
   }
 
   public setGray(gray: boolean): void {
-    this.flame.setTint(gray ? 0x707780 : 0xffffff);
+    this.formSprite.setTint(gray ? 0x707780 : 0xffffff);
+  }
+
+  public getVisualSnapshot(): BoosterFormVisualSnapshot {
+    return {
+      styleId: this.style.id,
+      mode: this.mode,
+      rocketFormVisible: this.formSprite.visible,
+      rocketFormParent: 'player-entity',
+      hasDetachedBoosterRoot: false,
+    };
   }
 
   public reset(): void {
-    this.setPosition(this.anchor.x, this.anchor.y);
-    this.setScale(1);
-    this.setAlpha(1);
-    this.flame.setScale(this.flameScale.x, this.flameScale.y);
+    this.scene.tweens.killTweensOf(this.formSprite);
+    this.formSprite.stop();
+    this.formSprite.setFrame(this.style.frameStart);
+    this.formSprite.setVisible(false);
+    this.formSprite.setAlpha(1);
+    this.formSprite.setScale(this.style.scaleX, this.style.scaleY);
     this.setGray(false);
-    this.setActive(false);
+    this.mode = 'normal';
+  }
+
+  private animationKey(): string {
+    return `booster-form-${this.style.id}`;
+  }
+
+  private ensureAnimation(scene: Phaser.Scene): void {
+    if (scene.anims.exists(this.animationKey())) return;
+    scene.anims.create({
+      key: this.animationKey(),
+      frames: scene.anims.generateFrameNumbers(this.style.textureKey, {
+        start: this.style.frameStart,
+        end: this.style.frameStart + this.style.frameCount - 1,
+      }),
+      frameRate: 16,
+      repeat: -1,
+    });
   }
 }

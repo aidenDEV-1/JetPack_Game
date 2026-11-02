@@ -10,7 +10,6 @@ const requiredFiles = [
   'player/booster-forms-spritesheet.png',
   'items/items-spritesheet.png',
   'obstacles/obstacles-spritesheet.png',
-  'ui/booster-vfx-spritesheet.png',
   'backgrounds/office.png',
   'backgrounds/security.png',
   'backgrounds/city.png',

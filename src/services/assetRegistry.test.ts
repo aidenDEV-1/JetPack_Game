@@ -7,7 +7,6 @@ import { assetRegistry } from './assetRegistry';
 const requiredKeys = [
   gameAssetKeys.playerSheet,
   gameAssetKeys.boosterFormsSheet,
-  gameAssetKeys.boosterVfxSheet,
   gameAssetKeys.itemsSheet,
   gameAssetKeys.obstaclesSheet,
   ...Object.values(gameAssetKeys.backgrounds).flatMap((scene) => Object.values(scene)),
