@@ -30,7 +30,7 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 플레이어 렌더링/애니메이션, 제트팩 VFX, 레이저·보안 장애물, 아케이드 HUD와 전체 연출을 기존 플레이 루프에 통합 | [P01](../phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md) |
+| P01 | `complete ✅` | 플레이어 렌더링/애니메이션, 제트팩 VFX, 레이저·보안 장애물, 아케이드 HUD와 전체 연출을 기존 플레이 루프에 통합 | [P01](../phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md) |
 
 ## Execution Order
 
