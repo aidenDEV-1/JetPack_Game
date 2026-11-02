@@ -1,6 +1,6 @@
 # Task: T02 Player Animation State Machine
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -140,6 +140,6 @@ Task: T02-player-animation-state-machine
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

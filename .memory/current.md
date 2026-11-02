@@ -7,10 +7,10 @@
 [P01 Arcade Visual Polish](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md)
 
 ## Active Task
-[T02 Player Animation State Machine](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T02-player-animation-state-machine.md)
+[T03 Attached Jetpack VFX](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T03-attached-jetpack-vfx.md)
 
 ## Status
-- T01 구현·검증 완료
+- T01~T02 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T02 청사진을 읽고 `PlayerAnimationController`, `BootScene.createPlayerAnimations`, `PlayerEntity`, `RunScene.update`를 7개 명시적 상태 row와 실제 motion 전환에 연결
+T03 청사진을 읽고 `JetpackAttachment` 내부에 가방/로켓 폼·로컬 불꽃·bounded spark emitter를 연결하고 부스터 상태별 visibility를 검증

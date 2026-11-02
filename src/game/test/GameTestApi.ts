@@ -1,4 +1,5 @@
 import type { RunState } from '../state/GameState';
+import type { PlayerAnimation } from '../../features/player/playerTypes';
 
 export interface BoosterTestSnapshot {
   active: boolean;
@@ -20,6 +21,8 @@ export interface GameTestApi {
   forceCrash: () => void;
   getPlayerVisualSnapshot?: () => {
     collisionBounds: { x: number; y: number; width: number; height: number };
+    animation: PlayerAnimation;
+    spriteFrame: number;
     renderRootCount: number;
     playerChildCount: number;
     jetpackAttachmentCount: number;

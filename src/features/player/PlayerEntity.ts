@@ -5,10 +5,12 @@ import { JetpackAttachment } from './JetpackAttachment';
 import type { BoosterFormMode } from './JetpackAttachment';
 import { PlayerAnimationController } from './playerAnimations';
 import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
-import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
+import type { PlayerAnimation, PlayerConfig, PlayerMotionVisualInput, PlayerVisualState } from './playerTypes';
 
 export interface PlayerVisualDebugSnapshot {
   collisionBounds: { x: number; y: number; width: number; height: number };
+  animation: PlayerAnimation;
+  spriteFrame: number;
   renderRootCount: number;
   playerChildCount: number;
   jetpackAttachmentCount: number;
@@ -66,6 +68,15 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.applyGray(visual.gray);
   }
 
+  public updateMotionAnimation(input: PlayerMotionVisualInput): void {
+    const animation = this.controller.updateMotion(input);
+    this.applyAnimation(animation);
+    const visual = this.controller.snapshot();
+    this.jetpack.setBoosting(visual.boosting && !visual.gray);
+    this.jetpack.setGray(visual.gray);
+    this.applyGray(visual.gray);
+  }
+
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
 
   public getVisualDebugSnapshot(): PlayerVisualDebugSnapshot {
@@ -73,6 +84,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     const booster = this.jetpack.getVisualSnapshot();
     return {
       collisionBounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height },
+      animation: this.controller.snapshot().animation,
+      spriteFrame: Number(this.sprite.frame.name),
       renderRootCount: this.scene.children.getAll().filter((child) => child === this).length,
       playerChildCount: this.list.length,
       jetpackAttachmentCount: 1,
@@ -101,7 +114,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   public async crash(): Promise<void> {
     if (this.crashStarted || !this.controller.beginCrash()) return;
     this.crashStarted = true;
-    this.applyAnimation('crashing');
+    this.applyAnimation('hit');
     this.jetpack.setBoosting(false);
     await new Promise<void>((resolve) => {
       this.scene.tweens.add({
@@ -114,7 +127,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       });
     });
     this.controller.finishCrash();
-    this.setAnimation('fallen');
+    this.setAnimation('dead');
   }
 
   public reset(): void {

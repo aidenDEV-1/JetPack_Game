@@ -13,6 +13,7 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
   expect(outbound?.playerX ?? 0).toBeGreaterThan(220);
   const boosterVisual = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.());
   expect(boosterVisual).toMatchObject({
+    animation: expect.not.stringMatching(/^running$/),
     renderRootCount: 1,
     playerChildCount: 2,
     jetpackAttachmentCount: 1,

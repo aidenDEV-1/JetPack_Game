@@ -86,7 +86,12 @@ export class RunScene extends Phaser.Scene {
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
     this.player.setBoosting(flight.active);
-    this.player.setAnimation(flight.active ? 'boosting' : motion.grounded ? 'running' : this.keyboard.isThrusting() ? 'flying' : 'falling');
+    this.player.updateMotionAnimation({
+      grounded: motion.grounded,
+      thrusting: this.keyboard.isThrusting(),
+      boosterActive: flight.active,
+      deltaMs: delta,
+    });
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
     this.collectibleField.update(delta, this.runState.snapshot().distanceMeters, worldSpeed, this.player.getCollisionBounds());
     this.obstacleField.update(

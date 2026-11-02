@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import type { GameBridge } from '../PhaserGame';
 import { assetRegistry } from '../../services/assetRegistry';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
+import { PLAYER_ANIMATION_RANGES } from '../../features/player/playerAssetConfig';
+import type { PlayerAnimation } from '../../features/player/playerTypes';
 
 export class BootScene extends Phaser.Scene {
   private readonly bridge: GameBridge;
@@ -66,30 +68,16 @@ export class BootScene extends Phaser.Scene {
   }
 
   private createPlayerAnimations(): void {
-    const rows = [
-      { key: 'player-running', start: 0, frameRate: 10, repeat: -1 },
-      { key: 'player-flying', start: 4, frameRate: 11, repeat: -1 },
-      { key: 'player-falling', start: 8, frameRate: 10, repeat: -1 },
-      { key: 'player-boosting', start: 12, frameRate: 16, repeat: -1 },
-      { key: 'player-crashing', start: 16, frameRate: 8, repeat: 0 },
-    ];
-    rows.forEach(({ key, start, frameRate, repeat }) => {
+    (Object.entries(PLAYER_ANIMATION_RANGES) as Array<[PlayerAnimation, (typeof PLAYER_ANIMATION_RANGES)[PlayerAnimation]]>).forEach(([animation, range]) => {
+      const key = `player-${animation}`;
       if (this.anims.exists(key)) return;
       this.anims.create({
         key,
-        frames: this.anims.generateFrameNumbers(gameAssetKeys.playerSheet, { start, end: start + 3 }),
-        frameRate,
-        repeat,
+        frames: this.anims.generateFrameNumbers(gameAssetKeys.playerSheet, { start: range.start, end: range.end }),
+        frameRate: range.frameRate,
+        repeat: range.repeat,
       });
     });
-    if (!this.anims.exists('player-fallen')) {
-      this.anims.create({
-        key: 'player-fallen',
-        frames: [{ key: gameAssetKeys.playerSheet, frame: 20 }],
-        frameRate: 1,
-        repeat: 0,
-      });
-    }
   }
 
   private readonly handleLoadError = (file: Phaser.Loader.File): void => {
