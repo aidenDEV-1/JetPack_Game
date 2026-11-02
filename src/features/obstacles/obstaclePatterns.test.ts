@@ -32,6 +32,18 @@ describe('obstacle patterns', () => {
   it('requires a playable vertical gap for ordinary patterns', () => {
     expect(isReachablePattern([{ startY: 100, endY: 180 }])).toBe(false);
     expect(isReachablePattern([{ startY: 250, endY: 400 }])).toBe(true);
-    expect(obstaclePatterns.filter((pattern) => pattern.warningArrow).map((pattern) => pattern.kind)).toEqual(['missile']);
+    expect(obstaclePatterns.filter((pattern) => pattern.warningArrow).map((pattern) => pattern.id)).toEqual([
+      'vertical-laser-full',
+      'horizontal-laser-full',
+      'missile',
+    ]);
+  });
+
+  it('defines full, fixed, or random spans for every laser pattern', () => {
+    obstaclePatterns.filter((pattern) => pattern.kind.includes('laser')).forEach((pattern) => {
+      expect(pattern.laserSpan).toBeDefined();
+      expect(pattern.laserVisual?.glowWidth).toBeGreaterThan(pattern.laserVisual?.beamWidth ?? 0);
+      expect(pattern.laserVisual?.beamWidth).toBeGreaterThanOrEqual(pattern.laserVisual?.coreWidth ?? 0);
+    });
   });
 });

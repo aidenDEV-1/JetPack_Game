@@ -1,6 +1,6 @@
 # Task: T03 Laser Span and Hazard Visual Redesign
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -189,6 +189,6 @@ Task: T03-laser-span-and-hazard-visual-redesign
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

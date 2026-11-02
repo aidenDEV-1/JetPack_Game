@@ -4,6 +4,7 @@ import { resolveObstacleCollision, type CollisionOutcome } from './CollisionReso
 import { obstaclePatterns } from './obstaclePatterns';
 import { ObstacleEntity } from './ObstacleEntity';
 import { ObstacleSpawner } from './ObstacleSpawner';
+import { resolveLaserGeometry } from './laserSpanResolver';
 import type { SpawnContext } from './obstacleTypes';
 
 export interface ObstacleFieldEvents {
@@ -90,6 +91,16 @@ export class ObstacleField {
     this.obstacles.push(new ObstacleEntity(this.scene, obstaclePatterns.find((pattern) => pattern.kind === 'missile')!, GAME_CONFIG.width + 80, GAME_CONFIG.floorY - 55));
   }
 
+  public spawnDemoLaser(patternId: string): void {
+    const pattern = obstaclePatterns.find((candidate) => candidate.id === patternId && candidate.laserSpan);
+    if (!pattern) return;
+    const geometry = resolveLaserGeometry(pattern.laserSpan!, GAME_CONFIG, () => 0.5);
+    const y = pattern.laserSpan?.orientation === 'vertical'
+      ? (GAME_CONFIG.ceilingY + GAME_CONFIG.floorY) / 2
+      : GAME_CONFIG.floorY - 180;
+    this.obstacles.push(new ObstacleEntity(this.scene, pattern, GAME_CONFIG.width + 100, y, geometry));
+  }
+
   public clearDemoObstacles(): void {
     this.obstacles.forEach((obstacle) => obstacle.destroy());
     this.obstacles.length = 0;
@@ -102,7 +113,10 @@ export class ObstacleField {
     const y = pattern.id === 'forced-crossfire'
       ? GAME_CONFIG.floorY - 330
       : GAME_CONFIG.ceilingY + 55 + this.random() * (GAME_CONFIG.floorY - GAME_CONFIG.ceilingY - 110);
-    this.obstacles.push(new ObstacleEntity(this.scene, pattern, GAME_CONFIG.width + 100, y));
+    const laserGeometry = pattern.laserSpan
+      ? resolveLaserGeometry(pattern.laserSpan, GAME_CONFIG, this.random)
+      : undefined;
+    this.obstacles.push(new ObstacleEntity(this.scene, pattern, GAME_CONFIG.width + 100, y, laserGeometry));
   }
 }
 

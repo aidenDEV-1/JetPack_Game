@@ -13,6 +13,7 @@ export interface GameTestApi {
   spawnDemoItems: () => void;
   spawnDemoObstacle: () => void;
   spawnDemoWarningObstacle?: () => void;
+  spawnDemoLaser?: (patternId: string) => void;
   clearDemoObstacles?: () => void;
   activateBooster: () => void;
   deactivateBooster: () => void;
@@ -31,8 +32,13 @@ export interface GameTestApi {
   getObstacleVisualSnapshot?: () => Array<{
     kind: string;
     x: number;
+    orientation?: 'vertical' | 'horizontal';
+    spanMode?: 'full' | 'fixed' | 'random';
+    resolvedLength?: number;
+    collisionLength?: number;
     displayWidth: number;
     displayHeight: number;
+    collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
     warning: { visible: boolean; x: number; y: number; alpha: number; label: '← 위험' };
   }>;
   getBoosterSnapshot?: () => BoosterTestSnapshot;

@@ -17,6 +17,7 @@ export const gameAssetKeys = {
   boosterFormsSheet: 'booster-forms-spritesheet',
   itemsSheet: 'items-spritesheet',
   obstaclesSheet: 'obstacles-spritesheet',
+  laserEmitter: 'laser-emitter',
   backgrounds: Object.fromEntries(
     backgroundScenes.map((scene) => [scene, Object.fromEntries(backgroundLayers.map((layer) => [layer, `background-${scene}-${layer}`]))]),
   ) as Record<(typeof backgroundScenes)[number], Record<(typeof backgroundLayers)[number], string>>,
@@ -60,6 +61,11 @@ export const gameAssetDefinitions: AssetDefinition[] = [
     frameWidth: 512,
     frameHeight: 512,
     frameCount: 6,
+  },
+  {
+    key: gameAssetKeys.laserEmitter,
+    path: '/assets/obstacles/laser-emitter.png',
+    kind: 'image',
   },
   ...backgroundDefinitions,
 ];

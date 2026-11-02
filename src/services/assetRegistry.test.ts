@@ -9,6 +9,7 @@ const requiredKeys = [
   gameAssetKeys.boosterFormsSheet,
   gameAssetKeys.itemsSheet,
   gameAssetKeys.obstaclesSheet,
+  gameAssetKeys.laserEmitter,
   ...Object.values(gameAssetKeys.backgrounds).flatMap((scene) => Object.values(scene)),
 ];
 

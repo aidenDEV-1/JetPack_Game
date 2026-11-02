@@ -147,6 +147,7 @@ export class RunScene extends Phaser.Scene {
   public spawnDemoItems(): void { this.collectibleField.spawnDemoItems(); }
   public spawnDemoObstacle(): void { this.obstacleField.spawnDemoObstacle(); }
   public spawnDemoWarningObstacle(): void { this.obstacleField.spawnDemoWarningObstacle(); }
+  public spawnDemoLaser(patternId: string): void { this.obstacleField.spawnDemoLaser(patternId); }
   public clearDemoObstacles(): void { this.obstacleField.clearDemoObstacles(); }
   public activateDemoBooster(): void {
     this.boosterController.activate();
@@ -224,6 +225,7 @@ export class RunScene extends Phaser.Scene {
       spawnDemoItems: () => this.spawnDemoItems(),
       spawnDemoObstacle: () => this.spawnDemoObstacle(),
       spawnDemoWarningObstacle: () => this.spawnDemoWarningObstacle(),
+      spawnDemoLaser: (patternId: string) => this.spawnDemoLaser(patternId),
       clearDemoObstacles: () => this.clearDemoObstacles(),
       activateBooster: () => this.activateDemoBooster(),
       deactivateBooster: () => this.deactivateDemoBooster(),

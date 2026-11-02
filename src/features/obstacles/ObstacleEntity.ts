@@ -1,19 +1,22 @@
 import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
-import type { ObstaclePattern } from './obstacleTypes';
+import type { ObstaclePattern, ResolvedLaserGeometry } from './obstacleTypes';
+import { LaserHazardVisual } from './LaserHazardVisual';
 import { ObstacleWarningIndicator, type ObstacleWarningSnapshot } from './ObstacleWarningIndicator';
 
-const OBSTACLE_FRAMES = { laser: 3, missile: 4, monster: 5 } as const;
+const OBSTACLE_FRAMES = { missile: 4, monster: 5 } as const;
 
 export class ObstacleEntity extends Phaser.GameObjects.Container {
   public readonly pattern: ObstaclePattern;
   private readonly hazard: Phaser.GameObjects.GameObject;
   private readonly warningIndicator?: ObstacleWarningIndicator;
   private readonly hitboxes: Phaser.Geom.Rectangle[];
+  private readonly laserGeometry?: ResolvedLaserGeometry;
 
-  public constructor(scene: Phaser.Scene, pattern: ObstaclePattern, x: number, y: number) {
+  public constructor(scene: Phaser.Scene, pattern: ObstaclePattern, x: number, y: number, laserGeometry?: ResolvedLaserGeometry) {
     super(scene, x, y);
     this.pattern = pattern;
+    this.laserGeometry = laserGeometry;
     scene.add.existing(this);
     this.hazard = this.createHazard(scene, pattern);
     this.add(this.hazard);
@@ -44,15 +47,26 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   public getVisualDebugSnapshot(): {
     kind: string;
     x: number;
+    orientation?: 'vertical' | 'horizontal';
+    spanMode?: 'full' | 'fixed' | 'random';
+    resolvedLength?: number;
+    collisionLength?: number;
     displayWidth: number;
     displayHeight: number;
+    collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
     warning: ObstacleWarningSnapshot;
   } {
+    const dimensions = this.getDisplayDimensions();
     return {
       kind: this.pattern.kind,
       x: this.x,
-      displayWidth: this.pattern.displayWidth,
-      displayHeight: this.pattern.displayHeight,
+      orientation: this.laserGeometry?.orientation,
+      spanMode: this.pattern.laserSpan?.mode,
+      resolvedLength: this.laserGeometry?.length,
+      collisionLength: this.laserGeometry?.collisionLength,
+      displayWidth: dimensions.width,
+      displayHeight: dimensions.height,
+      collisionBounds: this.hitboxes.map((bounds) => ({ x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height })),
       warning: this.warningIndicator?.snapshot() ?? { visible: false, x: 0, y: 0, alpha: 0, label: '← 위험' },
     };
   }
@@ -63,50 +77,73 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   }
 
   private createHazard(scene: Phaser.Scene, pattern: ObstaclePattern): Phaser.GameObjects.GameObject {
-    if (pattern.id === 'forced-crossfire') {
-      const crossfire = scene.add.container(0, 0);
-      [-pattern.height * 0.28, pattern.height * 0.28].forEach((offsetY) => {
-        const laser = scene.add.sprite(0, offsetY, gameAssetKeys.obstaclesSheet, OBSTACLE_FRAMES.laser)
-          .setDisplaySize(pattern.displayWidth, 30)
-          .setTint(pattern.accentColor)
-          .setAngle(90)
-          .setAlpha(0.95);
-        crossfire.add(laser);
+    if (this.laserGeometry && pattern.laserVisual) {
+      if (pattern.id === 'forced-crossfire') {
+        const crossfire = new Phaser.GameObjects.Container(scene, 0, 0);
+        [-pattern.height * 0.28, pattern.height * 0.28].forEach((offsetY) => {
+          const laser = new LaserHazardVisual(scene, {
+            geometry: this.laserGeometry!,
+            visual: pattern.laserVisual!,
+            emitterTextureKey: gameAssetKeys.laserEmitter,
+          });
+          laser.setPosition(0, offsetY);
+          crossfire.add(laser);
+        });
+        return crossfire;
+      }
+      return new LaserHazardVisual(scene, {
+        geometry: this.laserGeometry,
+        visual: pattern.laserVisual,
+        emitterTextureKey: gameAssetKeys.laserEmitter,
       });
-      return crossfire;
     }
-    switch (pattern.kind) {
-      case 'vertical-laser':
-        return scene.add.sprite(0, 0, gameAssetKeys.obstaclesSheet, OBSTACLE_FRAMES.laser)
-          .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
-          .setTint(pattern.accentColor);
-      case 'horizontal-laser':
-        return scene.add.sprite(0, 0, gameAssetKeys.obstaclesSheet, OBSTACLE_FRAMES.laser)
-          .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
-          .setTint(pattern.accentColor)
-          .setAngle(90);
-      case 'missile':
-        return scene.add.sprite(0, 0, gameAssetKeys.obstaclesSheet, OBSTACLE_FRAMES.missile)
-          .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
-          .setTint(pattern.accentColor);
-      case 'monster':
-        return scene.add.sprite(0, 0, gameAssetKeys.obstaclesSheet, OBSTACLE_FRAMES.monster)
-          .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
-          .setTint(pattern.accentColor);
-    }
+    return this.createSpriteHazard(scene, pattern);
+  }
+
+  private createSpriteHazard(scene: Phaser.Scene, pattern: ObstaclePattern): Phaser.GameObjects.Container {
+    const container = new Phaser.GameObjects.Container(scene, 0, 0);
+    const glow = new Phaser.GameObjects.Graphics(scene);
+    glow.fillStyle(pattern.warningColor, 0.18);
+    if (pattern.kind === 'monster') glow.fillCircle(0, 0, pattern.displayWidth * 0.58);
+    else glow.fillRoundedRect(-pattern.displayWidth / 2 - 10, -pattern.displayHeight / 2 - 10, pattern.displayWidth + 20, pattern.displayHeight + 20, 16);
+    container.add(glow);
+    const sprite = scene.make.sprite({
+      key: gameAssetKeys.obstaclesSheet,
+      frame: pattern.kind === 'missile' ? OBSTACLE_FRAMES.missile : OBSTACLE_FRAMES.monster,
+      add: false,
+    })
+      .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
+      .setTint(pattern.accentColor);
+    container.add(sprite);
+    return container;
   }
 
   private createHitboxes(pattern: ObstaclePattern): Phaser.Geom.Rectangle[] {
-    if (pattern.id === 'forced-crossfire') {
-      const offsetY = pattern.height * 0.28;
-      return [
-        new Phaser.Geom.Rectangle(-pattern.width / 2, -offsetY - 15, pattern.width, 30),
-        new Phaser.Geom.Rectangle(-pattern.width / 2, offsetY - 15, pattern.width, 30),
-      ];
+    if (this.laserGeometry && pattern.laserVisual) {
+      const beamWidth = pattern.laserVisual.beamWidth;
+      if (pattern.id === 'forced-crossfire') {
+        const offsetY = pattern.height * 0.28;
+        return [
+          new Phaser.Geom.Rectangle(this.laserGeometry.start, -offsetY - beamWidth / 2, this.laserGeometry.collisionLength, beamWidth),
+          new Phaser.Geom.Rectangle(this.laserGeometry.start, offsetY - beamWidth / 2, this.laserGeometry.collisionLength, beamWidth),
+        ];
+      }
+      if (this.laserGeometry.orientation === 'vertical') {
+        return [new Phaser.Geom.Rectangle(-beamWidth / 2, this.laserGeometry.start, beamWidth, this.laserGeometry.collisionLength)];
+      }
+      return [new Phaser.Geom.Rectangle(this.laserGeometry.start, -beamWidth / 2, this.laserGeometry.collisionLength, beamWidth)];
     }
     const insetX = pattern.width * 0.12;
     const insetY = pattern.height * 0.12;
     return [new Phaser.Geom.Rectangle(-pattern.width / 2 + insetX, -pattern.height / 2 + insetY, pattern.width - insetX * 2, pattern.height - insetY * 2)];
   }
-}
 
+  private getDisplayDimensions(): { width: number; height: number } {
+    if (!this.laserGeometry || !this.pattern.laserVisual) return { width: this.pattern.displayWidth, height: this.pattern.displayHeight };
+    const span = this.laserGeometry.length + (this.laserGeometry.orientation === 'vertical' ? this.pattern.laserVisual.emitterHeight : this.pattern.laserVisual.emitterWidth);
+    const thickness = Math.max(this.pattern.laserVisual.glowWidth, this.pattern.laserVisual.emitterWidth, this.pattern.laserVisual.emitterHeight);
+    return this.laserGeometry.orientation === 'vertical'
+      ? { width: thickness, height: span }
+      : { width: span, height: thickness };
+  }
+}
