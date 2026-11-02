@@ -7,6 +7,7 @@ import { assetRegistry } from './assetRegistry';
 const requiredKeys = [
   gameAssetKeys.playerSheet,
   gameAssetKeys.boosterFormsSheet,
+  gameAssetKeys.jetpackFlameSheet,
   gameAssetKeys.itemsSheet,
   gameAssetKeys.obstaclesSheet,
   gameAssetKeys.laserEmitter,

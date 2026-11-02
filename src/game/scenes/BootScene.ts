@@ -78,6 +78,14 @@ export class BootScene extends Phaser.Scene {
         repeat: range.repeat,
       });
     });
+    if (!this.anims.exists('player-jetpack-flame')) {
+      this.anims.create({
+        key: 'player-jetpack-flame',
+        frames: this.anims.generateFrameNumbers('jetpack-flame-spritesheet', { start: 0, end: 3 }),
+        frameRate: 18,
+        repeat: -1,
+      });
+    }
   }
 
   private readonly handleLoadError = (file: Phaser.Loader.File): void => {

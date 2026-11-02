@@ -20,6 +20,9 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
     hasDebugBounds: false,
     hasPersistentTrail: false,
     flameVisible: true,
+    jetpackActivity: 'boosting',
+    flameParent: 'jetpack-attachment',
+    sparkEmitterCount: 12,
     boosterStyleId: 'leather-rocket',
     rocketFormVisible: true,
     rocketFormParent: 'player-entity',
@@ -34,6 +37,9 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
   expect(returned).toMatchObject({ active: false, playerX: 220 });
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().rocketFormVisible)).toBe(false);
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().boosterMode)).toBe('normal');
+  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.().flameVisible)).toBe(false);
+  const resetVisual = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getPlayerVisualSnapshot?.());
+  expect(resetVisual).toMatchObject({ flameParent: 'jetpack-attachment', sparkEmitterCount: 12, hasPersistentTrail: false });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.activateBooster?.());
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.().active)).toBe(true);
 });

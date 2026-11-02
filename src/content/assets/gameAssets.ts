@@ -15,6 +15,7 @@ const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> =
 export const gameAssetKeys = {
   playerSheet: 'player-spritesheet',
   boosterFormsSheet: 'booster-forms-spritesheet',
+  jetpackFlameSheet: 'jetpack-flame-spritesheet',
   itemsSheet: 'items-spritesheet',
   obstaclesSheet: 'obstacles-spritesheet',
   laserEmitter: 'laser-emitter',
@@ -44,6 +45,14 @@ export const gameAssetDefinitions: AssetDefinition[] = [
     kind: 'spritesheet',
     frameWidth: 384,
     frameHeight: 170,
+    frameCount: 4,
+  },
+  {
+    key: gameAssetKeys.jetpackFlameSheet,
+    path: '/assets/player/jetpack-flame-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 128,
+    frameHeight: 128,
     frameCount: 4,
   },
   {

@@ -1,5 +1,6 @@
 import type { RunState } from '../state/GameState';
 import type { PlayerAnimation } from '../../features/player/playerTypes';
+import type { JetpackActivity } from '../../features/player/JetpackAttachment';
 
 export interface BoosterTestSnapshot {
   active: boolean;
@@ -29,10 +30,13 @@ export interface GameTestApi {
     hasDebugBounds: boolean;
     hasPersistentTrail: boolean;
     flameVisible: boolean;
+    jetpackActivity: JetpackActivity;
     boosterStyleId: string;
     boosterMode: string;
     rocketFormVisible: boolean;
     rocketFormParent: 'player-entity';
+    flameParent: 'jetpack-attachment';
+    sparkEmitterCount: number;
     hasDetachedBoosterRoot: false;
     bodyTextureKey: string;
   };

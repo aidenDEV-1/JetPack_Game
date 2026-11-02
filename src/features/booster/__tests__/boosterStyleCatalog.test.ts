@@ -14,6 +14,10 @@ describe('booster style catalog', () => {
       frameCount: 4,
       coinPrice: 0,
       defaultUnlocked: true,
+      vfx: {
+        flame: { x: -92, y: 4 },
+        sparks: { x: -96, y: 4 },
+      },
     });
   });
 

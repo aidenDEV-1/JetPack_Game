@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
 import { DEFAULT_BOOSTER_STYLE_ID, getBoosterStyle } from '../booster/boosterStyleCatalog';
 import { JetpackAttachment } from './JetpackAttachment';
-import type { BoosterFormMode } from './JetpackAttachment';
+import type { BoosterFormMode, JetpackActivity } from './JetpackAttachment';
 import { PlayerAnimationController } from './playerAnimations';
 import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerMotionVisualInput, PlayerVisualState } from './playerTypes';
@@ -19,8 +19,11 @@ export interface PlayerVisualDebugSnapshot {
   flameVisible: boolean;
   boosterStyleId: string;
   boosterMode: BoosterFormMode;
+  jetpackActivity: JetpackActivity;
   rocketFormVisible: boolean;
   rocketFormParent: 'player-entity';
+  flameParent: 'jetpack-attachment';
+  sparkEmitterCount: number;
   hasDetachedBoosterRoot: false;
   bodyTextureKey: string;
 }
@@ -54,27 +57,21 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.controller.setAnimation(state);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.jetpack.setBoosting(visual.boosting && !visual.gray);
-    this.jetpack.setGray(visual.gray);
-    this.applyGray(visual.gray);
+    this.applyVisualState(visual);
   }
 
   public setBoosting(value: boolean): void {
     this.controller.setBoosting(value);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.jetpack.setBoosting(visual.boosting && !visual.gray);
-    this.jetpack.setGray(visual.gray);
-    this.applyGray(visual.gray);
+    this.applyVisualState(visual);
   }
 
   public updateMotionAnimation(input: PlayerMotionVisualInput): void {
     const animation = this.controller.updateMotion(input);
     this.applyAnimation(animation);
     const visual = this.controller.snapshot();
-    this.jetpack.setBoosting(visual.boosting && !visual.gray);
-    this.jetpack.setGray(visual.gray);
-    this.applyGray(visual.gray);
+    this.applyVisualState(visual);
   }
 
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
@@ -91,11 +88,14 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       jetpackAttachmentCount: 1,
       hasDebugBounds: false,
       hasPersistentTrail: false,
-      flameVisible: booster.rocketFormVisible,
+      flameVisible: booster.flameVisible,
       boosterStyleId: booster.styleId,
       boosterMode: booster.mode,
+      jetpackActivity: booster.activity,
       rocketFormVisible: booster.rocketFormVisible,
       rocketFormParent: booster.rocketFormParent,
+      flameParent: booster.flameParent,
+      sparkEmitterCount: booster.sparkEmitterCount,
       hasDetachedBoosterRoot: booster.hasDetachedBoosterRoot,
       bodyTextureKey: this.sprite.texture.key,
     };
@@ -152,6 +152,21 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   private applyGray(gray: boolean): void {
     this.sprite.setTint(gray ? 0x7e8791 : 0xffffff);
     this.jetpack.setGray(gray);
+  }
+
+  private applyVisualState(visual: PlayerVisualState): void {
+    const activity: JetpackActivity = visual.gray || visual.animation === 'dead' || visual.animation === 'hit'
+      ? 'off'
+      : visual.boosting
+        ? 'boosting'
+        : visual.animation === 'takeoff'
+          ? 'takeoff'
+          : visual.animation === 'flying'
+            ? 'flying'
+            : 'off';
+    this.jetpack.setActivity(activity);
+    this.jetpack.setGray(visual.gray);
+    this.applyGray(visual.gray);
   }
 }
 

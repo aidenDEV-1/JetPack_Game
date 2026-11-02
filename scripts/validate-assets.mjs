@@ -8,6 +8,7 @@ const requiredDirectories = ['player', 'items', 'obstacles', 'backgrounds', 'ui'
 const requiredFiles = [
   'player/player-spritesheet.png',
   'player/booster-forms-spritesheet.png',
+  'player/jetpack-flame-spritesheet.png',
   'items/items-spritesheet.png',
   'obstacles/obstacles-spritesheet.png',
   'obstacles/laser-emitter.png',

@@ -7,10 +7,10 @@
 [P01 Arcade Visual Polish](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md)
 
 ## Active Task
-[T03 Attached Jetpack VFX](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T03-attached-jetpack-vfx.md)
+[T04 Mechanical Laser Redesign](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T04-mechanical-laser-redesign.md)
 
 ## Status
-- T01~T02 구현·검증 완료
+- T01~T03 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T03 청사진을 읽고 `JetpackAttachment` 내부에 가방/로켓 폼·로컬 불꽃·bounded spark emitter를 연결하고 부스터 상태별 visibility를 검증
+T04 청사진을 읽고 `LaserHazardVisual`·`ObstacleEntity`·`ObstacleField`에 기계식 레이저 emitter, 충전/활성 상태, 수직·수평 span과 실제 충돌 footprint를 연결

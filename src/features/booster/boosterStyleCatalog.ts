@@ -14,6 +14,10 @@ export const boosterStyleCatalog: readonly BoosterStyleDefinition[] = [
     frameCount: 4,
     frameStart: 0,
     anchor: PLAYER_JETPACK_ANCHOR,
+    vfx: {
+      flame: { x: -92, y: 4 },
+      sparks: { x: -96, y: 4 },
+    },
     scaleX: 0.5,
     scaleY: 0.5,
     coinPrice: 0,
