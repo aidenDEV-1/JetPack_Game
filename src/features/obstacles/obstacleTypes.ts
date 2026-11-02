@@ -1,4 +1,13 @@
 export type ObstacleKind = 'vertical-laser' | 'horizontal-laser' | 'missile' | 'monster';
+export type ObstacleVisualId = 'security-drone' | 'electro-drone' | 'missile' | 'rotor';
+export type ObstacleMotionType = 'straight' | 'hover' | 'sway' | 'spin';
+
+export interface ObstacleMotionSpec {
+  type: ObstacleMotionType;
+  amplitudePx: number;
+  periodMs: number;
+  rotationDegPerSecond: number;
+}
 
 export type LaserOrientation = 'vertical' | 'horizontal';
 export type LaserSpanMode = 'full' | 'fixed' | 'random';
@@ -41,6 +50,8 @@ export interface ResolvedLaserGeometry {
 export interface ObstaclePattern {
   id: string;
   kind: ObstacleKind;
+  visualId: ObstacleVisualId;
+  motion: ObstacleMotionSpec;
   requiresShield: boolean;
   warningArrow: boolean;
   width: number;

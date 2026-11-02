@@ -1,5 +1,10 @@
 import type { LaserVisualSpec, ObstaclePattern, PlayableGap } from './obstacleTypes';
 
+const STRAIGHT: ObstaclePattern['motion'] = { type: 'straight', amplitudePx: 0, periodMs: 1, rotationDegPerSecond: 0 };
+const SECURITY_HOVER: ObstaclePattern['motion'] = { type: 'hover', amplitudePx: 8, periodMs: 1650, rotationDegPerSecond: 0 };
+const ELECTRO_SWAY: ObstaclePattern['motion'] = { type: 'sway', amplitudePx: 12, periodMs: 1200, rotationDegPerSecond: 0 };
+const ROTOR_SPIN: ObstaclePattern['motion'] = { type: 'spin', amplitudePx: 5, periodMs: 1300, rotationDegPerSecond: 145 };
+
 const RED_LASER: LaserVisualSpec = {
   beamWidth: 14,
   coreWidth: 3,
@@ -28,6 +33,8 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'vertical-laser',
     kind: 'vertical-laser',
+    visualId: 'security-drone',
+    motion: STRAIGHT,
     requiresShield: false,
     warningArrow: false,
     width: 42,
@@ -42,6 +49,8 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'vertical-laser-full',
     kind: 'vertical-laser',
+    visualId: 'security-drone',
+    motion: STRAIGHT,
     requiresShield: false,
     warningArrow: true,
     width: 42,
@@ -56,6 +65,8 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'horizontal-laser',
     kind: 'horizontal-laser',
+    visualId: 'security-drone',
+    motion: STRAIGHT,
     requiresShield: false,
     warningArrow: false,
     width: 360,
@@ -70,6 +81,8 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'horizontal-laser-full',
     kind: 'horizontal-laser',
+    visualId: 'security-drone',
+    motion: STRAIGHT,
     requiresShield: false,
     warningArrow: true,
     width: 1280,
@@ -84,6 +97,8 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'missile',
     kind: 'missile',
+    visualId: 'missile',
+    motion: STRAIGHT,
     requiresShield: false,
     warningArrow: true,
     width: 90,
@@ -96,18 +111,50 @@ export const obstaclePatterns: ObstaclePattern[] = [
   {
     id: 'monster',
     kind: 'monster',
+    visualId: 'security-drone',
+    motion: SECURITY_HOVER,
     requiresShield: false,
     warningArrow: false,
     width: 72,
     height: 72,
     displayWidth: 112,
     displayHeight: 112,
-    accentColor: 0xffd43f8f,
-    warningColor: 0xffff5a5f,
+    accentColor: 0xff3bcef5,
+    warningColor: 0xffffc857,
+  },
+  {
+    id: 'electro-drone',
+    kind: 'monster',
+    visualId: 'electro-drone',
+    motion: ELECTRO_SWAY,
+    requiresShield: false,
+    warningArrow: true,
+    width: 82,
+    height: 82,
+    displayWidth: 124,
+    displayHeight: 124,
+    accentColor: 0xff26d9f5,
+    warningColor: 0xffffc857,
+  },
+  {
+    id: 'rotor',
+    kind: 'monster',
+    visualId: 'rotor',
+    motion: ROTOR_SPIN,
+    requiresShield: false,
+    warningArrow: true,
+    width: 78,
+    height: 78,
+    displayWidth: 128,
+    displayHeight: 128,
+    accentColor: 0xff38e8ff,
+    warningColor: 0xffffc857,
   },
   {
     id: 'forced-crossfire',
     kind: 'horizontal-laser',
+    visualId: 'security-drone',
+    motion: STRAIGHT,
     requiresShield: true,
     warningArrow: false,
     width: 360,

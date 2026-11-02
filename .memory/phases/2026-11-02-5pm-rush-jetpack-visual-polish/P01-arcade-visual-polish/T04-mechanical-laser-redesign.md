@@ -122,4 +122,4 @@ Task: T04-mechanical-laser-redesign
 
 - [x] 구현 완료
 - [x] 검증 통과
-- commit: `pending` (이번 단계에서 생성)
+- commit: `dea2448`

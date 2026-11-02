@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ObstacleSpawner } from './ObstacleSpawner';
 import { obstaclePatterns, isReachablePattern } from './obstaclePatterns';
+import { obstacleVisualCatalog } from './obstacleVisualCatalog';
 
 describe('obstacle patterns', () => {
   it('keeps visible footprints larger than collision footprints with contrast colors', () => {
@@ -9,6 +10,8 @@ describe('obstacle patterns', () => {
       expect(pattern.displayHeight).toBeGreaterThanOrEqual(pattern.height);
       expect(pattern.accentColor).not.toBe(0);
       expect(pattern.warningColor).not.toBe(0);
+      expect(obstacleVisualCatalog[pattern.visualId]).toBeDefined();
+      expect(pattern.motion.periodMs).toBeGreaterThan(0);
     });
   });
 
@@ -36,6 +39,8 @@ describe('obstacle patterns', () => {
       'vertical-laser-full',
       'horizontal-laser-full',
       'missile',
+      'electro-drone',
+      'rotor',
     ]);
   });
 
@@ -49,5 +54,11 @@ describe('obstacle patterns', () => {
       expect(pattern.laserVisual?.glowWidth).toBeLessThanOrEqual(32);
       expect(pattern.laserVisual?.chargeDurationMs).toBeGreaterThan(0);
     });
+  });
+
+  it('uses the security visual catalog instead of a purple monster fallback', () => {
+    expect(obstaclePatterns.find((pattern) => pattern.id === 'monster')).toMatchObject({ visualId: 'security-drone', motion: { type: 'hover' } });
+    expect(obstaclePatterns.find((pattern) => pattern.id === 'electro-drone')).toMatchObject({ visualId: 'electro-drone', motion: { type: 'sway' } });
+    expect(obstaclePatterns.find((pattern) => pattern.id === 'rotor')).toMatchObject({ visualId: 'rotor', motion: { type: 'spin' } });
   });
 });

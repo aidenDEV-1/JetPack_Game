@@ -3,8 +3,7 @@ import { gameAssetKeys } from '../../content/assets/gameAssets';
 import type { ObstaclePattern, ResolvedLaserGeometry } from './obstacleTypes';
 import { LaserHazardVisual } from './LaserHazardVisual';
 import { ObstacleWarningIndicator, type ObstacleWarningSnapshot } from './ObstacleWarningIndicator';
-
-const OBSTACLE_FRAMES = { missile: 4, monster: 5 } as const;
+import { obstacleVisualCatalog } from './obstacleVisualCatalog';
 
 export class ObstacleEntity extends Phaser.GameObjects.Container {
   public readonly pattern: ObstaclePattern;
@@ -13,6 +12,9 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private readonly hitboxes: Phaser.Geom.Rectangle[];
   private readonly laserGeometry?: ResolvedLaserGeometry;
   private readonly laserVisuals: LaserHazardVisual[] = [];
+  private spriteVisual?: Phaser.GameObjects.Container;
+  private spriteCore?: Phaser.GameObjects.Graphics;
+  private motionElapsedMs = 0;
 
   public constructor(scene: Phaser.Scene, pattern: ObstaclePattern, x: number, y: number, laserGeometry?: ResolvedLaserGeometry) {
     super(scene, x, y);
@@ -38,8 +40,9 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   }
 
   public updateVisual(timeMs: number, viewportWidth: number): void {
-    if (!this.warningIndicator) return;
     this.laserVisuals.forEach((laser) => laser.update(timeMs));
+    this.updateSpriteMotion(timeMs);
+    if (!this.warningIndicator) return;
     if (this.x <= viewportWidth - 220) {
       this.warningIndicator.hide();
       return;
@@ -52,6 +55,8 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
 
   public getVisualDebugSnapshot(): {
     kind: string;
+    visualId: string;
+    motion: string;
     x: number;
     orientation?: 'vertical' | 'horizontal';
     spanMode?: 'full' | 'fixed' | 'random';
@@ -70,6 +75,8 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     const dimensions = this.getDisplayDimensions();
     return {
       kind: this.pattern.kind,
+      visualId: this.pattern.visualId,
+      motion: this.pattern.motion.type,
       x: this.x,
       orientation: this.laserGeometry?.orientation,
       spanMode: this.pattern.laserSpan?.mode,
@@ -122,19 +129,34 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private createSpriteHazard(scene: Phaser.Scene, pattern: ObstaclePattern): Phaser.GameObjects.Container {
     const container = new Phaser.GameObjects.Container(scene, 0, 0);
     const glow = new Phaser.GameObjects.Graphics(scene);
-    glow.fillStyle(pattern.warningColor, 0.18);
-    if (pattern.kind === 'monster') glow.fillCircle(0, 0, pattern.displayWidth * 0.58);
-    else glow.fillRoundedRect(-pattern.displayWidth / 2 - 10, -pattern.displayHeight / 2 - 10, pattern.displayWidth + 20, pattern.displayHeight + 20, 16);
+    glow.fillStyle(obstacleVisualCatalog[pattern.visualId].outlineColor, 0.14);
+    glow.fillCircle(0, 0, 18);
     container.add(glow);
+    this.spriteCore = new Phaser.GameObjects.Graphics(scene);
+    this.spriteCore.fillStyle(obstacleVisualCatalog[pattern.visualId].coreColor, 0.9);
+    this.spriteCore.fillCircle(0, 0, 7);
+    container.add(this.spriteCore);
     const sprite = scene.make.sprite({
       key: gameAssetKeys.obstaclesSheet,
-      frame: pattern.kind === 'missile' ? OBSTACLE_FRAMES.missile : OBSTACLE_FRAMES.monster,
+      frame: obstacleVisualCatalog[pattern.visualId].frame,
       add: false,
     })
       .setDisplaySize(pattern.displayWidth, pattern.displayHeight)
       .setTint(pattern.accentColor);
     container.add(sprite);
+    this.spriteVisual = container;
     return container;
+  }
+
+  private updateSpriteMotion(timeMs: number): void {
+    if (!this.spriteVisual) return;
+    this.motionElapsedMs = Math.max(this.motionElapsedMs, timeMs);
+    const motion = this.pattern.motion;
+    const phase = (this.motionElapsedMs / Math.max(1, motion.periodMs)) * Math.PI * 2;
+    const wave = Math.sin(phase) * motion.amplitudePx;
+    this.spriteVisual.setY(motion.type === 'hover' || motion.type === 'sway' || motion.type === 'spin' ? wave : 0);
+    this.spriteVisual.setAngle(motion.type === 'spin' ? (this.motionElapsedMs / 1000) * motion.rotationDegPerSecond : wave * 0.35);
+    this.spriteCore?.setAlpha(0.55 + (Math.sin(this.motionElapsedMs * 0.018) + 1) * 0.18);
   }
 
   private createHitboxes(pattern: ObstaclePattern): Phaser.Geom.Rectangle[] {

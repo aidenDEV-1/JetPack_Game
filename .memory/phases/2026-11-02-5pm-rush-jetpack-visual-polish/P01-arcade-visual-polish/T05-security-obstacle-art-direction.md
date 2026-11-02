@@ -1,6 +1,6 @@
 # Task: T05 Security Obstacle Art Direction
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -138,6 +138,6 @@ Task: T05-security-obstacle-art-direction
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: `pending` (이번 단계에서 생성)

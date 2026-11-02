@@ -49,6 +49,15 @@ describe('asset registry', () => {
     });
   });
 
+  it('keeps the obstacle sheet on the six-frame visual contract', () => {
+    expect(assetRegistry.find((asset) => asset.key === gameAssetKeys.obstaclesSheet)).toMatchObject({
+      kind: 'spritesheet',
+      frameWidth: 512,
+      frameHeight: 512,
+      frameCount: 6,
+    });
+  });
+
   it('does not contain original-photo-like files', () => {
     const files = getAssetFiles(resolve(process.cwd(), 'public/assets'));
     expect(files.some((file) => /(?:^|\/)(?:IMG_|photo|original|face)[^/]*$/i.test(file))).toBe(false);

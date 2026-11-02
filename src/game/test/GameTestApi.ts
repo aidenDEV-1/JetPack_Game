@@ -42,6 +42,8 @@ export interface GameTestApi {
   };
   getObstacleVisualSnapshot?: () => Array<{
     kind: string;
+    visualId: string;
+    motion: string;
     x: number;
     orientation?: 'vertical' | 'horizontal';
     spanMode?: 'full' | 'fixed' | 'random';

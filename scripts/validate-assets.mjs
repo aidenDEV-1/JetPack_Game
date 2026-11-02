@@ -20,6 +20,7 @@ const requiredFiles = [
 ];
 const requiredSpritesheetMetadata = {
   'player/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
+  'obstacles/obstacles-spritesheet.png': { width: 1536, height: 1024, frameWidth: 512, frameHeight: 512, frameCount: 6 },
 };
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
@@ -35,8 +36,11 @@ requiredFiles.forEach((file) => {
 
 Object.entries(requiredSpritesheetMetadata).forEach(([file, metadata]) => {
   if (!existsSync(resolve(assetRoot, file))) return;
-  if (metadata.width !== 1536 || metadata.height !== 1190 || metadata.frameWidth !== 384 || metadata.frameHeight !== 170 || metadata.frameCount !== 28) {
-    failures.push(`invalid player spritesheet contract: ${file}`);
+  const bytes = readFileSync(resolve(assetRoot, file));
+  const width = bytes.readUInt32BE(16);
+  const height = bytes.readUInt32BE(20);
+  if (width !== metadata.width || height !== metadata.height || metadata.frameWidth <= 0 || metadata.frameHeight <= 0 || metadata.frameCount <= 0) {
+    failures.push(`invalid spritesheet contract: ${file} (${width}x${height})`);
   }
 });
 
