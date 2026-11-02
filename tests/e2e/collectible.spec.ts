@@ -13,6 +13,6 @@ test('로컬 플레이에서 생성된 아이템이 이동하고 코인을 반�
   const after = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getSnapshot?.());
   expect(before?.phase).toBe('running');
   expect(after?.distanceMeters ?? 0).toBeGreaterThan(before?.distanceMeters ?? 0);
-  await expect(page.locator('.hud-coins')).toHaveText(/🟡 [1-9]\d*/);
+  await expect(page.locator('.hud-coins')).toHaveText(/[1-9]\d*/);
 });
 

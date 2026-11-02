@@ -120,4 +120,4 @@ Task: T06-arcade-hud-redesign
 
 - [x] 구현 완료
 - [x] 검증 통과
-- commit: `pending` (이번 단계에서 생성)
+- commit: `fcbc69d`

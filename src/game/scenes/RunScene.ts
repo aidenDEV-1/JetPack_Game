@@ -11,11 +11,10 @@ import { BackgroundController } from '../../features/background/BackgroundContro
 import { BoosterController } from '../../features/booster/BoosterController';
 import { CollectibleField } from '../../features/items/CollectibleField';
 import type { ItemKind } from '../../features/items/itemTypes';
-import { showItemPickupFeedback } from '../../features/items/ItemPickupFeedback';
 import { ObstacleField } from '../../features/obstacles/ObstacleField';
 import type { CollisionOutcome } from '../../features/obstacles/CollisionResolver';
 import { BoosterFlightController } from '../../features/booster/BoosterFlightController';
-import { showBoosterFeedback } from '../../features/booster/BoosterFeedback';
+import { RunEffects } from '../../features/effects/RunEffects';
 import { ResultsController } from '../../features/results/ResultsController';
 import { registerGameTestApi } from '../test/GameTestApi';
 
@@ -33,10 +32,13 @@ export class RunScene extends Phaser.Scene {
   private backgroundController!: BackgroundController;
   private collectibleField!: CollectibleField;
   private obstacleField!: ObstacleField;
+  private runEffects!: RunEffects;
   private lastSnapshotAt = -Infinity;
   private lastSnapshotKey = '';
   private crashHandled = false;
   private runEndNotified = false;
+  private wasGrounded = false;
+  private dustCooldownMs = 0;
 
   public constructor(bridge: GameBridge) {
     super('RunScene');
@@ -48,6 +50,7 @@ export class RunScene extends Phaser.Scene {
     this.backgroundController = new BackgroundController(this);
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
+    this.runEffects = new RunEffects(this);
     this.obstacleField = new ObstacleField(this, { onHit: (outcome) => this.handleObstacleHit(outcome) });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
@@ -62,7 +65,9 @@ export class RunScene extends Phaser.Scene {
 
   public update(_time: number, delta: number): void {
     const state = this.runState.snapshot();
-    if (this.pauseSystem.isPaused() || state.phase !== 'running') return;
+    if (this.pauseSystem.isPaused()) return;
+    this.runEffects.update(delta);
+    if (state.phase !== 'running') return;
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
     const flight = this.boosterFlight.update(delta);
@@ -85,6 +90,13 @@ export class RunScene extends Phaser.Scene {
     });
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
+    if (motion.grounded && !this.wasGrounded) this.runEffects.emitLanding(this.player.x, this.player.y);
+    this.dustCooldownMs -= Math.max(0, delta);
+    if (motion.grounded && !this.keyboard.isThrusting() && !flight.active && this.dustCooldownMs <= 0) {
+      this.runEffects.emitRunDust(this.player.x - 32, this.player.y + 46);
+      this.dustCooldownMs = 220;
+    }
+    this.wasGrounded = motion.grounded;
     this.player.setBoosting(flight.active);
     this.player.updateMotionAnimation({
       grounded: motion.grounded,
@@ -114,7 +126,7 @@ export class RunScene extends Phaser.Scene {
     this.runState.start();
     this.boosterController.startInitial();
     this.boosterFlight.activate();
-    showBoosterFeedback(this);
+    this.runEffects.emitBooster(this.player.x, this.player.y);
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs);
     this.player.setBoosting(true);
@@ -130,7 +142,10 @@ export class RunScene extends Phaser.Scene {
     this.collectibleField.reset();
     this.obstacleField.reset();
     this.backgroundController.reset();
+    this.runEffects.reset();
     this.playerVelocityY = 0;
+    this.wasGrounded = false;
+    this.dustCooldownMs = 0;
     this.crashHandled = false;
     this.runEndNotified = false;
     this.player.reset();
@@ -157,7 +172,7 @@ export class RunScene extends Phaser.Scene {
   public activateDemoBooster(): void {
     this.boosterController.activate();
     this.boosterFlight.activate();
-    showBoosterFeedback(this);
+    this.runEffects.emitBooster(this.player.x, this.player.y);
     this.runState.setBooster(true, this.boosterFlight.snapshot().remainingMs);
     this.emitSnapshot(true);
   }
@@ -180,13 +195,13 @@ export class RunScene extends Phaser.Scene {
   }
 
   private handleItemCollect(kind: ItemKind, x: number, y: number): void {
-    showItemPickupFeedback(this, kind, x, y);
+    this.runEffects.emitPickup(kind, x, y);
     if (kind === 'coin') this.runState.collectCoin(1);
     if (kind === 'token') {
       this.runState.collectToken();
       if (this.boosterController.collectToken()) {
         this.boosterFlight.activate();
-        showBoosterFeedback(this);
+        this.runEffects.emitBooster(this.player.x, this.player.y);
       }
       this.runState.setTokenCount(this.boosterController.snapshot().tokenCount);
     }
@@ -209,6 +224,7 @@ export class RunScene extends Phaser.Scene {
     if (outcome !== 'crash') return;
     if (this.crashHandled) return;
     this.crashHandled = true;
+    this.runEffects.emitCrash(this.player.x, this.player.y);
     this.resultsController.beginCrash();
     this.runState.crash();
     this.emitSnapshot(true);
@@ -257,6 +273,7 @@ export class RunScene extends Phaser.Scene {
     window.removeEventListener('blur', this.pauseFromFocusLoss);
     document.removeEventListener('visibilitychange', this.pauseFromFocusLoss);
     this.pauseSystem.cancel();
+    this.runEffects?.destroy();
     this.floorLine.destroy();
   }
 }

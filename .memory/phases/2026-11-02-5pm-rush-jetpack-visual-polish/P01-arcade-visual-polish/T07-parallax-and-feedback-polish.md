@@ -1,6 +1,6 @@
 # Task: T07 Parallax and Feedback Polish
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -117,6 +117,6 @@ Task: T07-parallax-and-feedback-polish
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: `pending` (이번 단계에서 생성)

@@ -1,8 +1,11 @@
 import Phaser from 'phaser';
 
+export const BOOSTER_FEEDBACK_LABEL = 'BOOST!';
+export const BOOSTER_FEEDBACK_COLOR = '#52c7ff';
+
 export function showBoosterFeedback(scene: Phaser.Scene): void {
-  const label = scene.add.text(scene.scale.width / 2, scene.scale.height / 2, 'BOOST!', {
-    color: '#52c7ff',
+  const label = scene.add.text(scene.scale.width / 2, scene.scale.height / 2, BOOSTER_FEEDBACK_LABEL, {
+    color: BOOSTER_FEEDBACK_COLOR,
     fontFamily: 'Arial, sans-serif',
     fontSize: '42px',
     fontStyle: 'bold',

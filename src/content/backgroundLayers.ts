@@ -23,8 +23,8 @@ const assetKeysForLayer = (layer: 'far' | 'mid' | 'near'): Record<BackgroundScen
 });
 
 export const backgroundLayerDefinitions: readonly BackgroundLayerDefinition[] = [
-  { id: 'far', depth: -12, repeatWidth: 1280, scrollFactor: 0.18, height: 720, y: 360, alpha: 0.78, assetKeyByScene: assetKeysForLayer('far') },
-  { id: 'mid', depth: -11, repeatWidth: 1280, scrollFactor: 0.42, height: 720, y: 360, alpha: 0.42, assetKeyByScene: assetKeysForLayer('mid') },
-  { id: 'near', depth: -10, repeatWidth: 1280, scrollFactor: 0.75, height: 720, y: 360, alpha: 0.28, assetKeyByScene: assetKeysForLayer('near') },
+  { id: 'far', depth: -12, repeatWidth: 1280, scrollFactor: 0.18, height: 720, y: 360, alpha: 0.72, assetKeyByScene: assetKeysForLayer('far') },
+  { id: 'mid', depth: -11, repeatWidth: 1280, scrollFactor: 0.42, height: 720, y: 360, alpha: 0.36, assetKeyByScene: assetKeysForLayer('mid') },
+  { id: 'near', depth: -10, repeatWidth: 1280, scrollFactor: 0.75, height: 720, y: 360, alpha: 0.22, assetKeyByScene: assetKeysForLayer('near') },
 ];
 
