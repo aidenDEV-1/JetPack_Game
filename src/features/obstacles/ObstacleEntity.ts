@@ -12,6 +12,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private readonly warningIndicator?: ObstacleWarningIndicator;
   private readonly hitboxes: Phaser.Geom.Rectangle[];
   private readonly laserGeometry?: ResolvedLaserGeometry;
+  private readonly laserVisuals: LaserHazardVisual[] = [];
 
   public constructor(scene: Phaser.Scene, pattern: ObstaclePattern, x: number, y: number, laserGeometry?: ResolvedLaserGeometry) {
     super(scene, x, y);
@@ -33,7 +34,12 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   public isOffscreen(): boolean { return this.x < -160; }
 
   public updateWarning(timeMs: number, viewportWidth: number): void {
+    this.updateVisual(timeMs, viewportWidth);
+  }
+
+  public updateVisual(timeMs: number, viewportWidth: number): void {
     if (!this.warningIndicator) return;
+    this.laserVisuals.forEach((laser) => laser.update(timeMs));
     if (this.x <= viewportWidth - 220) {
       this.warningIndicator.hide();
       return;
@@ -51,6 +57,11 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     spanMode?: 'full' | 'fixed' | 'random';
     resolvedLength?: number;
     collisionLength?: number;
+    activity?: 'charging' | 'active';
+    beamWidth?: number;
+    coreWidth?: number;
+    glowWidth?: number;
+    emitterCount?: number;
     displayWidth: number;
     displayHeight: number;
     collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
@@ -64,6 +75,11 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
       spanMode: this.pattern.laserSpan?.mode,
       resolvedLength: this.laserGeometry?.length,
       collisionLength: this.laserGeometry?.collisionLength,
+      activity: this.laserVisuals[0]?.getActivity(),
+      beamWidth: this.pattern.laserVisual?.beamWidth,
+      coreWidth: this.pattern.laserVisual?.coreWidth,
+      glowWidth: this.pattern.laserVisual?.glowWidth,
+      emitterCount: this.laserVisuals.reduce((count, laser) => count + laser.getEmitterCount(), 0),
       displayWidth: dimensions.width,
       displayHeight: dimensions.height,
       collisionBounds: this.hitboxes.map((bounds) => ({ x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height })),
@@ -86,16 +102,19 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
             visual: pattern.laserVisual!,
             emitterTextureKey: gameAssetKeys.laserEmitter,
           });
+          this.laserVisuals.push(laser);
           laser.setPosition(0, offsetY);
           crossfire.add(laser);
         });
         return crossfire;
       }
-      return new LaserHazardVisual(scene, {
+      const laser = new LaserHazardVisual(scene, {
         geometry: this.laserGeometry,
         visual: pattern.laserVisual,
         emitterTextureKey: gameAssetKeys.laserEmitter,
       });
+      this.laserVisuals.push(laser);
+      return laser;
     }
     return this.createSpriteHazard(scene, pattern);
   }

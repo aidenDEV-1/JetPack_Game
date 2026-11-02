@@ -7,10 +7,10 @@
 [P01 Arcade Visual Polish](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md)
 
 ## Active Task
-[T04 Mechanical Laser Redesign](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T04-mechanical-laser-redesign.md)
+[T05 Security Obstacle Art Direction](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T05-security-obstacle-art-direction.md)
 
 ## Status
-- T01~T03 구현·검증 완료
+- T01~T04 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T04 청사진을 읽고 `LaserHazardVisual`·`ObstacleEntity`·`ObstacleField`에 기계식 레이저 emitter, 충전/활성 상태, 수직·수평 span과 실제 충돌 footprint를 연결
+T05 청사진을 읽고 보라색 구형 장애물을 보안 드론·전기 드론·미사일·회전 장애물 visual contract로 교체하고 기존 충돌/경고/실드 규칙을 회귀 검증

@@ -2,6 +2,7 @@ export type ObstacleKind = 'vertical-laser' | 'horizontal-laser' | 'missile' | '
 
 export type LaserOrientation = 'vertical' | 'horizontal';
 export type LaserSpanMode = 'full' | 'fixed' | 'random';
+export type LaserActivity = 'charging' | 'active';
 
 export interface LaserSpanSpec {
   orientation: LaserOrientation;
@@ -24,6 +25,8 @@ export interface LaserVisualSpec {
   emitterFrame: number;
   emitterWidth: number;
   emitterHeight: number;
+  chargeDurationMs: number;
+  sparkColor: number;
 }
 
 export interface ResolvedLaserGeometry {

@@ -158,4 +158,4 @@ Task: T03-attached-jetpack-vfx
 
 - [x] 구현 완료
 - [x] 검증 통과
-- commit: `pending` (이번 단계에서 생성)
+- commit: `5d86c45`

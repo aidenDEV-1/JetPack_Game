@@ -45,6 +45,11 @@ export interface GameTestApi {
     x: number;
     orientation?: 'vertical' | 'horizontal';
     spanMode?: 'full' | 'fixed' | 'random';
+    activity?: 'charging' | 'active';
+    beamWidth?: number;
+    coreWidth?: number;
+    glowWidth?: number;
+    emitterCount?: number;
     resolvedLength?: number;
     collisionLength?: number;
     displayWidth: number;

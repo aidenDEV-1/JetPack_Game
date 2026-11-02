@@ -1,24 +1,27 @@
 import type { LaserVisualSpec, ObstaclePattern, PlayableGap } from './obstacleTypes';
 
 const RED_LASER: LaserVisualSpec = {
-  beamWidth: 24,
-  coreWidth: 8,
-  glowWidth: 48,
-  glowColor: 0xff152c6e,
+  beamWidth: 14,
+  coreWidth: 3,
+  glowWidth: 28,
+  glowColor: 0xff8b102c,
   beamColor: 0xffef3340,
   coreColor: 0xfffff5d6,
   emitterColor: 0xffff5a5f,
   emitterFrame: 0,
-  emitterWidth: 56,
-  emitterHeight: 56,
+  emitterWidth: 60,
+  emitterHeight: 60,
+  chargeDurationMs: 360,
+  sparkColor: 0xffffc857,
 };
 
 const BLUE_LASER: LaserVisualSpec = {
   ...RED_LASER,
-  glowColor: 0xff173d96,
+  glowColor: 0xff104f98,
   beamColor: 0xff2864ff,
   coreColor: 0xffe9fbff,
   emitterColor: 0xff48b9ff,
+  sparkColor: 0xff9cecff,
 };
 
 export const obstaclePatterns: ObstaclePattern[] = [

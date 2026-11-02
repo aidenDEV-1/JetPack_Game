@@ -44,6 +44,10 @@ describe('obstacle patterns', () => {
       expect(pattern.laserSpan).toBeDefined();
       expect(pattern.laserVisual?.glowWidth).toBeGreaterThan(pattern.laserVisual?.beamWidth ?? 0);
       expect(pattern.laserVisual?.beamWidth).toBeGreaterThanOrEqual(pattern.laserVisual?.coreWidth ?? 0);
+      expect(pattern.laserVisual?.beamWidth).toBeLessThanOrEqual(16);
+      expect(pattern.laserVisual?.coreWidth).toBeLessThanOrEqual(4);
+      expect(pattern.laserVisual?.glowWidth).toBeLessThanOrEqual(32);
+      expect(pattern.laserVisual?.chargeDurationMs).toBeGreaterThan(0);
     });
   });
 });

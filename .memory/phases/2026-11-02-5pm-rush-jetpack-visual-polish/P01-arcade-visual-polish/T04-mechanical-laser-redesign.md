@@ -1,6 +1,6 @@
 # Task: T04 Mechanical Laser Redesign
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -120,6 +120,6 @@ Task: T04-mechanical-laser-redesign
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: `pending` (이번 단계에서 생성)

@@ -43,7 +43,7 @@ export class ObstacleField {
     for (let index = this.obstacles.length - 1; index >= 0; index -= 1) {
       const obstacle = this.obstacles[index];
       obstacle.x -= context.speed * deltaSeconds;
-      obstacle.updateWarning(this.scene.time.now, this.scene.scale.width);
+      obstacle.updateVisual(this.scene.time.now, this.scene.scale.width);
       const intersects = obstacle.getCollisionBoundsList().some((hitbox) => {
         const worldBounds = new Phaser.Geom.Rectangle(obstacle.x + hitbox.x, obstacle.y + hitbox.y, hitbox.width, hitbox.height);
         return Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, worldBounds);
