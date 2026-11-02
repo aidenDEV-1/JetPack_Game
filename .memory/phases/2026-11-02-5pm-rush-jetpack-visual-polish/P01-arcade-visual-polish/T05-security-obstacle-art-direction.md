@@ -140,4 +140,4 @@ Task: T05-security-obstacle-art-direction
 
 - [x] 구현 완료
 - [x] 검증 통과
-- commit: `pending` (이번 단계에서 생성)
+- commit: `fa4019a`

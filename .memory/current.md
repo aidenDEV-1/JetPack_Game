@@ -7,10 +7,10 @@
 [P01 Arcade Visual Polish](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/phase.md)
 
 ## Active Task
-[T06 Arcade HUD Redesign](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T06-arcade-hud-redesign.md)
+[T07 Parallax and Feedback Polish](./phases/2026-11-02-5pm-rush-jetpack-visual-polish/P01-arcade-visual-polish/T07-parallax-and-feedback-polish.md)
 
 ## Status
-- T01~T05 구현·검증 완료
+- T01~T06 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T06 청사진을 읽고 `GameHud`·`GameShell`·HUD tokens에 거리/코인/DEX 토큰/방어막/부스터 게이지/설정 버튼을 아케이드 HUD로 통합하고 플레이 화면 회귀 검증
+T07 청사진을 읽고 `BackgroundController`·`RunScene`·pickup/충돌 feedback에 pooled 파티클과 패럴랙스 layer를 연결하고 잔상 누적·프레임 안정성을 검증

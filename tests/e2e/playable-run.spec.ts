@@ -38,7 +38,7 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
   await page.waitForTimeout(5_200);
   const afterItems = await getRunSnapshot(page);
   expect(afterItems?.runCoins ?? 0).toBeGreaterThan(0);
-  await expect(page.locator('.hud-coins')).toHaveText(/🟡 [1-9]\d*/);
+  await expect(page.locator('.hud-coins')).toHaveText(/[1-9]\d*/);
 
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.activateBooster?.());
   await expect.poll(() => getBoosterSnapshot(page).then((snapshot) => snapshot?.active), { timeout: 2_000 }).toBe(true);

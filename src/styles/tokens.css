@@ -26,15 +26,36 @@ button { font: inherit; }
 .primary-button, .secondary-button { border: 0; border-radius: 12px; padding: 14px 20px; cursor: pointer; font-weight: 700; }
 .primary-button { background: #f7c948; color: #101820; }
 .secondary-button { border: 1px solid #688bb7; background: rgba(13, 30, 52, 0.8); color: #f7fbff; }
-.game-hud { position: absolute; inset: 0 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 22px; pointer-events: none; }
-.hud-score-panel, .hud-status-panel { display: grid; gap: 3px; padding: 10px 14px; border: 1px solid rgba(143, 183, 230, 0.42); border-radius: 12px; background: rgba(5, 11, 20, 0.74); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24); }
-.hud-label { color: #8fb7e6; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; }
-.hud-distance { color: #f7fbff; font-size: clamp(22px, 3vw, 34px); line-height: 1; letter-spacing: 0.04em; }
-.hud-coins { color: #f7c948; font-weight: 700; }
-.hud-status-panel { display: flex; align-items: center; margin-left: auto; }
-.hud-pill { padding: 5px 8px; border-radius: 999px; color: #b4c8df; font-size: 12px; background: rgba(31, 56, 86, 0.7); }
-.hud-pill.active { color: #08111f; background: #52c7ff; }
-.hud-settings-button { pointer-events: auto; width: 44px; height: 44px; border: 1px solid #688bb7; border-radius: 12px; background: rgba(5, 11, 20, 0.82); color: #fff; cursor: pointer; font-size: 20px; }
+.game-hud { position: absolute; inset: 0 0 auto; z-index: 6; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 14px 18px; pointer-events: none; }
+.hud-distance-readout { display: grid; gap: 2px; min-width: 148px; padding: 8px 13px 9px; border-left: 3px solid #f7c948; border-bottom: 1px solid rgba(247, 201, 72, 0.55); background: linear-gradient(90deg, rgba(5, 11, 20, 0.9), rgba(5, 11, 20, 0.45)); text-shadow: 0 2px 4px #03070d; }
+.hud-label { color: #9dbde0; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; }
+.hud-distance { color: #f7fbff; font-size: clamp(25px, 3.4vw, 39px); line-height: 0.94; letter-spacing: 0.06em; }
+.hud-coin-readout { display: inline-flex; align-items: center; gap: 5px; color: #f7c948; font-size: 15px; }
+.hud-coin-readout img, .hud-token-readout img, .hud-shield-readout img { width: 22px; height: 22px; object-fit: contain; }
+.hud-coins { color: #fff2ad; font-weight: 900; }
+.hud-right-rail { margin-left: auto; }
+.hud-status-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.hud-token-readout, .hud-shield-readout, .hud-booster-meter { display: flex; align-items: center; gap: 7px; min-height: 42px; padding: 6px 9px; border: 1px solid rgba(140, 195, 235, 0.42); border-radius: 9px; background: linear-gradient(145deg, rgba(7, 20, 38, 0.92), rgba(9, 33, 55, 0.72)); box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), 0 5px 15px rgba(0, 0, 0, 0.22); }
+.hud-token-readout small, .hud-shield-readout small { display: block; color: #8fb7e6; font-size: 9px; font-weight: 800; letter-spacing: 0.04em; }
+.hud-token-readout strong, .hud-shield-readout strong { display: block; color: #f7fbff; font-size: 13px; line-height: 1; }
+.hud-token-readout { position: relative; padding-right: 11px; }
+.hud-token-segments { display: flex; gap: 3px; margin-left: 3px; }
+.hud-token-segments i { display: block; width: 5px; height: 16px; border: 1px solid #53708d; border-radius: 2px; background: #132b42; }
+.hud-token-segments i.filled { border-color: #f7c948; background: #f7c948; box-shadow: 0 0 8px rgba(247, 201, 72, 0.65); }
+.hud-shield-readout.active { border-color: #52c7ff; box-shadow: inset 0 0 14px rgba(82, 199, 255, 0.16); }
+.hud-shield-readout.active strong { color: #74ddff; }
+.hud-booster-meter { display: grid; min-width: 118px; gap: 3px; }
+.hud-booster-label { display: inline-flex; align-items: center; gap: 3px; }
+.hud-booster-label img { width: 14px; height: 14px; object-fit: contain; }
+.hud-meter-heading { display: flex; justify-content: space-between; gap: 12px; color: #96b3d2; font-size: 9px; font-weight: 900; letter-spacing: 0.08em; }
+.hud-meter-heading strong { color: #a9bfd8; font-size: 10px; }
+.hud-booster-meter.active .hud-meter-heading, .hud-booster-meter.active .hud-meter-heading strong { color: #ffcc62; }
+.hud-meter-track { height: 6px; overflow: hidden; border-radius: 5px; background: #1d334b; box-shadow: inset 0 1px 3px #03070d; }
+.hud-meter-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff7b28, #f7c948); box-shadow: 0 0 9px rgba(247, 201, 72, 0.72); transition: width 120ms linear; }
+.hud-settings-button { pointer-events: auto; width: 42px; height: 42px; border: 1px solid #7da9d0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #234e73, #081525 70%); color: #f7fbff; cursor: pointer; font-size: 24px; line-height: 1; box-shadow: inset 0 0 0 2px rgba(5, 11, 20, 0.7), 0 4px 12px rgba(0, 0, 0, 0.3); }
+.hud-settings-button:hover, .hud-settings-button:focus-visible { border-color: #f7c948; color: #f7c948; outline: none; }
+.hud-settings-button:focus-visible { box-shadow: 0 0 0 3px rgba(247, 201, 72, 0.38); }
+.hud-paused-badge { padding: 4px 6px; border: 1px solid #ffcf73; border-radius: 4px; color: #ffcf73; font-size: 9px; font-weight: 900; letter-spacing: 0.08em; }
 .settings-backdrop { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; background: rgba(3, 7, 13, 0.62); }
 .settings-menu { width: min(360px, calc(100% - 40px)); display: grid; gap: 12px; padding: 24px; border: 1px solid #688bb7; border-radius: 18px; background: #0d1d31; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
 .settings-heading { display: flex; align-items: center; justify-content: space-between; color: #f7fbff; }
@@ -68,3 +89,16 @@ button { font: inherit; }
 .leaderboard-list li, .leaderboard-current { display: grid; grid-template-columns: 52px 1fr 90px 80px; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 9px; background: #172d48; color: #c7d7e9; }
 .leaderboard-list strong, .leaderboard-current strong { color: #fff; }
 .leaderboard-current { margin-top: 14px; border: 1px solid #f7c948; color: #f7c948; }
+@media (max-width: 760px) {
+  .game-hud { gap: 8px; padding: 9px 10px; }
+  .hud-distance-readout { min-width: 108px; padding: 6px 8px 7px; }
+  .hud-distance { font-size: 25px; }
+  .hud-right-rail { max-width: calc(100% - 116px); overflow: hidden; }
+  .hud-status-row { gap: 4px; }
+  .hud-token-readout, .hud-shield-readout, .hud-booster-meter { padding: 4px 5px; }
+  .hud-token-readout img, .hud-shield-readout img { width: 18px; height: 18px; }
+  .hud-token-readout small, .hud-shield-readout small { font-size: 8px; }
+  .hud-token-segments, .hud-shield-readout span { display: none; }
+  .hud-booster-meter { min-width: 78px; }
+  .hud-settings-button { width: 36px; height: 36px; font-size: 20px; }
+}
