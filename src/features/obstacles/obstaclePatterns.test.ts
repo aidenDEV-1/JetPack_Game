@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ObstacleSpawner } from './ObstacleSpawner';
 import { obstaclePatterns, isReachablePattern } from './obstaclePatterns';
 import { obstacleVisualCatalog } from './obstacleVisualCatalog';
+import { GAME_CONFIG } from '../../game/config/gameConfig';
 
 describe('obstacle patterns', () => {
   it('keeps visible footprints larger than collision footprints with contrast colors', () => {
@@ -34,7 +35,7 @@ describe('obstacle patterns', () => {
 
   it('requires a playable vertical gap for ordinary patterns', () => {
     expect(isReachablePattern([{ startY: 100, endY: 180 }])).toBe(false);
-    expect(isReachablePattern([{ startY: 250, endY: 400 }])).toBe(true);
+    expect(isReachablePattern([{ startY: 250, endY: 410 }])).toBe(true);
     expect(obstaclePatterns.filter((pattern) => pattern.warningArrow).map((pattern) => pattern.id)).toEqual([
       'vertical-laser-full',
       'horizontal-laser-full',
@@ -49,9 +50,9 @@ describe('obstacle patterns', () => {
       expect(pattern.laserSpan).toBeDefined();
       expect(pattern.laserVisual?.glowWidth).toBeGreaterThan(pattern.laserVisual?.beamWidth ?? 0);
       expect(pattern.laserVisual?.beamWidth).toBeGreaterThanOrEqual(pattern.laserVisual?.coreWidth ?? 0);
-      expect(pattern.laserVisual?.beamWidth).toBeLessThanOrEqual(16);
+      expect(pattern.laserVisual?.beamWidth).toBeLessThanOrEqual(GAME_CONFIG.playerHeight * 0.3);
       expect(pattern.laserVisual?.coreWidth).toBeLessThanOrEqual(4);
-      expect(pattern.laserVisual?.glowWidth).toBeLessThanOrEqual(32);
+      expect(pattern.laserVisual?.glowWidth).toBeLessThanOrEqual(GAME_CONFIG.playerHeight * 0.5);
       expect(pattern.laserVisual?.chargeDurationMs).toBeGreaterThan(0);
     });
   });

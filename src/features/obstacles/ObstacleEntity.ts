@@ -10,6 +10,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private readonly hazard: Phaser.GameObjects.GameObject;
   private readonly warningIndicator?: ObstacleWarningIndicator;
   private readonly hitboxes: Phaser.Geom.Rectangle[];
+  private readonly nodeCircles: Phaser.Geom.Circle[];
   private readonly laserGeometry?: ResolvedLaserGeometry;
   private readonly laserVisuals: LaserHazardVisual[] = [];
   private spriteVisual?: Phaser.GameObjects.Container;
@@ -24,6 +25,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     this.hazard = this.createHazard(scene, pattern);
     this.add(this.hazard);
     this.hitboxes = this.createHitboxes(pattern);
+    this.nodeCircles = this.createNodeCircles(pattern);
     if (pattern.warningArrow) {
       this.warningIndicator = new ObstacleWarningIndicator(scene);
       this.warningIndicator.setColor(pattern.warningColor);
@@ -32,6 +34,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
 
   public getCollisionBounds(): Phaser.Geom.Rectangle { return this.hitboxes[0]; }
   public getCollisionBoundsList(): readonly Phaser.Geom.Rectangle[] { return this.hitboxes; }
+  public getCollisionCircles(): readonly Phaser.Geom.Circle[] { return this.nodeCircles; }
   public hasWarningArrow(): boolean { return this.warningIndicator !== undefined; }
   public isOffscreen(): boolean { return this.x < -160; }
 
@@ -70,6 +73,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     displayWidth: number;
     displayHeight: number;
     collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
+    collisionCircles: Array<{ x: number; y: number; radius: number }>;
     warning: ObstacleWarningSnapshot;
   } {
     const dimensions = this.getDisplayDimensions();
@@ -90,6 +94,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
       displayWidth: dimensions.width,
       displayHeight: dimensions.height,
       collisionBounds: this.hitboxes.map((bounds) => ({ x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height })),
+      collisionCircles: this.nodeCircles.map((circle) => ({ x: circle.x, y: circle.y, radius: circle.radius })),
       warning: this.warningIndicator?.snapshot() ?? { visible: false, x: 0, y: 0, alpha: 0, label: '← 위험' },
     };
   }
@@ -177,6 +182,23 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     const insetX = pattern.width * 0.12;
     const insetY = pattern.height * 0.12;
     return [new Phaser.Geom.Rectangle(-pattern.width / 2 + insetX, -pattern.height / 2 + insetY, pattern.width - insetX * 2, pattern.height - insetY * 2)];
+  }
+
+  private createNodeCircles(pattern: ObstaclePattern): Phaser.Geom.Circle[] {
+    if (!this.laserGeometry || !pattern.laserVisual) return [];
+    const radius = pattern.laserVisual.emitterWidth / 2;
+    if (pattern.id === 'forced-crossfire') {
+      const offsetY = pattern.height * 0.28;
+      return [
+        new Phaser.Geom.Circle(this.laserGeometry.start, -offsetY, radius),
+        new Phaser.Geom.Circle(this.laserGeometry.end, -offsetY, radius),
+        new Phaser.Geom.Circle(this.laserGeometry.start, offsetY, radius),
+        new Phaser.Geom.Circle(this.laserGeometry.end, offsetY, radius),
+      ];
+    }
+    return this.laserGeometry.orientation === 'vertical'
+      ? [new Phaser.Geom.Circle(0, this.laserGeometry.start, radius), new Phaser.Geom.Circle(0, this.laserGeometry.end, radius)]
+      : [new Phaser.Geom.Circle(this.laserGeometry.start, 0, radius), new Phaser.Geom.Circle(this.laserGeometry.end, 0, radius)];
   }
 
   private getDisplayDimensions(): { width: number; height: number } {

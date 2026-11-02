@@ -5,6 +5,7 @@ import { obstaclePatterns } from './obstaclePatterns';
 import { ObstacleEntity } from './ObstacleEntity';
 import { ObstacleSpawner } from './ObstacleSpawner';
 import { resolveLaserGeometry } from './laserSpanResolver';
+import { intersectsObstacleGeometry } from './obstacleCollisionGeometry';
 import type { SpawnContext } from './obstacleTypes';
 
 export interface ObstacleFieldEvents {
@@ -44,10 +45,13 @@ export class ObstacleField {
       const obstacle = this.obstacles[index];
       obstacle.x -= context.speed * deltaSeconds;
       obstacle.updateVisual(this.scene.time.now, this.scene.scale.width);
-      const intersects = obstacle.getCollisionBoundsList().some((hitbox) => {
-        const worldBounds = new Phaser.Geom.Rectangle(obstacle.x + hitbox.x, obstacle.y + hitbox.y, hitbox.width, hitbox.height);
-        return Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, worldBounds);
-      });
+      const intersects = intersectsObstacleGeometry(
+        playerBounds,
+        obstacle.x,
+        obstacle.y,
+        obstacle.getCollisionBoundsList(),
+        obstacle.getCollisionCircles(),
+      );
       if (intersects) {
         const outcome = resolveObstacleCollision({ invincible, hasShield });
         this.events.onHit(outcome);

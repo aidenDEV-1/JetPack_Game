@@ -1,4 +1,5 @@
 import type { AssetDefinition } from '../../services/assetRegistry';
+import { PLAYER_SHEET_META } from './playerSheetMeta';
 
 const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'] as const;
 const backgroundLayers = ['far', 'mid', 'near'] as const;
@@ -33,11 +34,11 @@ const backgroundDefinitions: AssetDefinition[] = backgroundScenes.flatMap((scene
 export const gameAssetDefinitions: AssetDefinition[] = [
   {
     key: gameAssetKeys.playerSheet,
-    path: '/assets/player/player-spritesheet.png',
+    path: PLAYER_SHEET_META.path,
     kind: 'spritesheet',
-    frameWidth: 384,
-    frameHeight: 170,
-    frameCount: 28,
+    frameWidth: PLAYER_SHEET_META.frameWidth,
+    frameHeight: PLAYER_SHEET_META.frameHeight,
+    frameCount: PLAYER_SHEET_META.frameCount,
   },
   {
     key: gameAssetKeys.boosterFormsSheet,

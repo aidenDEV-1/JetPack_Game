@@ -1,5 +1,6 @@
 import { gameAssetKeys } from '../../content/assets/gameAssets';
 import { PLAYER_JETPACK_ANCHOR } from '../player/playerAssetConfig';
+import { GAME_CONFIG } from '../../game/config/gameConfig';
 import type { BoosterStyleDefinition, BoosterStyleId } from './boosterStyleTypes';
 
 export const DEFAULT_BOOSTER_STYLE_ID: BoosterStyleId = 'leather-rocket';
@@ -15,11 +16,11 @@ export const boosterStyleCatalog: readonly BoosterStyleDefinition[] = [
     frameStart: 0,
     anchor: PLAYER_JETPACK_ANCHOR,
     vfx: {
-      flame: { x: -92, y: 4 },
-      sparks: { x: -96, y: 4 },
+      flame: { x: Math.round(-GAME_CONFIG.playerHeight * 0.96), y: Math.round(GAME_CONFIG.playerHeight * 0.04) },
+      sparks: { x: Math.round(-GAME_CONFIG.playerHeight * 1.0), y: Math.round(GAME_CONFIG.playerHeight * 0.04) },
     },
-    scaleX: 0.5,
-    scaleY: 0.5,
+    scaleX: (GAME_CONFIG.playerHeight / 170) * 0.82,
+    scaleY: (GAME_CONFIG.playerHeight / 170) * 0.82,
     coinPrice: 0,
     defaultUnlocked: true,
   },

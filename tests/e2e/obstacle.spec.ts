@@ -13,19 +13,19 @@ test('로컬 플레이에서 장애물 충돌이 crash 상태를 만든다', asy
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.orientation === 'vertical')), { timeout: 2_000 }).toMatchObject({
     orientation: 'vertical',
     spanMode: 'random',
-    beamWidth: 14,
+    beamWidth: 19,
     coreWidth: 3,
     emitterCount: 2,
   });
   const shortLaser = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.orientation === 'vertical'));
-  expect(shortLaser?.resolvedLength ?? 0).toBeGreaterThanOrEqual(220);
-  expect(shortLaser?.resolvedLength ?? 0).toBeLessThanOrEqual(535);
+  expect(shortLaser?.resolvedLength ?? 0).toBeGreaterThanOrEqual(216);
+  expect(shortLaser?.resolvedLength ?? 0).toBeLessThanOrEqual(384);
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.clearDemoObstacles?.());
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoLaser?.('vertical-laser-full'));
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.spanMode === 'full')), { timeout: 2_000 }).toMatchObject({
     orientation: 'vertical',
     resolvedLength: 535,
-    glowWidth: 28,
+    glowWidth: 40,
   });
   await page.screenshot({ path: testInfo.outputPath('laser-mechanical.png') });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.clearDemoObstacles?.());
@@ -36,12 +36,12 @@ test('로컬 플레이에서 장애물 충돌이 crash 상태를 만든다', asy
   });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.clearDemoObstacles?.());
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoWarningObstacle?.());
-  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.displayWidth === 128)), { timeout: 2_000 }).toMatchObject({
-    displayWidth: 128,
+  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.kind === 'missile')), { timeout: 2_000 }).toMatchObject({
+    displayWidth: 144,
     displayHeight: 48,
     warning: { visible: true, label: '← 위험' },
   });
-  const warning = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.displayWidth === 128)?.warning);
+  const warning = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.kind === 'missile')?.warning);
   expect(warning?.x ?? 0).toBeGreaterThan(1100);
   await page.screenshot({ path: testInfo.outputPath('security-obstacle-warning.png') });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.clearDemoObstacles?.());

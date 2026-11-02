@@ -19,6 +19,7 @@ export interface GameTestApi {
   clearDemoObstacles?: () => void;
   activateBooster: () => void;
   deactivateBooster: () => void;
+  toggleDebugOverlay?: () => boolean;
   forceCrash: () => void;
   getPlayerVisualSnapshot?: () => {
     collisionBounds: { x: number; y: number; width: number; height: number };
@@ -57,6 +58,7 @@ export interface GameTestApi {
     displayWidth: number;
     displayHeight: number;
     collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
+    collisionCircles: Array<{ x: number; y: number; radius: number }>;
     warning: { visible: boolean; x: number; y: number; alpha: number; label: '← 위험' };
   }>;
   getEffectsSnapshot?: () => {

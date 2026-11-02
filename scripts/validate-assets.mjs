@@ -4,9 +4,9 @@ import process from 'node:process';
 import { error, log } from 'node:console';
 
 const assetRoot = resolve(process.cwd(), 'public/assets');
-const requiredDirectories = ['player', 'items', 'obstacles', 'backgrounds', 'ui'];
+const requiredDirectories = ['player', 'generated', 'items', 'obstacles', 'backgrounds', 'ui'];
 const requiredFiles = [
-  'player/player-spritesheet.png',
+  'generated/player-spritesheet.png',
   'player/booster-forms-spritesheet.png',
   'player/jetpack-flame-spritesheet.png',
   'items/items-spritesheet.png',
@@ -23,7 +23,7 @@ const requiredFiles = [
   'backgrounds/rooftop.png',
 ];
 const requiredSpritesheetMetadata = {
-  'player/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
+  'generated/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
   'obstacles/obstacles-spritesheet.png': { width: 1536, height: 1024, frameWidth: 512, frameHeight: 512, frameCount: 6 },
 };
 const requiredImageMetadata = {

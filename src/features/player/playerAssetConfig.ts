@@ -1,8 +1,11 @@
 import type { PlayerAnimation } from './playerTypes';
+import { GAME_CONFIG } from '../../game/config/gameConfig';
+import { PLAYER_SHEET_META } from '../../content/assets/playerSheetMeta';
 
-export const PLAYER_FRAME_WIDTH = 384;
-export const PLAYER_FRAME_HEIGHT = 170;
-export const PLAYER_FRAME_COUNT = 28;
+export const PLAYER_FRAME_WIDTH = PLAYER_SHEET_META.frameWidth;
+export const PLAYER_FRAME_HEIGHT = PLAYER_SHEET_META.frameHeight;
+export const PLAYER_FRAME_COUNT = PLAYER_SHEET_META.frameCount;
+export const PLAYER_FRAME_GUTTER = PLAYER_SHEET_META.gutter;
 
 export const PLAYER_ANIMATION_KEYS: Record<PlayerAnimation, string> = {
   running: 'player-running',
@@ -24,7 +27,17 @@ export const PLAYER_ANIMATION_RANGES: Record<PlayerAnimation, { start: number; e
   dead: { start: 24, end: 27, frameRate: 1, repeat: 0 },
 };
 
-export const PLAYER_SPRITE_SCALE = 0.5;
-export const PLAYER_JETPACK_ANCHOR = { x: -78, y: 18 } as const;
-export const PLAYER_COLLISION_BOUNDS = { x: -42, y: -30, width: 84, height: 68 } as const;
+export const PLAYER_HEIGHT = GAME_CONFIG.playerHeight;
+export const PLAYER_SPRITE_SCALE = PLAYER_HEIGHT / PLAYER_FRAME_HEIGHT;
+export const PLAYER_SPRITE_DISPLAY_SIZE = {
+  width: PLAYER_FRAME_WIDTH * PLAYER_SPRITE_SCALE,
+  height: PLAYER_HEIGHT,
+} as const;
+export const PLAYER_JETPACK_ANCHOR = { x: Math.round(-PLAYER_HEIGHT * 0.81), y: Math.round(PLAYER_HEIGHT * 0.19) } as const;
+export const PLAYER_COLLISION_BOUNDS = {
+  x: Math.round(-PLAYER_HEIGHT * 0.42),
+  y: Math.round(-PLAYER_HEIGHT * 0.33),
+  width: Math.round(PLAYER_HEIGHT * 0.82),
+  height: Math.round(PLAYER_HEIGHT * 0.68),
+} as const;
 

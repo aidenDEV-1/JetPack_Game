@@ -65,6 +65,7 @@ export class RunScene extends Phaser.Scene {
 
   public update(_time: number, delta: number): void {
     const state = this.runState.snapshot();
+    if (this.keyboard.consumeDebugToggle()) this.player.toggleDebugOverlay();
     if (this.pauseSystem.isPaused()) return;
     this.runEffects.update(delta);
     if (state.phase !== 'running') return;
@@ -250,6 +251,7 @@ export class RunScene extends Phaser.Scene {
       clearDemoObstacles: () => this.clearDemoObstacles(),
       activateBooster: () => this.activateDemoBooster(),
       deactivateBooster: () => this.deactivateDemoBooster(),
+      toggleDebugOverlay: () => this.player.toggleDebugOverlay(),
       forceCrash: () => {
         if (this.runState.snapshot().phase === 'running') this.handleObstacleHit('crash');
       },

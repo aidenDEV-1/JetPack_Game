@@ -14,6 +14,7 @@ export class LaserHazardVisual extends Phaser.GameObjects.Container {
   private readonly core: Phaser.GameObjects.Graphics;
   private readonly emitters: Phaser.GameObjects.Image[];
   private readonly sparks: Phaser.GameObjects.Graphics[];
+  private readonly emitterBaseScale: number;
   private readonly geometry: ResolvedLaserGeometry;
   private readonly visual: LaserVisualSpec;
   private activity: LaserActivity = 'charging';
@@ -38,6 +39,7 @@ export class LaserHazardVisual extends Phaser.GameObjects.Container {
     const emitterEnd = scene.make.image({ key: config.emitterTextureKey, add: false })
       .setDisplaySize(visual.emitterWidth, visual.emitterHeight)
       .setTint(visual.emitterColor);
+    this.emitterBaseScale = emitterStart.scaleX;
     if (geometry.orientation === 'vertical') {
       emitterStart.setPosition(0, geometry.start);
       emitterEnd.setPosition(0, geometry.end);
@@ -84,7 +86,8 @@ export class LaserHazardVisual extends Phaser.GameObjects.Container {
     this.core.setAlpha(active ? 0.88 + pulse * 0.12 : 0.5 + pulse * 0.25);
     this.emitters.forEach((emitter, index) => {
       emitter.setAlpha(active ? 0.88 + pulse * 0.12 : 0.55 + pulse * 0.25);
-      emitter.setScale(active ? 0.96 + pulse * 0.08 : 0.88 + pulse * 0.08);
+      const pulseScale = active ? 0.96 + pulse * 0.08 : 0.88 + pulse * 0.08;
+      emitter.setScale(this.emitterBaseScale * pulseScale);
       emitter.setRotation(index === 0 ? pulse * 0.03 : -pulse * 0.03);
     });
     this.sparks.forEach((spark, index) => {

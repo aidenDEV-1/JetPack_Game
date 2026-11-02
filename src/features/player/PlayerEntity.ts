@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
+import { GAME_CONFIG } from '../../game/config/gameConfig';
 import { DEFAULT_BOOSTER_STYLE_ID, getBoosterStyle } from '../booster/boosterStyleCatalog';
 import { JetpackAttachment } from './JetpackAttachment';
 import type { BoosterFormMode, JetpackActivity } from './JetpackAttachment';
 import { PlayerAnimationController } from './playerAnimations';
-import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
+import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_DISPLAY_SIZE, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerMotionVisualInput, PlayerVisualState } from './playerTypes';
 
 export interface PlayerVisualDebugSnapshot {
@@ -33,6 +34,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   private readonly sprite: Phaser.GameObjects.Sprite;
   private readonly jetpack: JetpackAttachment;
   private currentAnimation: PlayerAnimation | null = null;
+  private debugBounds?: Phaser.GameObjects.Graphics;
   private crashStarted = false;
   private readonly initialX: number;
   private readonly initialY: number;
@@ -86,7 +88,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       renderRootCount: this.scene.children.getAll().filter((child) => child === this).length,
       playerChildCount: this.list.length,
       jetpackAttachmentCount: 1,
-      hasDebugBounds: false,
+      hasDebugBounds: Boolean(this.debugBounds),
       hasPersistentTrail: false,
       flameVisible: booster.flameVisible,
       boosterStyleId: booster.styleId,
@@ -99,6 +101,17 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       hasDetachedBoosterRoot: booster.hasDetachedBoosterRoot,
       bodyTextureKey: this.sprite.texture.key,
     };
+  }
+
+  public toggleDebugOverlay(): boolean {
+    if (this.debugBounds) {
+      this.debugBounds.destroy();
+      this.debugBounds = undefined;
+      return false;
+    }
+    this.debugBounds = this.scene.add.graphics().setDepth(30);
+    this.drawDebugOverlay();
+    return true;
   }
 
   public getCollisionBounds(): Phaser.Geom.Rectangle {
@@ -167,6 +180,27 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.jetpack.setActivity(activity);
     this.jetpack.setGray(visual.gray);
     this.applyGray(visual.gray);
+    if (!visual.gray && visual.boosting) {
+      this.setAngle(GAME_CONFIG.playerLeanDegrees);
+    } else if (!visual.gray && visual.animation !== 'hit' && visual.animation !== 'dead') {
+      this.setAngle(0);
+    }
+    this.drawDebugOverlay();
+  }
+
+  private drawDebugOverlay(): void {
+    if (!this.debugBounds) return;
+    this.debugBounds.clear();
+    this.debugBounds.lineStyle(2, 0x38a8ff, 0.95);
+    this.debugBounds.strokeRect(
+      this.x - PLAYER_SPRITE_DISPLAY_SIZE.width / 2,
+      this.y - PLAYER_SPRITE_DISPLAY_SIZE.height / 2,
+      PLAYER_SPRITE_DISPLAY_SIZE.width,
+      PLAYER_SPRITE_DISPLAY_SIZE.height,
+    );
+    const bounds = this.getCollisionBounds();
+    this.debugBounds.lineStyle(2, 0xff3d55, 0.95);
+    this.debugBounds.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 }
 

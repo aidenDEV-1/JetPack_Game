@@ -43,7 +43,7 @@ describe('player animation states', () => {
 
   it('keeps the jetpack anchor separate from the character collision bounds', () => {
     expect(PLAYER_JETPACK_ANCHOR).toEqual({ x: -78, y: 18 });
-    expect(PLAYER_COLLISION_BOUNDS).toEqual({ x: -42, y: -30, width: 84, height: 68 });
+    expect(PLAYER_COLLISION_BOUNDS).toEqual({ x: -40, y: -32, width: 79, height: 65 });
     expect(PLAYER_JETPACK_ANCHOR.x).toBeLessThan(PLAYER_COLLISION_BOUNDS.x);
   });
 });
