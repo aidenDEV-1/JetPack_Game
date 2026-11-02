@@ -15,6 +15,11 @@ export interface GameTestApi {
   activateBooster: () => void;
   deactivateBooster: () => void;
   forceCrash: () => void;
+  getPlayerVisualSnapshot?: () => {
+    jetpackAttachmentCount: number;
+    hasPersistentTrail: boolean;
+    flameVisible: boolean;
+  };
   getBoosterSnapshot?: () => BoosterTestSnapshot;
 }
 

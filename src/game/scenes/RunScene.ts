@@ -226,6 +226,7 @@ export class RunScene extends Phaser.Scene {
       forceCrash: () => {
         if (this.runState.snapshot().phase === 'running') this.handleObstacleHit('crash');
       },
+      getPlayerVisualSnapshot: () => this.player.getVisualDebugSnapshot(),
       getBoosterSnapshot: () => this.boosterFlight.snapshot(),
     });
   }

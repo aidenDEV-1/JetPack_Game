@@ -5,6 +5,12 @@ import { PlayerAnimationController } from './playerAnimations';
 import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
 
+export interface PlayerVisualDebugSnapshot {
+  jetpackAttachmentCount: number;
+  hasPersistentTrail: boolean;
+  flameVisible: boolean;
+}
+
 export class PlayerEntity extends Phaser.GameObjects.Container {
   private readonly controller = new PlayerAnimationController();
   private readonly sprite: Phaser.GameObjects.Sprite;
@@ -52,6 +58,14 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   }
 
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
+
+  public getVisualDebugSnapshot(): PlayerVisualDebugSnapshot {
+    return {
+      jetpackAttachmentCount: 1,
+      hasPersistentTrail: false,
+      flameVisible: this.jetpack.visible,
+    };
+  }
 
   public getCollisionBounds(): Phaser.Geom.Rectangle {
     const scale = this.scaleX;

@@ -1,6 +1,6 @@
 # Task: T02 Booster Trail Removal
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -86,6 +86,6 @@ Task: T02-booster-trail-removal
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: perf(booster): remove persistent booster trails
