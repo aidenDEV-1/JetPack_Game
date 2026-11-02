@@ -20,6 +20,13 @@ export interface GameTestApi {
     hasPersistentTrail: boolean;
     flameVisible: boolean;
   };
+  getObstacleVisualSnapshot?: () => Array<{
+    kind: string;
+    x: number;
+    displayWidth: number;
+    displayHeight: number;
+    warning: { visible: boolean; x: number; y: number; alpha: number; label: '← 위험' };
+  }>;
   getBoosterSnapshot?: () => BoosterTestSnapshot;
 }
 

@@ -3,6 +3,15 @@ import { ObstacleSpawner } from './ObstacleSpawner';
 import { obstaclePatterns, isReachablePattern } from './obstaclePatterns';
 
 describe('obstacle patterns', () => {
+  it('keeps visible footprints larger than collision footprints with contrast colors', () => {
+    obstaclePatterns.forEach((pattern) => {
+      expect(pattern.displayWidth).toBeGreaterThanOrEqual(pattern.width);
+      expect(pattern.displayHeight).toBeGreaterThanOrEqual(pattern.height);
+      expect(pattern.accentColor).not.toBe(0);
+      expect(pattern.warningColor).not.toBe(0);
+    });
+  });
+
   it('only exposes the forced pattern after a shield pickup and once per segment', () => {
     const spawner = new ObstacleSpawner();
     expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: false, forcedPatternUsedInSegment: false })).toBe(false);

@@ -7,6 +7,10 @@ export interface ObstaclePattern {
   warningArrow: boolean;
   width: number;
   height: number;
+  displayWidth: number;
+  displayHeight: number;
+  accentColor: number;
+  warningColor: number;
 }
 
 export interface SpawnContext {

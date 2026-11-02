@@ -10,6 +10,13 @@ test('로컬 플레이에서 장애물 충돌이 crash 상태를 만든다', asy
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.deactivateBooster?.());
   await expect.poll(async () => page.evaluate(() => typeof window.__5PM_RUSH_TEST_API__?.spawnDemoObstacle)).toBe('function');
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoObstacle?.());
+  await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.()[0]), { timeout: 2_000 }).toMatchObject({
+    displayWidth: 128,
+    displayHeight: 48,
+    warning: { visible: true, label: '← 위험' },
+  });
+  const warning = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.()[0]?.warning);
+  expect(warning?.x ?? 0).toBeGreaterThan(1100);
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getSnapshot?.().phase), { timeout: 5000 }).toBe('crashed');
 });
 

@@ -7,10 +7,10 @@
 [P01 Visual Cohesion and Hazard Clarity](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/phase.md)
 
 ## Active Task
-[T03 Obstacle Visibility and Warning](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/T03-obstacle-visibility-warning.md)
+[T04 Visual Regression Validation](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/T04-visual-regression-validation.md)
 
 ## Status
-- T02 구현·검증 완료
+- T03 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T03 청사진을 읽고 `src/features/obstacles/obstacleTypes.ts`, `src/features/obstacles/obstaclePatterns.ts`, `src/features/obstacles/ObstacleEntity.ts`, `src/features/obstacles/ObstacleWarningIndicator.ts`의 장애물 가독성과 우측 경고 indicator를 구현한다.
+T04 청사진을 읽고 `src/game/test/GameTestApi.ts`, `tests/e2e/playable-run.spec.ts`, `tests/e2e/booster.spec.ts`, `tests/e2e/obstacle.spec.ts`의 시각 회귀·성능·production guard 전체 검증을 마무리한다.

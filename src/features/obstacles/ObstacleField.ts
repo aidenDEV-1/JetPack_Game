@@ -42,6 +42,7 @@ export class ObstacleField {
     for (let index = this.obstacles.length - 1; index >= 0; index -= 1) {
       const obstacle = this.obstacles[index];
       obstacle.x -= context.speed * deltaSeconds;
+      obstacle.updateWarning(this.scene.time.now, this.scene.scale.width);
       const intersects = obstacle.getCollisionBoundsList().some((hitbox) => {
         const worldBounds = new Phaser.Geom.Rectangle(obstacle.x + hitbox.x, obstacle.y + hitbox.y, hitbox.width, hitbox.height);
         return Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, worldBounds);
@@ -53,6 +54,7 @@ export class ObstacleField {
           obstacle.destroy();
           this.obstacles.splice(index, 1);
         } else {
+          obstacle.hideWarning();
           this.stopped = true;
         }
         continue;
@@ -76,8 +78,12 @@ export class ObstacleField {
 
   public setShieldPickupAhead(value: boolean): void { this.shieldPickupAhead = value; }
 
+  public getVisualDebugSnapshot(): Array<ReturnType<ObstacleEntity['getVisualDebugSnapshot']>> {
+    return this.obstacles.map((obstacle) => obstacle.getVisualDebugSnapshot());
+  }
+
   public spawnDemoObstacle(): void {
-    this.obstacles.push(new ObstacleEntity(this.scene, obstaclePatterns.find((pattern) => pattern.kind === 'monster')!, GAME_CONFIG.playerX + 60, GAME_CONFIG.floorY - 55));
+    this.obstacles.push(new ObstacleEntity(this.scene, obstaclePatterns.find((pattern) => pattern.kind === 'missile')!, GAME_CONFIG.width + 80, GAME_CONFIG.floorY - 55));
   }
 
   private spawn(context: SpawnContext): void {
