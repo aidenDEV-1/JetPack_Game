@@ -14,6 +14,7 @@ const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> =
 
 export const gameAssetKeys = {
   playerSheet: 'player-spritesheet',
+  boosterFormsSheet: 'booster-forms-spritesheet',
   boosterVfxSheet: 'booster-vfx-spritesheet',
   itemsSheet: 'items-spritesheet',
   obstaclesSheet: 'obstacles-spritesheet',
@@ -36,6 +37,14 @@ export const gameAssetDefinitions: AssetDefinition[] = [
     frameWidth: 384,
     frameHeight: 170,
     frameCount: 24,
+  },
+  {
+    key: gameAssetKeys.boosterFormsSheet,
+    path: '/assets/player/booster-forms-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 384,
+    frameHeight: 170,
+    frameCount: 4,
   },
   {
     key: gameAssetKeys.boosterVfxSheet,

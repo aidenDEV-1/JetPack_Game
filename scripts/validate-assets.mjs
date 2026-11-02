@@ -7,6 +7,7 @@ const assetRoot = resolve(process.cwd(), 'public/assets');
 const requiredDirectories = ['player', 'items', 'obstacles', 'backgrounds', 'ui'];
 const requiredFiles = [
   'player/player-spritesheet.png',
+  'player/booster-forms-spritesheet.png',
   'items/items-spritesheet.png',
   'obstacles/obstacles-spritesheet.png',
   'ui/booster-vfx-spritesheet.png',
