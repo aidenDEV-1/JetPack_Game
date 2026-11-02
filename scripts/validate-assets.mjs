@@ -17,6 +17,9 @@ const requiredFiles = [
   'backgrounds/subway.png',
   'backgrounds/rooftop.png',
 ];
+const requiredSpritesheetMetadata = {
+  'player/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
+};
 
 const failures = [];
 requiredDirectories.forEach((directory) => {
@@ -24,6 +27,13 @@ requiredDirectories.forEach((directory) => {
 });
 requiredFiles.forEach((file) => {
   if (!existsSync(resolve(assetRoot, file))) failures.push(`missing file: ${file}`);
+});
+
+Object.entries(requiredSpritesheetMetadata).forEach(([file, metadata]) => {
+  if (!existsSync(resolve(assetRoot, file))) return;
+  if (metadata.width !== 1536 || metadata.height !== 1190 || metadata.frameWidth !== 384 || metadata.frameHeight !== 170 || metadata.frameCount !== 28) {
+    failures.push(`invalid player spritesheet contract: ${file}`);
+  }
 });
 
 function walk(directory) {

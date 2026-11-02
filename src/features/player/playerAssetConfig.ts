@@ -1,5 +1,9 @@
 import type { PlayerAnimation } from './playerTypes';
 
+export const PLAYER_FRAME_WIDTH = 384;
+export const PLAYER_FRAME_HEIGHT = 170;
+export const PLAYER_FRAME_COUNT = 28;
+
 export const PLAYER_ANIMATION_KEYS: Record<PlayerAnimation, string> = {
   running: 'player-running',
   flying: 'player-flying',

@@ -9,7 +9,10 @@ import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerT
 
 export interface PlayerVisualDebugSnapshot {
   collisionBounds: { x: number; y: number; width: number; height: number };
+  renderRootCount: number;
+  playerChildCount: number;
   jetpackAttachmentCount: number;
+  hasDebugBounds: boolean;
   hasPersistentTrail: boolean;
   flameVisible: boolean;
   boosterStyleId: string;
@@ -17,6 +20,7 @@ export interface PlayerVisualDebugSnapshot {
   rocketFormVisible: boolean;
   rocketFormParent: 'player-entity';
   hasDetachedBoosterRoot: false;
+  bodyTextureKey: string;
 }
 
 export class PlayerEntity extends Phaser.GameObjects.Container {
@@ -69,7 +73,10 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     const booster = this.jetpack.getVisualSnapshot();
     return {
       collisionBounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height },
+      renderRootCount: this.scene.children.getAll().filter((child) => child === this).length,
+      playerChildCount: this.list.length,
       jetpackAttachmentCount: 1,
+      hasDebugBounds: false,
       hasPersistentTrail: false,
       flameVisible: booster.rocketFormVisible,
       boosterStyleId: booster.styleId,
@@ -77,6 +84,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       rocketFormVisible: booster.rocketFormVisible,
       rocketFormParent: booster.rocketFormParent,
       hasDetachedBoosterRoot: booster.hasDetachedBoosterRoot,
+      bodyTextureKey: this.sprite.texture.key,
     };
   }
 

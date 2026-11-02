@@ -39,6 +39,15 @@ describe('asset registry', () => {
     });
   });
 
+  it('keeps the player sheet on the fixed transparent 28-frame contract', () => {
+    expect(assetRegistry.find((asset) => asset.key === gameAssetKeys.playerSheet)).toMatchObject({
+      kind: 'spritesheet',
+      frameWidth: 384,
+      frameHeight: 170,
+      frameCount: 28,
+    });
+  });
+
   it('does not contain original-photo-like files', () => {
     const files = getAssetFiles(resolve(process.cwd(), 'public/assets'));
     expect(files.some((file) => /(?:^|\/)(?:IMG_|photo|original|face)[^/]*$/i.test(file))).toBe(false);

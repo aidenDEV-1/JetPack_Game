@@ -20,7 +20,10 @@ export interface GameTestApi {
   forceCrash: () => void;
   getPlayerVisualSnapshot?: () => {
     collisionBounds: { x: number; y: number; width: number; height: number };
+    renderRootCount: number;
+    playerChildCount: number;
     jetpackAttachmentCount: number;
+    hasDebugBounds: boolean;
     hasPersistentTrail: boolean;
     flameVisible: boolean;
     boosterStyleId: string;
@@ -28,6 +31,7 @@ export interface GameTestApi {
     rocketFormVisible: boolean;
     rocketFormParent: 'player-entity';
     hasDetachedBoosterRoot: false;
+    bodyTextureKey: string;
   };
   getObstacleVisualSnapshot?: () => Array<{
     kind: string;

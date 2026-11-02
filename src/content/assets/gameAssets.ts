@@ -36,7 +36,7 @@ export const gameAssetDefinitions: AssetDefinition[] = [
     kind: 'spritesheet',
     frameWidth: 384,
     frameHeight: 170,
-    frameCount: 24,
+    frameCount: 28,
   },
   {
     key: gameAssetKeys.boosterFormsSheet,
