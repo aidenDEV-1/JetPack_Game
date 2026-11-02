@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR } from '../playerAssetConfig';
 import { PlayerAnimationController } from '../playerAnimations';
 
 describe('player animation states', () => {
@@ -23,5 +24,11 @@ describe('player animation states', () => {
     controller.setAnimation('running');
     expect(controller.snapshot().animation).toBe('fallen');
     expect(controller.snapshot().gray).toBe(true);
+  });
+
+  it('keeps the jetpack anchor separate from the character collision bounds', () => {
+    expect(PLAYER_JETPACK_ANCHOR).toEqual({ x: -78, y: 18 });
+    expect(PLAYER_COLLISION_BOUNDS).toEqual({ x: -42, y: -30, width: 84, height: 68 });
+    expect(PLAYER_JETPACK_ANCHOR.x).toBeLessThan(PLAYER_COLLISION_BOUNDS.x);
   });
 });

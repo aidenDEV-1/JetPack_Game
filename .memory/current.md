@@ -1,16 +1,16 @@
 # Current Context
 
 ## Active Plan
-[5PM RUSH 플레이어블 콘텐츠·연출 보강](./plans/2026-11-01-5pm-rush-playable-content.md)
+[5PM RUSH 캐릭터·부스터·장애물 시각 일체감 개선](./plans/2026-11-02-5pm-rush-visual-cohesion.md)
 
 ## Active Phase
-[P03 Results and Regression](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/phase.md)
+[P01 Visual Cohesion and Hazard Clarity](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/phase.md)
 
 ## Active Task
-[T09 Playable Regression Validation](./phases/2026-11-01-5pm-rush-playable-content/P03-results-and-regression/T09-playable-regression-validation.md)
+[T02 Booster Trail Removal](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/T02-booster-trail-removal.md)
 
 ## Status
-- T09 구현·검증 완료
+- T01 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-현재 계획의 모든 Task 구현·검증 완료. 다음 작업은 새 요구사항이 생길 때 새 계획을 생성한다.
+T02 청사진을 읽고 `src/features/player/PlayerEntity.ts`, `src/features/player/JetpackAttachment.ts`, `src/features/booster/BoosterFlightController.ts`의 잔상 없는 부스터 렌더링과 성능 회귀를 구현한다.

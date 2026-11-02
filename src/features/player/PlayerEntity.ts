@@ -1,15 +1,14 @@
 import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
+import { JetpackAttachment } from './JetpackAttachment';
 import { PlayerAnimationController } from './playerAnimations';
-import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
+import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, PLAYER_SPRITE_SCALE } from './playerAssetConfig';
 import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
 
 export class PlayerEntity extends Phaser.GameObjects.Container {
   private readonly controller = new PlayerAnimationController();
   private readonly sprite: Phaser.GameObjects.Sprite;
-  private readonly flame: Phaser.GameObjects.Sprite;
-  private readonly boostAura: Phaser.GameObjects.Sprite;
-  private readonly boostTrail: Phaser.GameObjects.Sprite;
+  private readonly jetpack: JetpackAttachment;
   private currentAnimation: PlayerAnimation | null = null;
   private crashStarted = false;
   private readonly initialX: number;
@@ -22,19 +21,15 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.initialY = config.floorY - 74;
     this.setScale(config.scale);
 
-    this.boostTrail = scene.add.sprite(-110, 10, gameAssetKeys.boosterVfxSheet, 2)
-      .setScale(0.32, 0.2)
-      .setAlpha(0.9);
-    this.boostAura = scene.add.sprite(0, 0, gameAssetKeys.boosterVfxSheet, 1)
-      .setScale(0.2)
-      .setAlpha(0.8);
-    this.flame = scene.add.sprite(-78, 18, gameAssetKeys.boosterVfxSheet, 0)
-      .setScale(0.18, 0.25);
+    this.jetpack = new JetpackAttachment(scene, {
+      textureKey: gameAssetKeys.boosterVfxSheet,
+      flameFrame: 0,
+      anchor: PLAYER_JETPACK_ANCHOR,
+      scaleX: 0.24,
+      scaleY: 0.34,
+    });
     this.sprite = scene.add.sprite(0, 0, gameAssetKeys.playerSheet, 0).setScale(PLAYER_SPRITE_SCALE);
-    this.add([this.boostTrail, this.boostAura, this.flame, this.sprite]);
-    this.boostTrail.setVisible(false);
-    this.boostAura.setVisible(false);
-    this.flame.setVisible(false);
+    this.add([this.jetpack, this.sprite]);
     this.setAnimation('running');
   }
 
@@ -42,9 +37,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.controller.setAnimation(state);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.boostAura.setVisible(visual.boosting && !visual.gray);
-    this.boostTrail.setVisible(visual.boosting && !visual.gray);
-    this.flame.setVisible(visual.boosting && !visual.gray);
+    this.jetpack.setActive(visual.boosting && !visual.gray);
+    this.jetpack.setGray(visual.gray);
     this.applyGray(visual.gray);
   }
 
@@ -52,11 +46,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.controller.setBoosting(value);
     const visual = this.controller.snapshot();
     this.applyAnimation(visual.animation);
-    this.boostAura.setVisible(visual.boosting && !visual.gray);
-    this.boostTrail.setVisible(visual.boosting && !visual.gray);
-    this.flame.setVisible(visual.boosting && !visual.gray);
-    this.boostAura.setAlpha(visual.boosting ? 0.9 : 0);
-    this.flame.setScale(visual.boosting ? 0.24 : 0.18, visual.boosting ? 0.34 : 0.25);
+    this.jetpack.setActive(visual.boosting && !visual.gray);
+    this.jetpack.setGray(visual.gray);
     this.applyGray(visual.gray);
   }
 
@@ -76,9 +67,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     if (this.crashStarted || !this.controller.beginCrash()) return;
     this.crashStarted = true;
     this.applyAnimation('crashing');
-    this.boostAura.setVisible(false);
-    this.boostTrail.setVisible(false);
-    this.flame.setVisible(false);
+    this.jetpack.setActive(false);
     await new Promise<void>((resolve) => {
       this.scene.tweens.add({
         targets: this,
@@ -101,6 +90,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.crashStarted = false;
     this.controller.reset();
     this.currentAnimation = null;
+    this.jetpack.reset();
     this.setAnimation('running');
     this.setBoosting(false);
   }
@@ -112,11 +102,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   }
 
   private applyGray(gray: boolean): void {
-    const tint = gray ? 0x7e8791 : 0xffffff;
-    this.sprite.setTint(tint);
-    this.flame.setTint(gray ? 0x707780 : 0xffffff);
-    this.boostAura.setTint(gray ? 0x707780 : 0xffffff);
-    this.boostTrail.setTint(gray ? 0x707780 : 0xffffff);
+    this.sprite.setTint(gray ? 0x7e8791 : 0xffffff);
+    this.jetpack.setGray(gray);
   }
 }
 
