@@ -7,10 +7,10 @@
 [P01 Rocket Booster and Laser Redesign](./phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/phase.md)
 
 ## Active Task
-[T04 Visual Regression and Content Contract](./phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/T04-visual-regression-and-content-contract.md)
+없음 — 현재 계획의 모든 Task 완료
 
 ## Status
-- T01~T03 구현·검증 완료
+- T01~T04 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T04 청사진을 읽고 `tests/e2e/booster.spec.ts`, `tests/e2e/obstacle.spec.ts`, `docs/content-authoring.md`, `docs/testing.md` 전체 시각 회귀 검증 및 문서화 시작
+현재 계획의 모든 Task 구현·검증·커밋·푸시 완료. 다음 요구사항이 생기면 새 memory-plan을 생성한다.

@@ -28,7 +28,7 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 캐릭터 투명 프레임·가방 로켓 변환, 스타일 확장점, 레이저/장애물 시각 고도화 및 회귀 검증 | [P01](../phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/phase.md) |
+| P01 | `done ✅` | 캐릭터 투명 프레임·가방 로켓 변환, 스타일 확장점, 레이저/장애물 시각 고도화 및 회귀 검증 | [P01](../phases/2026-11-02-5pm-rush-rocket-booster-hazard-design/P01-rocket-booster-and-laser-redesign/phase.md) |
 
 ## Execution Order
 

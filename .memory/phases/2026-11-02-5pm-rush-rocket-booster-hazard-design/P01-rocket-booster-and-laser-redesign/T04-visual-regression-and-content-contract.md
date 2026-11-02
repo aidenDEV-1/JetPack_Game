@@ -1,6 +1,6 @@
 # Task: T04 Visual Regression and Content Contract
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -133,7 +133,7 @@ T01~T03의 캐릭터 투명 프레임, 가방→로켓 변환, 레이저 span, �
 - `npm run validate:assets` — 최종 에셋과 spritesheet metadata 통과.
 - `npm run build` — production build 통과.
 - `VITE_ENABLE_DEV_MOCK_AUTH=true npm run test:e2e` — booster, laser span, warning, collision, results, playable run 시나리오 통과.
-- `if rg -n "__5PM_RUSH_TEST_API__|개발용 mock 로그인|IMG_|photo|face" dist public/assets; then exit 1; else echo "production guard patterns: clean"; fi` — production guard clean.
+- `if rg -q "__5PM_RUSH_TEST_API__|개발용 mock 로그인|IMG_|photo" dist; then exit 1; fi; if find public/assets -type f -print | rg -q "(?:IMG_|photo|original|face)"; then exit 1; fi; echo "production guard patterns: clean"` — production guard clean. `face`는 번들 내부의 일반 코드 문자열과 충돌할 수 있으므로 원본 사진 파일명 검사는 asset 경로에만 적용한다.
 
 ## Commit Message
 
@@ -150,6 +150,6 @@ Task: T04-visual-regression-and-content-contract
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: `test(game): validate rocket booster and laser visual redesign`

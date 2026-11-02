@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축으로 이동한다', async ({ page }) => {
+test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축으로 이동한다', async ({ page }, testInfo) => {
   test.skip(Boolean(process.env.E2E_BASE_URL), '실제 Entra 인증 staging에서 수행');
   await page.goto('/');
   await page.getByRole('button', { name: '개발용 mock 로그인' }).click();
@@ -23,6 +23,7 @@ test('로컬 플레이에서 시작 부스터와 재발동 비행이 실제 x축
   });
   expect(boosterVisual?.collisionBounds.width).toBe(84);
   expect(boosterVisual?.collisionBounds.height).toBe(68);
+  await page.screenshot({ path: testInfo.outputPath('rocket-booster.png') });
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.deactivateBooster?.());
   const returned = await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.());
   expect(returned).toMatchObject({ active: false, playerX: 220 });

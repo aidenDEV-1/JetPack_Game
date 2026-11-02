@@ -38,4 +38,6 @@ VITE_ENABLE_DEV_MOCK_AUTH=true
 
 개발 서버에서만 `window.__5PM_RUSH_TEST_API__`가 등록된다. `getSnapshot()`은 bridge 상태를 반환하고, `spawnDemoItems()`, `spawnDemoObstacle()`, `activateBooster()`, `deactivateBooster()`, `forceCrash()`는 실제 Phaser 장면의 이벤트를 호출한다. 테스트가 끝나면 GameShell unmount에서 hook을 삭제하며 production build에는 이 API가 포함되지 않는다.
 
-Playwright는 1280×720 화면에서 시작/부스터/우측 장애물 warning screenshot을 캡처하고, `/assets/` 응답 오류와 uncaught console error를 실패로 처리한다. player debug snapshot으로 attachment 1개, persistent trail 없음, 몸체 collision bounds를 확인하고 obstacle snapshot으로 우측 warning 위치와 표시 크기를 확인한다. 캡처 이미지는 `test-results/` 아래에만 생성되므로 저장소에는 커밋하지 않는다.
+Playwright는 1280×720 화면에서 시작/가방 로켓 부스터/레이저 full span/우측 장애물 warning screenshot(`rocket-booster.png`, `laser-full-span.png`, `hazard-warning.png`)을 캡처하고, `/assets/` 응답 오류와 uncaught console error를 실패로 처리한다. player debug snapshot으로 style id, rocket form parent, attachment 1개, detached root 없음, persistent trail 없음, 몸체 collision bounds를 확인한다. obstacle snapshot으로 orientation/span mode/resolved length, 표시 bounds와 collision bounds의 분리, 우측 warning 위치를 확인한다. 캡처 이미지는 `test-results/` 아래에만 생성되므로 저장소에는 커밋하지 않는다.
+
+레이저 snapshot의 `resolvedLength`는 spawn 시 결정된 값이므로 update 중 바뀌면 실패한다. `displayBounds`에는 glow/emitter가 포함될 수 있지만 `collisionBounds`에는 실제 beam만 포함되어야 한다. 새 로켓 스타일은 실제 구매 상태를 테스트하지 않고 기본 `leather-rocket` catalog 계약만 검증한다.
