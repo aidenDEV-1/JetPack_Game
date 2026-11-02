@@ -1,6 +1,6 @@
 # Task: T04 Visual Regression Validation
 
-## Status: pending
+## Status: done ✅
 
 ## Goal
 
@@ -108,6 +108,6 @@ Task: T04-visual-regression-validation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: test(game): cover visual clarity regressions

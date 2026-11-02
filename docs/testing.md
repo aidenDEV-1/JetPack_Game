@@ -38,4 +38,4 @@ VITE_ENABLE_DEV_MOCK_AUTH=true
 
 개발 서버에서만 `window.__5PM_RUSH_TEST_API__`가 등록된다. `getSnapshot()`은 bridge 상태를 반환하고, `spawnDemoItems()`, `spawnDemoObstacle()`, `activateBooster()`, `deactivateBooster()`, `forceCrash()`는 실제 Phaser 장면의 이벤트를 호출한다. 테스트가 끝나면 GameShell unmount에서 hook을 삭제하며 production build에는 이 API가 포함되지 않는다.
 
-Playwright는 1280×720 화면을 캡처하고 `/assets/` 응답 오류와 uncaught console error를 실패로 처리한다. 캡처 이미지는 `test-results/` 아래에만 생성되므로 저장소에는 커밋하지 않는다.
+Playwright는 1280×720 화면에서 시작/부스터/우측 장애물 warning screenshot을 캡처하고, `/assets/` 응답 오류와 uncaught console error를 실패로 처리한다. player debug snapshot으로 attachment 1개, persistent trail 없음, 몸체 collision bounds를 확인하고 obstacle snapshot으로 우측 warning 위치와 표시 크기를 확인한다. 캡처 이미지는 `test-results/` 아래에만 생성되므로 저장소에는 커밋하지 않는다.

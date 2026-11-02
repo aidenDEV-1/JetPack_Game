@@ -12,10 +12,13 @@ export interface GameTestApi {
   getSnapshot: () => RunState;
   spawnDemoItems: () => void;
   spawnDemoObstacle: () => void;
+  spawnDemoWarningObstacle?: () => void;
+  clearDemoObstacles?: () => void;
   activateBooster: () => void;
   deactivateBooster: () => void;
   forceCrash: () => void;
   getPlayerVisualSnapshot?: () => {
+    collisionBounds: { x: number; y: number; width: number; height: number };
     jetpackAttachmentCount: number;
     hasPersistentTrail: boolean;
     flameVisible: boolean;

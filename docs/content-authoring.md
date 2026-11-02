@@ -16,7 +16,7 @@
 | 게임 방식 | `src/game/`, `src/features/*` | Phaser 장면과 순수 시스템을 직접 결합하지 않는다. |
 | 기술 스택·배포 | `package.json`, `infra/`, `.github/workflows/` | 인증·비밀값을 프론트 번들에 넣지 않는다. |
 
-새 콘텐츠는 기존 타입과 이벤트 계약을 사용하고, 다른 feature 폴더의 내부 상태를 직접 수정하지 않는다. 원본 얼굴 사진은 커밋·배포하지 않고 최종 일러스트 에셋만 사용한다.
+새 콘텐츠는 기존 타입과 이벤트 계약을 사용하고, 다른 feature 폴더의 내부 상태를 직접 수정하지 않는다. 원본 얼굴 사진은 커밋·배포하지 않고 최종 일러스트 에셋만 사용한다. 장애물의 `displayWidth/displayHeight`와 collision `width/height`는 `obstaclePatterns.ts`에서 함께 검토하고, 우측 warning 표시 lifecycle은 `ObstacleWarningIndicator.ts`에서 관리한다.
 
 ## 새 에셋과 구간을 추가하는 순서
 

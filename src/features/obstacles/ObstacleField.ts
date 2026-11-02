@@ -83,7 +83,16 @@ export class ObstacleField {
   }
 
   public spawnDemoObstacle(): void {
+    this.obstacles.push(new ObstacleEntity(this.scene, obstaclePatterns.find((pattern) => pattern.kind === 'monster')!, GAME_CONFIG.playerX + 60, GAME_CONFIG.floorY - 55));
+  }
+
+  public spawnDemoWarningObstacle(): void {
     this.obstacles.push(new ObstacleEntity(this.scene, obstaclePatterns.find((pattern) => pattern.kind === 'missile')!, GAME_CONFIG.width + 80, GAME_CONFIG.floorY - 55));
+  }
+
+  public clearDemoObstacles(): void {
+    this.obstacles.forEach((obstacle) => obstacle.destroy());
+    this.obstacles.length = 0;
   }
 
   private spawn(context: SpawnContext): void {

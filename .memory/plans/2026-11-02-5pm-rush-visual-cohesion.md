@@ -24,7 +24,7 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 캐릭터-제트팩 결합, 부스터 잔상 제거, 장애물 가독성·우측 경고·시각 회귀 검증 | [P01](../phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/phase.md) |
+| P01 | `done ✅` | 캐릭터-제트팩 결합, 부스터 잔상 제거, 장애물 가독성·우측 경고·시각 회귀 검증 | [P01](../phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/phase.md) |
 
 ## Execution Order
 

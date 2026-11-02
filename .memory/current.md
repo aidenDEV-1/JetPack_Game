@@ -10,7 +10,7 @@
 [T04 Visual Regression Validation](./phases/2026-11-02-5pm-rush-visual-cohesion/P01-visual-cohesion-and-hazard-clarity/T04-visual-regression-validation.md)
 
 ## Status
-- T03 구현·검증 완료
+- T04 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T04 청사진을 읽고 `src/game/test/GameTestApi.ts`, `tests/e2e/playable-run.spec.ts`, `tests/e2e/booster.spec.ts`, `tests/e2e/obstacle.spec.ts`의 시각 회귀·성능·production guard 전체 검증을 마무리한다.
+현재 계획의 모든 Task 구현·검증 완료. 다음 작업은 새 요구사항이 생길 때 새 계획을 생성한다.

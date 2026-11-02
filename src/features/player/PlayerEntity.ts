@@ -6,6 +6,7 @@ import { PLAYER_ANIMATION_KEYS, PLAYER_COLLISION_BOUNDS, PLAYER_JETPACK_ANCHOR, 
 import type { PlayerAnimation, PlayerConfig, PlayerVisualState } from './playerTypes';
 
 export interface PlayerVisualDebugSnapshot {
+  collisionBounds: { x: number; y: number; width: number; height: number };
   jetpackAttachmentCount: number;
   hasPersistentTrail: boolean;
   flameVisible: boolean;
@@ -60,7 +61,9 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
 
   public getVisualDebugSnapshot(): PlayerVisualDebugSnapshot {
+    const bounds = this.getCollisionBounds();
     return {
+      collisionBounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height },
       jetpackAttachmentCount: 1,
       hasPersistentTrail: false,
       flameVisible: this.jetpack.visible,
