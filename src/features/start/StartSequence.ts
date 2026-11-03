@@ -18,13 +18,12 @@ export class StartSequence implements StartSequenceContract {
   public async play(): Promise<void> {
     this.cancelled = false;
     this.options.onClockChange('4:59:59');
-    await this.wait(1200);
+    const clockLeadMs = Math.round(BOOSTER_TUNING.introDurationMs * 0.4);
+    await this.wait(clockLeadMs);
     if (this.cancelled) return;
     this.options.onClockChange('5:00:00');
     this.options.onAlarm();
-    await this.wait(800);
-    if (this.cancelled) return;
-    await this.wait(1000);
+    await this.wait(Math.max(0, BOOSTER_TUNING.introDurationMs - clockLeadMs));
     if (!this.cancelled) this.options.onComplete();
   }
 
@@ -38,3 +37,5 @@ export class StartSequence implements StartSequenceContract {
     return new Promise((resolve) => { this.timer = setTimeout(resolve, durationMs); });
   }
 }
+import { BOOSTER_TUNING } from '../../game/config/tuning/booster';
+

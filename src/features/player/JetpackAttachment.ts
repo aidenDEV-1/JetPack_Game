@@ -3,6 +3,7 @@ import type { BoosterStyleDefinition, BoosterStyleId } from '../booster/boosterS
 import { gameAssetKeys } from '../../content/assets/gameAssets';
 import { JetpackFlameVisual, type JetpackFlameIntensity } from './JetpackFlameVisual';
 import { JetpackSparkEmitter } from './JetpackSparkEmitter';
+import { BOOSTER_TUNING } from '../../game/config/tuning/booster';
 
 export type BoosterFormMode = 'normal' | 'transforming-in' | 'boosting' | 'transforming-out';
 export type JetpackActivity = 'off' | 'takeoff' | 'flying' | 'boosting';
@@ -70,10 +71,12 @@ export class JetpackAttachment extends Phaser.GameObjects.Container {
     }
     const active = activity !== 'off';
     const intensity: JetpackFlameIntensity = activity === 'boosting' || activity === 'takeoff' ? 'strong' : 'normal';
-    // The rocket form already contains its two exhaust flames; use the separate
-    // nozzle flame only for the normal backpack form to avoid double-rendering.
-    this.flameVisual.setFlameActive(activity === 'takeoff' || activity === 'flying', intensity);
-    this.sparkEmitter.setEmitterActive(active);
+    this.flameVisual.setFlameActive(activity === 'takeoff' || activity === 'flying' || activity === 'boosting', intensity);
+    this.sparkEmitter.setEmitterActive(active, activity === 'boosting' ? BOOSTER_TUNING.particleMultiplier : 1);
+  }
+
+  public setBoosterVisual(active: boolean): void {
+    this.setActivity(active ? 'boosting' : 'off');
   }
 
   public setBoosting(active: boolean): void {

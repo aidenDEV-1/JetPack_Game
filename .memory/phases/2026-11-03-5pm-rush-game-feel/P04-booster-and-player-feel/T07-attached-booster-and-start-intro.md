@@ -1,6 +1,6 @@
 # Task: T07 가방 제트팩 강화형 부스터와 시작 인트로
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -98,6 +98,6 @@ Task: T07-attached-booster-and-start-intro
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)

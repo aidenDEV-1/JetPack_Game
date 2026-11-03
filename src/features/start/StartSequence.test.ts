@@ -14,4 +14,17 @@ describe('start sequence', () => {
     expect(complete).toHaveBeenCalledOnce();
     vi.useRealTimers();
   });
+
+  it('completes the clock/alarm intro in the configured 1.5 seconds', async () => {
+    vi.useFakeTimers();
+    const complete = vi.fn();
+    const sequence = new StartSequence({ onClockChange: vi.fn(), onAlarm: vi.fn(), onComplete: complete });
+    const running = sequence.play();
+    await vi.advanceTimersByTimeAsync(1499);
+    expect(complete).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    await running;
+    expect(complete).toHaveBeenCalledOnce();
+    vi.useRealTimers();
+  });
 });

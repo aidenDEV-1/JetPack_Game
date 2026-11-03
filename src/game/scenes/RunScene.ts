@@ -19,6 +19,7 @@ import { ResultsController } from '../../features/results/ResultsController';
 import { registerGameTestApi } from '../test/GameTestApi';
 import { MOVEMENT_TUNING } from '../config/tuning/movement';
 import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
+import { BOOSTER_TUNING } from '../config/tuning/booster';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -143,7 +144,7 @@ export class RunScene extends Phaser.Scene {
     if (this.runState.snapshot().phase !== 'ready') return;
     this.runState.start();
     this.boosterController.startInitial();
-    this.boosterFlight.activate();
+    this.boosterFlight.activate(BOOSTER_TUNING.initialBoostDurationMs);
     this.runEffects.emitBooster(this.player.x, this.player.y);
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs);

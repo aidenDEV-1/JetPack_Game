@@ -69,8 +69,10 @@ button { font: inherit; }
 .start-overlay p:not(.eyebrow) { margin: 0 0 16px; color: #e4eef9; font-size: clamp(14px, 2vw, 22px); }
 .start-button { border: 2px solid #f7c948; border-radius: 14px; padding: 16px 28px; background: #f7c948; color: #101820; cursor: pointer; font-size: 18px; font-weight: 900; box-shadow: 0 10px 30px rgba(247, 201, 72, 0.3); }
 .clock-overlay { background: rgba(5, 11, 20, 0.76); }
+.clock-overlay.alarm .wall-clock { animation: alarm-pulse 180ms ease-in-out infinite alternate; border-color: #ffcf54; box-shadow: 0 0 72px rgba(255, 71, 71, 0.8); }
 .wall-clock { display: grid; place-items: center; width: clamp(170px, 25vw, 280px); height: clamp(170px, 25vw, 280px); border: 12px solid #dce8f5; border-radius: 50%; background: #152b46; color: #f7c948; font-size: clamp(28px, 5vw, 56px); font-weight: 900; box-shadow: 0 0 50px rgba(247, 201, 72, 0.4); }
 .clock-overlay p { color: #fff; font-size: 22px; font-weight: 900; }
+@keyframes alarm-pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
 .results-panel { position: absolute; inset: 50% auto auto 50%; z-index: 12; width: min(560px, calc(100% - 40px)); transform: translate(-50%, -50%); padding: 30px; border: 1px solid #688bb7; border-radius: 20px; background: #0d1d31; box-shadow: 0 20px 70px rgba(0, 0, 0, 0.52); text-align: center; }
 .results-layer { position: absolute; inset: 0; z-index: 12; background: rgba(3, 7, 13, 0.56); }
 .results-panel h2 { margin: 6px 0 20px; color: #f7c948; font-size: clamp(26px, 4vw, 42px); }

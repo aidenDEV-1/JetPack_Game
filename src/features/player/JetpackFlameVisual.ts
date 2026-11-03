@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { BOOSTER_TUNING } from '../../game/config/tuning/booster';
 
 export type JetpackFlameIntensity = 'normal' | 'strong';
 
@@ -17,7 +18,9 @@ export class JetpackFlameVisual extends Phaser.GameObjects.Sprite {
       return;
     }
     this.setVisible(true);
-    this.setScale(intensity === 'strong' ? 0.56 : 0.42);
+    const baseScale = intensity === 'strong' ? 0.52 : 0.42;
+    const lengthMultiplier = intensity === 'strong' ? BOOSTER_TUNING.flameLengthMultiplier : 1;
+    this.setScale(baseScale * lengthMultiplier, baseScale);
     this.play('player-jetpack-flame', true);
   }
 

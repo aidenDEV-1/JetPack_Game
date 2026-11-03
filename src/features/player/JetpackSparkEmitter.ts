@@ -20,9 +20,11 @@ export class JetpackSparkEmitter extends Phaser.GameObjects.Particles.ParticleEm
     this.setVisible(false);
   }
 
-  public setEmitterActive(active: boolean): void {
+  public setEmitterActive(active: boolean, multiplier = 1): void {
     this.setVisible(active);
     if (active) {
+      this.quantity = Math.max(1, Math.round(multiplier));
+      this.frequency = Math.max(25, 95 / multiplier);
       this.start();
     } else {
       this.stop(true);

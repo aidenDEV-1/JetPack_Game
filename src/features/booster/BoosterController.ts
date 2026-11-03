@@ -4,7 +4,7 @@ import { BOOSTER_TUNING } from '../../game/config/tuning/booster';
 export class BoosterController {
   private state: BoosterState = { active: false, remainingMs: 0, tokenCount: 0, hasShield: false };
 
-  public startInitial(): void { this.activate(); }
+  public startInitial(): void { this.activate(BOOSTER_TUNING.initialBoostDurationMs); }
 
   public collectToken(): boolean {
     this.state.tokenCount += 1;
@@ -28,9 +28,9 @@ export class BoosterController {
     return true;
   }
 
-  public activate(): void {
+  public activate(durationMs: number = BOOSTER_TUNING.durationMs): void {
     this.state.active = true;
-    this.state.remainingMs = BOOSTER_TUNING.durationMs;
+    this.state.remainingMs = durationMs;
   }
 
   public tick(deltaMs: number): void {

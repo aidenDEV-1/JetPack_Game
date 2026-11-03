@@ -21,4 +21,11 @@ describe('BoosterFlightController', () => {
     controller.activate();
     expect(controller.snapshot()).toMatchObject({ active: true, phase: 'travelling-out', playerX: GAME_CONFIG.playerX, remainingMs: 5000 });
   });
+
+  it('supports the shorter 1.5 second start boost without changing the normal boost duration', () => {
+    const controller = new BoosterFlightController();
+    controller.activate(1500);
+    expect(controller.update(500).phase).toBe('holding');
+    expect(controller.update(1000)).toMatchObject({ active: false, playerX: GAME_CONFIG.playerX, remainingMs: 0 });
+  });
 });

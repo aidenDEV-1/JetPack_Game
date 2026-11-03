@@ -42,7 +42,7 @@ export const gameAssetDefinitions: AssetDefinition[] = [
   },
   {
     key: gameAssetKeys.boosterFormsSheet,
-    path: '/assets/player/booster-forms-spritesheet.png',
+    path: '/assets/player/booster-backpack-spritesheet.png',
     kind: 'spritesheet',
     frameWidth: 384,
     frameHeight: 170,

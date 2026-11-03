@@ -14,24 +14,30 @@ export class BoosterFlightController {
   private active = false;
   private elapsedMs = 0;
   private playerX: number = GAME_CONFIG.playerX;
+  private activeDurationMs: number = BOOSTER_TUNING.durationMs;
 
-  public activate(): void {
+  public activate(durationMs: number = BOOSTER_TUNING.durationMs): void {
     this.active = true;
     this.elapsedMs = 0;
     this.playerX = GAME_CONFIG.playerX;
+    this.activeDurationMs = Math.max(1, durationMs);
   }
 
   public update(deltaMs: number): BoosterFlightSnapshot {
     if (!this.active) return this.snapshot();
-    const durationMs = BOOSTER_TUNING.travelOutMs + BOOSTER_TUNING.holdMs + BOOSTER_TUNING.travelBackMs;
+    const durationMs = this.activeDurationMs;
+    const durationScale = durationMs / BOOSTER_TUNING.durationMs;
+    const travelOutMs = BOOSTER_TUNING.travelOutMs * durationScale;
+    const holdMs = BOOSTER_TUNING.holdMs * durationScale;
+    const travelBackMs = BOOSTER_TUNING.travelBackMs * durationScale;
     this.elapsedMs = Math.min(durationMs, this.elapsedMs + Math.max(0, deltaMs));
-    if (this.elapsedMs < BOOSTER_TUNING.travelOutMs) {
-      const progress = this.easeOutCubic(this.elapsedMs / BOOSTER_TUNING.travelOutMs);
+    if (this.elapsedMs < travelOutMs) {
+      const progress = this.easeOutCubic(this.elapsedMs / travelOutMs);
       this.playerX = this.interpolate(GAME_CONFIG.playerX, GAME_CONFIG.width - 120, progress);
-    } else if (this.elapsedMs < BOOSTER_TUNING.travelOutMs + BOOSTER_TUNING.holdMs) {
+    } else if (this.elapsedMs < travelOutMs + holdMs) {
       this.playerX = GAME_CONFIG.width - 120;
     } else if (this.elapsedMs < durationMs) {
-      const progress = this.easeInCubic((this.elapsedMs - BOOSTER_TUNING.travelOutMs - BOOSTER_TUNING.holdMs) / BOOSTER_TUNING.travelBackMs);
+      const progress = this.easeInCubic((this.elapsedMs - travelOutMs - holdMs) / travelBackMs);
       this.playerX = this.interpolate(GAME_CONFIG.width - 120, GAME_CONFIG.playerX, progress);
     } else {
       this.active = false;
@@ -46,7 +52,7 @@ export class BoosterFlightController {
       phase: this.getPhase(),
       playerX: this.playerX,
       worldSpeedMultiplier: this.active ? BOOSTER_TUNING.speedMultiplier : 1,
-      remainingMs: this.active ? Math.max(0, (BOOSTER_TUNING.travelOutMs + BOOSTER_TUNING.holdMs + BOOSTER_TUNING.travelBackMs) - this.elapsedMs) : 0,
+      remainingMs: this.active ? Math.max(0, this.activeDurationMs - this.elapsedMs) : 0,
     };
   }
 
@@ -54,12 +60,16 @@ export class BoosterFlightController {
     this.active = false;
     this.elapsedMs = 0;
     this.playerX = GAME_CONFIG.playerX;
+    this.activeDurationMs = BOOSTER_TUNING.durationMs;
   }
 
   private getPhase(): BoosterFlightPhase {
     if (!this.active) return 'idle';
-    if (this.elapsedMs < BOOSTER_TUNING.travelOutMs) return 'travelling-out';
-    if (this.elapsedMs < BOOSTER_TUNING.travelOutMs + BOOSTER_TUNING.holdMs) return 'holding';
+    const durationScale = this.activeDurationMs / BOOSTER_TUNING.durationMs;
+    const travelOutMs = BOOSTER_TUNING.travelOutMs * durationScale;
+    const holdMs = BOOSTER_TUNING.holdMs * durationScale;
+    if (this.elapsedMs < travelOutMs) return 'travelling-out';
+    if (this.elapsedMs < travelOutMs + holdMs) return 'holding';
     return 'travelling-back';
   }
 

@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { BoosterController } from '../BoosterController';
 
 describe('booster controller', () => {
-  it('starts with five seconds of invincibility', () => {
+  it('starts with the configured short intro boost', () => {
     const controller = new BoosterController();
     controller.startInitial();
     expect(controller.isInvincible()).toBe(true);
-    controller.tick(4999);
+    controller.tick(1499);
     expect(controller.isInvincible()).toBe(true);
     controller.tick(1);
     expect(controller.isInvincible()).toBe(false);

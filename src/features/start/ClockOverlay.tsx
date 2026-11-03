@@ -7,7 +7,7 @@ interface ClockOverlayProps {
 
 export function ClockOverlay({ visible, value }: ClockOverlayProps) {
   if (!visible) return null;
-  return <div className="clock-overlay" aria-live="assertive"><div className="wall-clock">{value}</div><p>{value === gameCopy.clockAfter ? '5시 정각! 출발!' : '퇴근 준비…'}</p></div>;
+  return <div className={`clock-overlay${value === gameCopy.clockAfter ? ' alarm' : ''}`} aria-live="assertive"><div className="wall-clock">{value}</div><p>{value === gameCopy.clockAfter ? '5시 정각! 출발!' : '퇴근 준비…'}</p></div>;
 }
 
 export function StartOverlay({ onStart }: { onStart: () => void }) {
