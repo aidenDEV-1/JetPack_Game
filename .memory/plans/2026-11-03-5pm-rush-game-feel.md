@@ -16,8 +16,8 @@
 | P04 | `pending` | 가방 제트팩 강화형 부스터, 시작 인트로, 유예 무적 | [P04](../phases/2026-11-03-5pm-rush-game-feel/P04-booster-and-player-feel/phase.md) |
 | P05 | `pending` | 사무실 우선 레이어 분리 배경과 나머지 구간 확장 | [P05](../phases/2026-11-03-5pm-rush-game-feel/P05-background-reconstruction/phase.md) |
 | P06 | `done ✅` | 효과음·배경음 파이프라인과 비충돌 동료 NPC | [P06](../phases/2026-11-03-5pm-rush-game-feel/P06-audio-and-world-life/phase.md) |
-| P07 | `in_progress 🔵` | 런당 미션 3개와 결과 보너스 코인 | [P07](../phases/2026-11-03-5pm-rush-game-feel/P07-reward-loop/phase.md) |
-| P08 | `pending` | F 디버그 오버레이, 결정적 플레이테스트, 회귀 검증 | [P08](../phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/phase.md) |
+| P07 | `done ✅` | 런당 미션 3개와 결과 보너스 코인 | [P07](../phases/2026-11-03-5pm-rush-game-feel/P07-reward-loop/phase.md) |
+| P08 | `in_progress 🔵` | F 디버그 오버레이, 결정적 플레이테스트, 회귀 검증 | [P08](../phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/phase.md) |
 
 ## Global Constraints
 

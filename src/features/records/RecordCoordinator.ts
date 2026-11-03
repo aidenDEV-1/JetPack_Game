@@ -52,5 +52,5 @@ export class RecordCoordinator {
 }
 
 function sameResult(left: GameRunResult | null, right: GameRunResult): boolean {
-  return Boolean(left && left.distanceMeters === right.distanceMeters && left.runCoins === right.runCoins && left.score === right.score);
+  return Boolean(left && left.distanceMeters === right.distanceMeters && left.totalRunCoins === right.totalRunCoins && left.missionBonusCoins === right.missionBonusCoins && left.score === right.score);
 }

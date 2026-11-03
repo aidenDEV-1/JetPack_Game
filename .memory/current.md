@@ -4,13 +4,13 @@
 [5PM RUSH 게임성 고도화](./plans/2026-11-03-5pm-rush-game-feel.md)
 
 ## Active Phase
-[P07 보상 루프](./phases/2026-11-03-5pm-rush-game-feel/P07-reward-loop/phase.md)
+[P08 플레이테스트와 회귀 검증](./phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/phase.md)
 
 ## Active Task
-[T14 결과 화면 미션 보상 연결](./phases/2026-11-03-5pm-rush-game-feel/P07-reward-loop/T14-results-mission-reward.md)
+[T15 디버그 오버레이와 결정적 플레이 시뮬레이션](./phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/T15-debug-overlay-and-simulation.md)
 
 ## Status
-- T01~T13 구현·검증 완료
+- T01~T14 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T14 청사진을 읽고 결과 화면에 미션 진행·보너스 및 기존 기록 저장 결과를 연결
+T15 청사진을 읽고 F 디버그 오버레이와 결정적 플레이 시뮬레이션을 연결

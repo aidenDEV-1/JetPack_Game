@@ -1,6 +1,6 @@
 # Task: T14 결과 화면 미션 보너스와 기록 연결
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -88,6 +88,6 @@ Task: T14-results-mission-reward
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)

@@ -15,9 +15,11 @@ import { RecordCoordinator } from '../features/records/RecordCoordinator';
 import { ResultsPanel } from '../features/results/ResultsPanel';
 import { LeaderboardPanel } from '../features/leaderboard/LeaderboardPanel';
 import { clearGameTestApi } from '../game/test/GameTestApi';
+import type { MissionSnapshot } from '../features/rewards/missionTypes';
 
 interface RunResultState {
   result: GameRunResult;
+  missions: MissionSnapshot;
   saveState: SaveState;
 }
 
@@ -51,9 +53,9 @@ export function GameShell() {
         onRunEnd: (snapshot) => {
           const result = toGameRunResult(snapshot);
           setLeaderboardOpen(false);
-          setRunResult({ result, saveState: { status: 'saving', result } });
+          setRunResult({ result, missions: snapshot.missions, saveState: { status: 'saving', result } });
           void recordCoordinatorRef.current.save(result).then((saveState) => {
-            if (!disposed) setRunResult({ result, saveState });
+            if (!disposed) setRunResult({ result, missions: snapshot.missions, saveState });
           });
         },
       };
@@ -94,8 +96,8 @@ export function GameShell() {
 
   const retrySave = () => {
     if (!runResult) return;
-    setRunResult({ result: runResult.result, saveState: { status: 'saving', result: runResult.result } });
-    void recordCoordinatorRef.current.retry().then((saveState) => setRunResult({ result: runResult.result, saveState }));
+    setRunResult({ result: runResult.result, missions: runResult.missions, saveState: { status: 'saving', result: runResult.result } });
+    void recordCoordinatorRef.current.retry().then((saveState) => setRunResult({ result: runResult.result, missions: runResult.missions, saveState }));
   };
 
   const replay = () => {
@@ -124,7 +126,10 @@ export function GameShell() {
           {leaderboardOpen && savedState ? <div className="leaderboard-dialog"><LeaderboardPanel leaderboard={savedState.leaderboard} onClose={() => setLeaderboardOpen(false)} /></div> : <ResultsPanel
             distanceMeters={runResult.result.distanceMeters}
             runCoins={runResult.result.runCoins}
-            totalCoins={savedResponse?.record.totalCoins ?? runResult.result.runCoins}
+            missionBonusCoins={runResult.result.missionBonusCoins}
+            totalRunCoins={runResult.result.totalRunCoins}
+            missions={runResult.missions.missions}
+            totalCoins={savedResponse?.record.totalCoins ?? runResult.result.totalRunCoins}
             bestDistanceMeters={savedResponse?.record.bestDistanceMeters ?? runResult.result.distanceMeters}
             isNewBest={savedResponse?.isNewBest ?? false}
             isRankOne={savedState?.leaderboard.currentUser?.rank === 1}
@@ -142,11 +147,13 @@ export function GameShell() {
 }
 
 function toGameRunResult(snapshot: RunState): GameRunResult {
-  const awardedCoins = snapshot.runCoins + snapshot.missions.bonusCoins;
+  const totalRunCoins = snapshot.runCoins + snapshot.missions.bonusCoins;
   return {
     distanceMeters: snapshot.distanceMeters,
-    runCoins: awardedCoins,
-    score: Math.floor(snapshot.distanceMeters) + awardedCoins * 10,
+    runCoins: snapshot.runCoins,
+    missionBonusCoins: snapshot.missions.bonusCoins,
+    totalRunCoins,
+    score: Math.floor(snapshot.distanceMeters) + totalRunCoins * 10,
   };
 }
 

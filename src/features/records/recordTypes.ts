@@ -1,6 +1,8 @@
 export interface GameRunResult {
   distanceMeters: number;
   runCoins: number;
+  missionBonusCoins: number;
+  totalRunCoins: number;
   score: number;
 }
 

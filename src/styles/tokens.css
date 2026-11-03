@@ -79,6 +79,19 @@ button { font: inherit; }
 .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .results-grid span { display: grid; gap: 4px; padding: 12px; border-radius: 10px; background: #172d48; color: #a9bfd8; font-size: 12px; }
 .results-grid strong { color: #f7fbff; font-size: 22px; }
+.mission-summary { margin-top: 18px; padding: 14px; border: 1px solid rgba(247, 201, 72, 0.35); border-radius: 14px; background: linear-gradient(145deg, rgba(17, 38, 62, 0.95), rgba(9, 23, 39, 0.95)); text-align: left; }
+.mission-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; color: #f7c948; font-size: 11px; letter-spacing: 0.08em; }
+.mission-summary-heading span { color: #fff2ad; font-size: 10px; letter-spacing: 0; }
+.mission-list { display: grid; gap: 7px; }
+.mission-card { padding: 8px 10px; border: 1px solid rgba(140, 195, 235, 0.2); border-radius: 8px; background: rgba(7, 17, 31, 0.58); }
+.mission-card.completed { border-color: rgba(247, 201, 72, 0.75); background: rgba(92, 68, 20, 0.3); }
+.mission-card-heading { display: flex; justify-content: space-between; gap: 10px; color: #d9e6f2; font-size: 12px; }
+.mission-card.completed .mission-card-heading { color: #fff2ad; }
+.mission-card-heading strong { color: #a9bfd8; font-size: 11px; }
+.mission-progress { height: 5px; margin: 6px 0 4px; overflow: hidden; border-radius: 5px; background: #1d334b; }
+.mission-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #368fd8, #f7c948); transition: width 160ms ease-out; }
+.mission-card.completed .mission-progress span { background: #f7c948; box-shadow: 0 0 8px rgba(247, 201, 72, 0.65); }
+.mission-card small { color: #7796b6; font-size: 10px; }
 .save-pending { margin: 16px 0; color: #ffcf73; }
 .save-pending button, .results-actions button { border: 1px solid #688bb7; border-radius: 10px; padding: 10px 14px; background: #172d48; color: #fff; cursor: pointer; }
 .results-actions button:disabled { cursor: not-allowed; opacity: 0.45; }

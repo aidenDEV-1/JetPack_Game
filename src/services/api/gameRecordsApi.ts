@@ -9,7 +9,8 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export function saveGameRun(result: GameRunResult): Promise<SaveRunResponse> {
-  return requestJson<SaveRunResponse>(`${API_BASE_URL}/runs`, { method: 'POST', body: JSON.stringify(result) });
+  const payload = { distanceMeters: result.distanceMeters, runCoins: result.totalRunCoins, score: result.score };
+  return requestJson<SaveRunResponse>(`${API_BASE_URL}/runs`, { method: 'POST', body: JSON.stringify(payload) });
 }
 
 export function getLeaderboard(): Promise<LeaderboardResponse> {
