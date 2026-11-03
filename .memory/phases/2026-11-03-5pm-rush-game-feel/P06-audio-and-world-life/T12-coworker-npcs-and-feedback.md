@@ -1,6 +1,6 @@
 # Task: T12 퇴근 동료 NPC와 월드 피드백
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -78,6 +78,6 @@ Task: T12-coworker-npcs-and-feedback
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)

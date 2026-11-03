@@ -4,7 +4,7 @@ import process from 'node:process';
 import { error, log } from 'node:console';
 
 const assetRoot = resolve(process.cwd(), 'public/assets');
-const requiredDirectories = ['player', 'generated', 'items', 'obstacles', 'backgrounds', 'ui'];
+const requiredDirectories = ['player', 'generated', 'items', 'obstacles', 'backgrounds', 'ui', 'world'];
 const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'];
 const backgroundLayers = ['l0', 'l1', 'l2', 'l3'];
 const layeredBackgroundFiles = backgroundScenes.flatMap((scene) => backgroundLayers.map((layer) => `backgrounds/${scene}-${layer}.png`));
@@ -17,6 +17,8 @@ const requiredFiles = [
   'items/items-spritesheet.png',
   'obstacles/obstacles-spritesheet.png',
   'obstacles/laser-emitter.png',
+  'world/coworker-npc-spritesheet.png',
+  'world/source/coworker-npc-source.png',
   'ui/coin-icon.svg',
   'ui/dex-token-icon.svg',
   'ui/shield-icon.svg',
@@ -32,9 +34,11 @@ const requiredFiles = [
 const requiredSpritesheetMetadata = {
   'generated/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
   'obstacles/obstacles-spritesheet.png': { width: 1536, height: 1024, frameWidth: 512, frameHeight: 512, frameCount: 6 },
+  'world/coworker-npc-spritesheet.png': { width: 512, height: 170, frameWidth: 128, frameHeight: 170, frameCount: 4 },
 };
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
+  'world/source/coworker-npc-source.png': { width: 1199, height: 1312 },
 };
 const requiredBackgroundMetadata = Object.fromEntries(layeredBackgroundFiles.map((file) => [file, { width: 1280, height: 720 }]));
 const requiredReferenceMetadata = {

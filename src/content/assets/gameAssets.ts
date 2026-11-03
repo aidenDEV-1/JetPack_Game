@@ -14,6 +14,7 @@ export const gameAssetKeys = {
   itemsSheet: 'items-spritesheet',
   obstaclesSheet: 'obstacles-spritesheet',
   laserEmitter: 'laser-emitter',
+  coworkerNpcSheet: 'coworker-npc-spritesheet',
   backgrounds: Object.fromEntries(
     backgroundScenes.map((scene) => [scene, Object.fromEntries(backgroundLayers.map((layer) => [layer, `background-${scene}-${layer}`]))]),
   ) as Record<(typeof backgroundScenes)[number], Record<(typeof backgroundLayers)[number], string>>,
@@ -70,6 +71,14 @@ export const gameAssetDefinitions: AssetDefinition[] = [
     key: gameAssetKeys.laserEmitter,
     path: '/assets/obstacles/laser-emitter.png',
     kind: 'image',
+  },
+  {
+    key: gameAssetKeys.coworkerNpcSheet,
+    path: '/assets/world/coworker-npc-spritesheet.png',
+    kind: 'spritesheet',
+    frameWidth: 128,
+    frameHeight: 170,
+    frameCount: 4,
   },
   ...backgroundDefinitions,
 ];

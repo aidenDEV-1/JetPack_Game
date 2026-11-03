@@ -21,6 +21,7 @@ import { MOVEMENT_TUNING } from '../config/tuning/movement';
 import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
 import { BOOSTER_TUNING } from '../config/tuning/booster';
 import { audioController } from '../../services/audio/AudioController';
+import { CoworkerNpcField } from '../../features/world/CoworkerNpcField';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -38,6 +39,7 @@ export class RunScene extends Phaser.Scene {
   private collectibleField!: CollectibleField;
   private obstacleField!: ObstacleField;
   private runEffects!: RunEffects;
+  private coworkerNpcField!: CoworkerNpcField;
   private lastSnapshotAt = -Infinity;
   private lastSnapshotKey = '';
   private crashHandled = false;
@@ -58,6 +60,7 @@ export class RunScene extends Phaser.Scene {
     this.backgroundController = new BackgroundController(this);
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
+    this.coworkerNpcField = new CoworkerNpcField(this);
     this.runEffects = new RunEffects(this);
     this.obstacleField = new ObstacleField(this, {
       onHit: (outcome) => this.handleObstacleHit(outcome),
@@ -113,7 +116,10 @@ export class RunScene extends Phaser.Scene {
     });
     this.player.y = motion.y;
     this.playerVelocityY = motion.velocityY;
-    if (motion.grounded && !this.wasGrounded) this.runEffects.emitLanding(this.player.x, this.player.y);
+    if (motion.grounded && !this.wasGrounded) {
+      this.runEffects.emitLanding(this.player.x, this.player.y);
+      this.coworkerNpcField.reactToPlayer(this.player.x, this.player.y, 'landing');
+    }
     this.dustCooldownMs -= Math.max(0, delta);
     if (motion.grounded && !this.keyboard.isThrusting() && !flight.active && this.dustCooldownMs <= 0) {
       this.runEffects.emitRunDust(this.player.x - 32, this.player.y + 46);
@@ -129,6 +135,7 @@ export class RunScene extends Phaser.Scene {
       deltaMs: delta,
     });
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
+    this.coworkerNpcField.update(delta, worldSpeed, this.player.x, this.player.y, flight.active);
     const distanceMeters = this.runState.snapshot().distanceMeters;
     while (this.chunkScheduler.isDue(distanceMeters)) {
       const chunk = this.chunkScheduler.next(distanceMeters);
@@ -323,6 +330,7 @@ export class RunScene extends Phaser.Scene {
         };
       },
       getChunkSnapshot: () => this.chunkScheduler.snapshot(),
+      getCoworkerNpcSnapshot: () => this.coworkerNpcField.getDebugSnapshot(),
     });
   }
 
@@ -352,6 +360,7 @@ export class RunScene extends Phaser.Scene {
     document.removeEventListener('visibilitychange', this.pauseFromFocusLoss);
     this.pauseSystem.cancel();
     this.runEffects?.destroy();
+    this.coworkerNpcField?.destroy();
     this.floorLine.destroy();
   }
 }
