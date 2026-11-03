@@ -3,18 +3,8 @@ import { PLAYER_SHEET_META } from './playerSheetMeta';
 
 const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'] as const;
 const backgroundLayers = ['l0', 'l1', 'l2', 'l3'] as const;
-const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> = {
-  office: 'office',
-  security: 'security',
-  city: 'city',
-  'subway-entrance': 'subway',
-  'subway-inside': 'subway',
-  'subway-exit': 'subway',
-  rooftop: 'rooftop',
-};
-
 function getBackgroundPath(scene: (typeof backgroundScenes)[number], layer: (typeof backgroundLayers)[number]): string {
-  return scene === 'office' ? `/assets/backgrounds/office-${layer}.png` : `/assets/backgrounds/${backgroundFileByScene[scene]}.png`;
+  return `/assets/backgrounds/${scene}-${layer}.png`;
 }
 
 export const gameAssetKeys = {

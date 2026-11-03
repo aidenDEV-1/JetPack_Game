@@ -30,14 +30,14 @@ export class BackgroundController {
   private readonly transitionDurationMs = BACKGROUND_TUNING.transitionDurationMs;
 
   public constructor(private readonly scene: Phaser.Scene) {
-    this.segmentLabel = scene.add.text(40, 100, '', {
+    this.segmentLabel = scene.add.text(40, 154, '', {
       color: '#f7c948',
       fontFamily: 'Arial, sans-serif',
       fontSize: '20px',
       fontStyle: 'bold',
       stroke: '#07111f',
       strokeThickness: 5,
-    }).setDepth(-1);
+    }).setDepth(6).setScrollFactor(0);
 
     backgroundLayerDefinitions.forEach((definition) => {
       const items: BackgroundTile[] = [0, 1].map((index) => {

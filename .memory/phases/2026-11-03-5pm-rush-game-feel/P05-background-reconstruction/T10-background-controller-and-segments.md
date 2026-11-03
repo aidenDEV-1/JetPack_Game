@@ -1,6 +1,6 @@
 # Task: T10 배경 컨트롤러와 거리 구간 확장
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -88,6 +88,6 @@ Task: T10-background-controller-and-segments
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)

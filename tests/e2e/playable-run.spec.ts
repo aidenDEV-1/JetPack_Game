@@ -23,6 +23,8 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
   await page.getByRole('button', { name: '개발용 mock 로그인' }).click();
   await expect(page.getByRole('button', { name: '5PM RUSH 시작' })).toBeVisible();
   await page.getByRole('button', { name: '5PM RUSH 시작' }).click();
+  await expect.poll(() => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBackgroundSnapshot?.().scene), { timeout: 3_500 }).toBe('office');
+  expect(await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBackgroundSnapshot?.().segment)).toBe(0);
 
   await expect(page.getByText('5:00:00')).toBeVisible({ timeout: 3_500 });
   await expect.poll(() => getRunSnapshot(page).then((snapshot) => snapshot?.phase), { timeout: 8_000 }).toBe('running');

@@ -23,7 +23,7 @@ export const GAME_CONFIG = {
     laserBeamWidth: Math.round(PLAYER_HEIGHT * 0.2),
     laserGlowWidth: Math.round(PLAYER_HEIGHT * 0.42),
     laserMinLength: Math.round(PLAYER_HEIGHT * 2.25),
-    laserMaxLength: Math.round(PLAYER_HEIGHT * 4),
+    laserMaxLength: Math.round(PLAYER_HEIGHT * 2.4),
     minPlayableGap: OBSTACLE_TUNING.minimumPlayableGap,
   },
 } as const;

@@ -5,6 +5,9 @@ import { error, log } from 'node:console';
 
 const assetRoot = resolve(process.cwd(), 'public/assets');
 const requiredDirectories = ['player', 'generated', 'items', 'obstacles', 'backgrounds', 'ui'];
+const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'];
+const backgroundLayers = ['l0', 'l1', 'l2', 'l3'];
+const layeredBackgroundFiles = backgroundScenes.flatMap((scene) => backgroundLayers.map((layer) => `backgrounds/${scene}-${layer}.png`));
 const requiredFiles = [
   'generated/player-spritesheet.png',
   'player/booster-forms-spritesheet.png',
@@ -22,10 +25,7 @@ const requiredFiles = [
   'backgrounds/city.png',
   'backgrounds/subway.png',
   'backgrounds/rooftop.png',
-  'backgrounds/office-l0.png',
-  'backgrounds/office-l1.png',
-  'backgrounds/office-l2.png',
-  'backgrounds/office-l3.png',
+  ...layeredBackgroundFiles,
 ];
 const requiredSpritesheetMetadata = {
   'generated/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
@@ -34,12 +34,7 @@ const requiredSpritesheetMetadata = {
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
 };
-const requiredBackgroundMetadata = {
-  'backgrounds/office-l0.png': { width: 1280, height: 720 },
-  'backgrounds/office-l1.png': { width: 1280, height: 720 },
-  'backgrounds/office-l2.png': { width: 1280, height: 720 },
-  'backgrounds/office-l3.png': { width: 1280, height: 720 },
-};
+const requiredBackgroundMetadata = Object.fromEntries(layeredBackgroundFiles.map((file) => [file, { width: 1280, height: 720 }]));
 const requiredReferenceMetadata = {
   '../docs/reference/game-feel/01-booster-reference.png': { width: 1600, height: 610 },
   '../docs/reference/game-feel/02-obstacle-chunks.png': { width: 1600, height: 871 },
