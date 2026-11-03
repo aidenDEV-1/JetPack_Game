@@ -1,6 +1,3 @@
-export const PROGRESSION_CONFIG = {
-  segmentLengthMeters: 1000,
-  speedIncreasePerSegment: 1.15,
-  maxSpeedSegment: 5,
-  baseSpeed: 300,
-} as const;
+import { SPEED_TUNING } from '../../game/config/tuning/speed';
+
+export const PROGRESSION_CONFIG = SPEED_TUNING;

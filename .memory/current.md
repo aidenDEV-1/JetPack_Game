@@ -4,13 +4,13 @@
 [5PM RUSH 게임성 고도화](./plans/2026-11-03-5pm-rush-game-feel.md)
 
 ## Active Phase
-[P01 영역별 구조 정비](./phases/2026-11-03-5pm-rush-game-feel/P01-foundation-and-tuning/phase.md)
+[P02 이동 손맛과 속도](./phases/2026-11-03-5pm-rush-game-feel/P02-movement-and-speed/phase.md)
 
 ## Active Task
-[T02 영역별 튜닝 파일과 중복 상수 단일화](./phases/2026-11-03-5pm-rush-game-feel/P01-foundation-and-tuning/T02-tuning-config-consolidation.md)
+[T03 연속 속도 곡선과 비행 물리 튜닝](./phases/2026-11-03-5pm-rush-game-feel/P02-movement-and-speed/T03-continuous-speed-and-motion.md)
 
 ## Status
-- T01 구현·검증 완료
+- T01~T02 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T02 청사진을 읽고 `src/game/config/tuning/`을 생성한 뒤 중복 게임 수치를 이동
+T03 청사진을 읽고 `DistanceProgression`의 계단식 속도를 연속 곡선으로 변경

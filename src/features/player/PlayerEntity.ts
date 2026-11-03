@@ -65,7 +65,8 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   public setBoosting(value: boolean): void {
     this.controller.setBoosting(value);
     const visual = this.controller.snapshot();
-    this.applyAnimation(visual.animation);
+    const visualAnimation = visual.boosting && visual.animation === 'running' ? 'flying' : visual.animation;
+    this.applyAnimation(visualAnimation);
     this.applyVisualState(visual);
   }
 

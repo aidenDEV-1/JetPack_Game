@@ -4,6 +4,7 @@ import { selectTokenPattern } from './movementPatterns';
 import { ItemEntity } from './ItemEntity';
 import type { ItemKind } from './itemTypes';
 import { getNextShieldDistance, getSpawnInterval, MIN_SHIELD_DISTANCE } from './collectibleSpawn';
+import { ITEM_TUNING } from '../../game/config/tuning/items';
 
 export interface CollectibleFieldEvents {
   onCollect: (kind: ItemKind, x: number, y: number) => void;
@@ -16,7 +17,7 @@ export class CollectibleField {
   private elapsedMs = 0;
   private nextCoinDistance = 0;
   private nextTokenDistance = 120;
-  private nextShieldDistance = MIN_SHIELD_DISTANCE;
+  private nextShieldDistance: number = MIN_SHIELD_DISTANCE;
   private shieldHeld = false;
   private shieldPickupSpawned = false;
 
@@ -65,15 +66,15 @@ export class CollectibleField {
 
   private spawnDueItems(distanceMeters: number): void {
     if (distanceMeters >= this.nextCoinDistance) {
-      this.spawnCoinCluster(GAME_CONFIG.width + 80, 170 + this.random() * 300);
+      this.spawnCoinCluster(GAME_CONFIG.width + 80, ITEM_TUNING.spawnYMinPx + this.random() * ITEM_TUNING.spawnYRangePx);
       this.nextCoinDistance = distanceMeters + getSpawnInterval('coin', this.random);
     }
     if (distanceMeters >= this.nextTokenDistance) {
-      this.spawnTokenCluster(GAME_CONFIG.width + 140, 160 + this.random() * 320);
+      this.spawnTokenCluster(GAME_CONFIG.width + 140, ITEM_TUNING.spawnYMinPx + this.random() * ITEM_TUNING.spawnYRangePx);
       this.nextTokenDistance = distanceMeters + getSpawnInterval('token', this.random);
     }
     if (distanceMeters >= this.nextShieldDistance && !this.shieldHeld && !this.hasActiveShieldPickup()) {
-      this.spawnShield(GAME_CONFIG.width + 220, 160 + this.random() * 320);
+      this.spawnShield(GAME_CONFIG.width + 220, ITEM_TUNING.spawnYMinPx + this.random() * ITEM_TUNING.spawnYRangePx);
       this.nextShieldDistance = getNextShieldDistance(distanceMeters, this.random);
       this.shieldPickupSpawned = true;
       this.events.onShieldPickupSpawned(distanceMeters);

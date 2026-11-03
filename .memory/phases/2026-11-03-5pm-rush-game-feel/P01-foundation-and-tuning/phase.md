@@ -5,8 +5,8 @@
 | Task | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
 | T01 | `done ✅` | 참고 자료와 11개 영역 설계 문서 체계 구축 | [T01](./T01-reference-and-design-docs.md) |
-| T02 | `in_progress 🔵` | 영역별 튜닝 파일 생성 및 중복 상수 단일화 | [T02](./T02-tuning-config-consolidation.md) |
+| T02 | `done ✅` | 영역별 튜닝 파일 생성 및 중복 상수 단일화 | [T02](./T02-tuning-config-consolidation.md) |
 
 ## Progress
 
-- done: 1/2 (active: T02)
+- done: 2/2 (active: complete)

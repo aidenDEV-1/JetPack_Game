@@ -1,3 +1,6 @@
+import { MOVEMENT_TUNING } from './tuning/movement';
+import { SPEED_TUNING } from './tuning/speed';
+
 export const PLAYER_HEIGHT = 96;
 
 export const GAME_CONFIG = {
@@ -6,11 +9,11 @@ export const GAME_CONFIG = {
   playerX: 220,
   floorY: 625,
   ceilingY: 90,
-  gravity: 1100,
-  liftAcceleration: -1800,
-  maxUpwardVelocity: -650,
-  ceilingBounceVelocity: 120,
-  baseSpeed: 300,
+  gravity: MOVEMENT_TUNING.gravity,
+  liftAcceleration: MOVEMENT_TUNING.liftAcceleration,
+  maxUpwardVelocity: MOVEMENT_TUNING.maxUpwardVelocity,
+  ceilingBounceVelocity: MOVEMENT_TUNING.ceilingBounceVelocity,
+  baseSpeed: SPEED_TUNING.baseSpeed,
   pixelsPerMeter: 10,
   playerHeight: PLAYER_HEIGHT,
   playerLeanDegrees: -12,

@@ -17,6 +17,7 @@ import { BoosterFlightController } from '../../features/booster/BoosterFlightCon
 import { RunEffects } from '../../features/effects/RunEffects';
 import { ResultsController } from '../../features/results/ResultsController';
 import { registerGameTestApi } from '../test/GameTestApi';
+import { MOVEMENT_TUNING } from '../config/tuning/movement';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -82,8 +83,8 @@ export class RunScene extends Phaser.Scene {
       velocityY: this.playerVelocityY,
       deltaSeconds: delta / 1000,
       thrusting: this.keyboard.isThrusting(),
-      floorY: GAME_CONFIG.floorY - 55,
-      ceilingY: GAME_CONFIG.ceilingY + 55,
+      floorY: GAME_CONFIG.floorY - MOVEMENT_TUNING.floorOffset,
+      ceilingY: GAME_CONFIG.ceilingY + MOVEMENT_TUNING.ceilingOffset,
       gravity: GAME_CONFIG.gravity,
       liftAcceleration: GAME_CONFIG.liftAcceleration,
       maxUpwardVelocity: GAME_CONFIG.maxUpwardVelocity,

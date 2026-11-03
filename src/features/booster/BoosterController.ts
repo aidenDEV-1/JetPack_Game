@@ -1,6 +1,5 @@
 import type { BoosterState } from './boosterTypes';
-
-const BOOSTER_DURATION_MS = 5000;
+import { BOOSTER_TUNING } from '../../game/config/tuning/booster';
 
 export class BoosterController {
   private state: BoosterState = { active: false, remainingMs: 0, tokenCount: 0, hasShield: false };
@@ -31,7 +30,7 @@ export class BoosterController {
 
   public activate(): void {
     this.state.active = true;
-    this.state.remainingMs = BOOSTER_DURATION_MS;
+    this.state.remainingMs = BOOSTER_TUNING.durationMs;
   }
 
   public tick(deltaMs: number): void {

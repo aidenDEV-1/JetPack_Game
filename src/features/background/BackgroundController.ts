@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { backgroundSegments, resolveBackgroundScene, resolveBackgroundSegmentIndex, type BackgroundSceneKey } from '../../content/backgroundSegments';
 import { backgroundLayerDefinitions, type BackgroundLayerDefinition } from '../../content/backgroundLayers';
+import { BACKGROUND_TUNING } from '../../game/config/tuning/background';
 
 interface BackgroundTile {
   sprite: Phaser.GameObjects.Image;
@@ -26,7 +27,7 @@ export class BackgroundController {
   private currentSegment = -1;
   private transitionProgress = 1;
   private transitioning = false;
-  private readonly transitionDurationMs = 220;
+  private readonly transitionDurationMs = BACKGROUND_TUNING.transitionDurationMs;
 
   public constructor(private readonly scene: Phaser.Scene) {
     this.segmentLabel = scene.add.text(40, 100, '', {

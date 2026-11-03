@@ -1,6 +1,6 @@
 # Task: T02 영역별 튜닝 파일과 중복 상수 단일화
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -104,6 +104,6 @@ Task: T02-tuning-config-consolidation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

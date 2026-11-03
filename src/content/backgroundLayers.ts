@@ -1,5 +1,6 @@
 import { gameAssetKeys } from './assets/gameAssets';
 import type { BackgroundSceneKey } from './backgroundSegments';
+import { BACKGROUND_TUNING } from '../game/config/tuning/background';
 
 export interface BackgroundLayerDefinition {
   id: 'far' | 'mid' | 'near';
@@ -22,9 +23,9 @@ const assetKeysForLayer = (layer: 'far' | 'mid' | 'near'): Record<BackgroundScen
   rooftop: gameAssetKeys.backgrounds.rooftop[layer],
 });
 
-export const backgroundLayerDefinitions: readonly BackgroundLayerDefinition[] = [
-  { id: 'far', depth: -12, repeatWidth: 1280, scrollFactor: 0.18, height: 720, y: 360, alpha: 0.72, assetKeyByScene: assetKeysForLayer('far') },
-  { id: 'mid', depth: -11, repeatWidth: 1280, scrollFactor: 0.42, height: 720, y: 360, alpha: 0.36, assetKeyByScene: assetKeysForLayer('mid') },
-  { id: 'near', depth: -10, repeatWidth: 1280, scrollFactor: 0.75, height: 720, y: 360, alpha: 0.22, assetKeyByScene: assetKeysForLayer('near') },
-];
+export const backgroundLayerDefinitions: readonly BackgroundLayerDefinition[] = (['far', 'mid', 'near'] as const).map((id) => ({
+  id,
+  ...BACKGROUND_TUNING.layers[id],
+  assetKeyByScene: assetKeysForLayer(id),
+}));
 
