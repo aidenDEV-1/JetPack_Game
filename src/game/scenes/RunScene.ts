@@ -18,12 +18,14 @@ import { RunEffects } from '../../features/effects/RunEffects';
 import { ResultsController } from '../../features/results/ResultsController';
 import { registerGameTestApi } from '../test/GameTestApi';
 import { MOVEMENT_TUNING } from '../config/tuning/movement';
+import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
   private readonly pauseSystem = new PauseSystem();
   private readonly boosterController = new BoosterController();
   private readonly boosterFlight = new BoosterFlightController();
+  private readonly chunkScheduler = new ChunkScheduler();
   private readonly resultsController = new ResultsController();
   private readonly bridge: GameBridge;
   private keyboard!: KeyboardController;
@@ -59,6 +61,8 @@ export class RunScene extends Phaser.Scene {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
       onShieldPickupSpawned: () => this.obstacleField.setShieldPickupAhead(true),
     });
+    this.collectibleField.enableChunkScheduling();
+    this.obstacleField.enableChunkScheduling();
     this.keyboard = new KeyboardController(this);
     this.registerDevTestApi();
     window.addEventListener('blur', this.pauseFromFocusLoss);
@@ -113,7 +117,13 @@ export class RunScene extends Phaser.Scene {
       deltaMs: delta,
     });
     this.runState.addDistance((worldSpeed * delta / 1000) / GAME_CONFIG.pixelsPerMeter);
-    this.collectibleField.update(delta, this.runState.snapshot().distanceMeters, worldSpeed, this.player.getCollisionBounds());
+    const distanceMeters = this.runState.snapshot().distanceMeters;
+    while (this.chunkScheduler.isDue(distanceMeters)) {
+      const chunk = this.chunkScheduler.next(distanceMeters);
+      this.collectibleField.spawnChunk(chunk, distanceMeters);
+      this.obstacleField.spawnChunk(chunk);
+    }
+    this.collectibleField.update(delta, distanceMeters, worldSpeed, this.player.getCollisionBounds());
     this.obstacleField.update(
       delta,
       {
@@ -150,6 +160,7 @@ export class RunScene extends Phaser.Scene {
     this.collectibleField.reset();
     this.obstacleField.reset();
     this.backgroundController.reset();
+    this.chunkScheduler.reset();
     this.runEffects.reset();
     this.playerVelocityY = 0;
     this.wasGrounded = false;
@@ -179,6 +190,7 @@ export class RunScene extends Phaser.Scene {
   public spawnDemoWarningObstacle(): void { this.obstacleField.spawnDemoWarningObstacle(); }
   public spawnDemoLaser(patternId: string): void { this.obstacleField.spawnDemoLaser(patternId); }
   public clearDemoObstacles(): void { this.obstacleField.clearDemoObstacles(); }
+  public getChunkSnapshot() { return this.chunkScheduler.snapshot(); }
   public activateDemoBooster(): void {
     this.boosterController.activate();
     this.boosterFlight.activate();
@@ -271,6 +283,7 @@ export class RunScene extends Phaser.Scene {
       getEffectsSnapshot: () => this.runEffects.getDebugSnapshot(),
       getBackgroundSnapshot: () => this.backgroundController.getTransitionSnapshot(),
       getBoosterSnapshot: () => this.boosterFlight.snapshot(),
+      getChunkSnapshot: () => this.chunkScheduler.snapshot(),
     });
   }
 

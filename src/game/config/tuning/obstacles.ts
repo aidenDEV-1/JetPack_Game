@@ -9,4 +9,8 @@ export const OBSTACLE_TUNING = {
   minimumPlayableGap: 154,
   forcedPatternMinimumDistanceMeters: 1100,
   chunkWeights: { early: 1, mid: 1, late: 1 },
+  chunkCadenceMeters: 180,
+  missileSpeedMultiplier: 1.8,
+  missileLockDistancePx: 360,
+  missileWarningDistancePx: 220,
 } as const;

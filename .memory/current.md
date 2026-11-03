@@ -4,13 +4,13 @@
 [5PM RUSH 게임성 고도화](./plans/2026-11-03-5pm-rush-game-feel.md)
 
 ## Active Phase
-[P03 장애물·코인 청크 시스템](./phases/2026-11-03-5pm-rush-game-feel/P03-obstacle-and-coin-chunks/phase.md)
+[P04 부스터·플레이어 손맛](./phases/2026-11-03-5pm-rush-game-feel/P04-booster-and-player-feel/phase.md)
 
 ## Active Task
-[T06 청크 생성기와 위협 패턴 연결](./phases/2026-11-03-5pm-rush-game-feel/P03-obstacle-and-coin-chunks/T06-chunk-spawner-and-hazards.md)
+[T07 가방 제트팩 강화형 부스터와 시작 인트로 재설계](./phases/2026-11-03-5pm-rush-game-feel/P04-booster-and-player-feel/T07-attached-booster-and-start-intro.md)
 
 ## Status
-- T01~T05 구현·검증 완료
+- T01~T06 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T06 청사진을 읽고 거리 기반 청크를 실제 장애물·아이템 생성기와 미사일 위협에 연결
+T07 청사진을 읽고 시작 인트로와 가방 제트팩 강화형 부스터를 플레이어 단일 렌더링 구조에 연결

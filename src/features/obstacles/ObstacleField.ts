@@ -8,6 +8,7 @@ import { resolveLaserGeometry } from './laserSpanResolver';
 import { intersectsObstacleGeometry } from './obstacleCollisionGeometry';
 import type { SpawnContext } from './obstacleTypes';
 import { OBSTACLE_TUNING } from '../../game/config/tuning/obstacles';
+import type { GameChunk } from '../chunks/chunkTypes';
 
 export interface ObstacleFieldEvents {
   onHit: (outcome: CollisionOutcome) => void;
@@ -22,6 +23,7 @@ export class ObstacleField {
   private shieldPickupAhead = false;
   private readonly forcedPatternSegments = new Set<number>();
   private stopped = false;
+  private chunkSchedulingEnabled = false;
 
   public constructor(private readonly scene: Phaser.Scene, private readonly events: ObstacleFieldEvents, random: () => number = Math.random) {
     this.random = random;
@@ -48,6 +50,7 @@ export class ObstacleField {
     for (let index = this.obstacles.length - 1; index >= 0; index -= 1) {
       const obstacle = this.obstacles[index];
       obstacle.x -= context.speed * deltaSeconds;
+      obstacle.updateHazardBehavior(deltaMs, this.scene.scale.width, playerBounds.centerY, context.speed);
       obstacle.updateVisual(this.scene.time.now, this.scene.scale.width);
       const intersects = intersectsObstacleGeometry(
         playerBounds,
@@ -85,6 +88,25 @@ export class ObstacleField {
     this.stopped = false;
   }
 
+  public enableChunkScheduling(): void { this.chunkSchedulingEnabled = true; }
+
+  public spawnChunk(chunk: GameChunk): void {
+    const spawnedForcedCrossfire = new Set<number>();
+    chunk.obstacles.forEach((spec) => {
+      const basePattern = obstaclePatterns.find((pattern) => pattern.id === spec.patternId);
+      if (!basePattern || (spec.forced && !this.shieldPickupAhead)) return;
+      if (spec.patternId === 'forced-crossfire' && spawnedForcedCrossfire.has(spec.xMeters)) return;
+      if (spec.patternId === 'forced-crossfire') spawnedForcedCrossfire.add(spec.xMeters);
+      const pattern = spec.warning && !basePattern.warningArrow ? { ...basePattern, warningArrow: true } : basePattern;
+      const x = this.scene.scale.width + OBSTACLE_TUNING.spawnXOffsetPx + spec.xMeters * GAME_CONFIG.pixelsPerMeter;
+      const playableHeight = GAME_CONFIG.floorY - GAME_CONFIG.ceilingY;
+      const normalizedY = GAME_CONFIG.ceilingY + playableHeight * spec.yRatio;
+      const y = pattern.laserSpan?.orientation === 'vertical' ? (GAME_CONFIG.ceilingY + GAME_CONFIG.floorY) / 2 : normalizedY;
+      const geometry = pattern.laserSpan ? resolveLaserGeometry(pattern.laserSpan, GAME_CONFIG, this.random) : undefined;
+      this.obstacles.push(new ObstacleEntity(this.scene, pattern, x, y, geometry));
+    });
+  }
+
   public setShieldPickupAhead(value: boolean): void { this.shieldPickupAhead = value; }
 
   public getVisualDebugSnapshot(): Array<ReturnType<ObstacleEntity['getVisualDebugSnapshot']>> {
@@ -115,6 +137,7 @@ export class ObstacleField {
   }
 
   private spawn(context: SpawnContext): void {
+    if (this.chunkSchedulingEnabled) return;
     const pattern = this.spawner.choosePattern(context, this.random);
     if (!pattern) return;
     if (pattern.requiresShield) this.forcedPatternSegments.add(Math.floor(context.distanceMeters / 1000));

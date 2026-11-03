@@ -1,6 +1,6 @@
 # Task: T06 청크 생성기와 위협 패턴 연결
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -97,6 +97,6 @@ Task: T06-chunk-spawner-and-hazards
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)

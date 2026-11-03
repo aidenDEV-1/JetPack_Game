@@ -75,6 +75,7 @@ export interface GameTestApi {
     transitionProgress: number;
   };
   getBoosterSnapshot?: () => BoosterTestSnapshot;
+  getChunkSnapshot?: () => { activeChunkId: string | null; nextDistanceMeters: number };
 }
 
 export function registerGameTestApi(api: GameTestApi): void {

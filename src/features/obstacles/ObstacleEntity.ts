@@ -4,6 +4,7 @@ import type { ObstaclePattern, ResolvedLaserGeometry } from './obstacleTypes';
 import { LaserHazardVisual } from './LaserHazardVisual';
 import { ObstacleWarningIndicator, type ObstacleWarningSnapshot } from './ObstacleWarningIndicator';
 import { obstacleVisualCatalog } from './obstacleVisualCatalog';
+import { MissileEntity } from './MissileEntity';
 
 export class ObstacleEntity extends Phaser.GameObjects.Container {
   public readonly pattern: ObstaclePattern;
@@ -13,6 +14,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private readonly nodeCircles: Phaser.Geom.Circle[];
   private readonly laserGeometry?: ResolvedLaserGeometry;
   private readonly laserVisuals: LaserHazardVisual[] = [];
+  private readonly missile?: MissileEntity;
   private spriteVisual?: Phaser.GameObjects.Container;
   private spriteCore?: Phaser.GameObjects.Graphics;
   private motionElapsedMs = 0;
@@ -21,6 +23,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     super(scene, x, y);
     this.pattern = pattern;
     this.laserGeometry = laserGeometry;
+    if (pattern.kind === 'missile') this.missile = new MissileEntity();
     scene.add.existing(this);
     this.hazard = this.createHazard(scene, pattern);
     this.add(this.hazard);
@@ -40,6 +43,13 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
 
   public updateWarning(timeMs: number, viewportWidth: number): void {
     this.updateVisual(timeMs, viewportWidth);
+  }
+
+  public updateHazardBehavior(deltaMs: number, viewportWidth: number, playerY: number, worldSpeed: number): void {
+    if (!this.missile) return;
+    const movement = this.missile.update(deltaMs, this.x, this.y, playerY, viewportWidth, worldSpeed);
+    this.x += movement.extraX;
+    this.y = movement.nextY;
   }
 
   public updateVisual(timeMs: number, viewportWidth: number): void {
@@ -75,6 +85,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
     collisionBounds: Array<{ x: number; y: number; width: number; height: number }>;
     collisionCircles: Array<{ x: number; y: number; radius: number }>;
     warning: ObstacleWarningSnapshot;
+    missilePhase?: string;
   } {
     const dimensions = this.getDisplayDimensions();
     return {
@@ -96,6 +107,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
       collisionBounds: this.hitboxes.map((bounds) => ({ x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height })),
       collisionCircles: this.nodeCircles.map((circle) => ({ x: circle.x, y: circle.y, radius: circle.radius })),
       warning: this.warningIndicator?.snapshot() ?? { visible: false, x: 0, y: 0, alpha: 0, label: '← 위험' },
+      missilePhase: this.missile?.getPhase(),
     };
   }
 

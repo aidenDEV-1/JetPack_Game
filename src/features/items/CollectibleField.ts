@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 import { GAME_CONFIG } from '../../game/config/gameConfig';
-import { selectTokenPattern } from './movementPatterns';
 import { ItemEntity } from './ItemEntity';
-import type { ItemKind } from './itemTypes';
+import type { ItemKind, TokenPattern } from './itemTypes';
 import { getNextShieldDistance, getSpawnInterval, MIN_SHIELD_DISTANCE } from './collectibleSpawn';
 import { ITEM_TUNING } from '../../game/config/tuning/items';
+import type { ChunkCollectiblePattern, GameChunk } from '../chunks/chunkTypes';
 
 export interface CollectibleFieldEvents {
   onCollect: (kind: ItemKind, x: number, y: number) => void;
@@ -20,6 +20,7 @@ export class CollectibleField {
   private nextShieldDistance: number = MIN_SHIELD_DISTANCE;
   private shieldHeld = false;
   private shieldPickupSpawned = false;
+  private chunkSchedulingEnabled = false;
 
   public constructor(private readonly scene: Phaser.Scene, private readonly events: CollectibleFieldEvents, random: () => number = Math.random) {
     this.random = random;
@@ -27,7 +28,7 @@ export class CollectibleField {
 
   public update(deltaMs: number, distanceMeters: number, worldSpeed: number, playerBounds: Phaser.Geom.Rectangle): void {
     this.elapsedMs += Math.max(0, deltaMs);
-    this.spawnDueItems(distanceMeters);
+    if (!this.chunkSchedulingEnabled) this.spawnDueItems(distanceMeters);
     this.items.forEach((item) => {
       item.update(deltaMs, worldSpeed, this.elapsedMs);
       if (!item.isCollected() && Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, item.getCollisionBounds())) {
@@ -57,6 +58,22 @@ export class CollectibleField {
 
   public setShieldHeld(value: boolean): void { this.shieldHeld = value; }
   public hasShieldPickupAhead(): boolean { return this.shieldPickupSpawned; }
+  public enableChunkScheduling(): void { this.chunkSchedulingEnabled = true; }
+
+  public spawnChunk(chunk: GameChunk, distanceMeters: number): void {
+    const playableHeight = GAME_CONFIG.floorY - GAME_CONFIG.ceilingY;
+    chunk.collectibles.forEach((spec) => {
+      const x = GAME_CONFIG.width + 80 + spec.xMeters * GAME_CONFIG.pixelsPerMeter;
+      const y = Phaser.Math.Clamp(GAME_CONFIG.ceilingY + playableHeight * spec.yRatio, ITEM_TUNING.spawnYMinPx, GAME_CONFIG.floorY - ITEM_TUNING.spawnYMinPx);
+      if (spec.kind === 'coin') this.spawnCoinCluster(x, y, spec.pattern);
+      if (spec.kind === 'token') this.spawnTokenCluster(x, y, spec.pattern);
+      if (spec.kind === 'shield' && !this.shieldHeld && !this.hasActiveShieldPickup()) {
+        this.spawnShield(x, y);
+        this.shieldPickupSpawned = true;
+        this.events.onShieldPickupSpawned(distanceMeters);
+      }
+    });
+  }
 
   public spawnDemoItems(): void {
     this.spawnCoinCluster(1320, 540);
@@ -81,15 +98,16 @@ export class CollectibleField {
     }
   }
 
-  private spawnCoinCluster(x: number, y: number): void {
-    for (let index = 0; index < 5; index += 1) {
-      this.items.push(new ItemEntity(this.scene, 'coin', x + index * 58, y + Math.sin(index * 0.9) * 24));
+  private spawnCoinCluster(x: number, y: number, pattern: ChunkCollectiblePattern = 'arc'): void {
+    for (let index = 0; index < ITEM_TUNING.coinClusterCount; index += 1) {
+      const progress = index / Math.max(1, ITEM_TUNING.coinClusterCount - 1);
+      this.items.push(new ItemEntity(this.scene, 'coin', x + index * 58, y + getPatternOffset(pattern, progress)));
     }
   }
 
-  private spawnTokenCluster(x: number, y: number): void {
-    for (let index = 0; index < 3; index += 1) {
-      this.items.push(new ItemEntity(this.scene, 'token', x + index * 86, y + (index - 1) * 56, selectTokenPattern(this.random)));
+  private spawnTokenCluster(x: number, y: number, pattern: ChunkCollectiblePattern = 'zigzag'): void {
+    for (let index = 0; index < ITEM_TUNING.tokenClusterCount; index += 1) {
+      this.items.push(new ItemEntity(this.scene, 'token', x + index * 86, y + (index - 1) * 56, mapTokenPattern(pattern, this.random)));
     }
   }
 
@@ -100,5 +118,19 @@ export class CollectibleField {
   private hasActiveShieldPickup(): boolean {
     return this.items.some((item) => item.kind === 'shield' && !item.isCollected());
   }
+}
+
+function getPatternOffset(pattern: ChunkCollectiblePattern, progress: number): number {
+  if (pattern === 'line') return 0;
+  if (pattern === 'zigzag') return progress % 0.5 < 0.25 ? -30 : 30;
+  if (pattern === 'orbit') return Math.cos(progress * Math.PI * 2) * 28;
+  return -Math.sin(progress * Math.PI) * 34;
+}
+
+function mapTokenPattern(pattern: ChunkCollectiblePattern, random: () => number): TokenPattern {
+  if (pattern === 'orbit') return 'orbit';
+  if (pattern === 'zigzag') return 'wave';
+  if (pattern === 'arc') return random() > 0.5 ? 'vertical' : 'wave';
+  return 'horizontal';
 }
 

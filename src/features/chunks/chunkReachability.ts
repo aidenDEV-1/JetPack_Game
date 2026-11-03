@@ -17,14 +17,9 @@ export function validateChunkReachability(chunk: GameChunk, minimumGapPx: number
   const errors: ChunkValidationError[] = [];
   const playableHeight = GAME_CONFIG.floorY - GAME_CONFIG.ceilingY;
   const blocks = chunk.obstacles.map((obstacle) => toVerticalBlock(obstacle, playableHeight)).sort((left, right) => left.top - right.top);
-  let largestGap = 0;
-  let cursor = 0;
-  blocks.forEach((block) => {
-    largestGap = Math.max(largestGap, block.top - cursor);
-    cursor = Math.max(cursor, block.bottom);
-  });
-  largestGap = Math.max(largestGap, playableHeight - cursor);
-  if (largestGap < minimumGapPx) errors.push({ chunkId: chunk.id, reason: `maximum opening ${Math.round(largestGap)}px is below ${minimumGapPx}px` });
+  const obstacleColumns = groupByColumn(blocks);
+  const narrowestOpening = obstacleColumns.reduce((narrowest, column) => Math.min(narrowest, largestOpening(column, playableHeight)), playableHeight);
+  if (narrowestOpening < minimumGapPx) errors.push({ chunkId: chunk.id, reason: `maximum opening ${Math.round(narrowestOpening)}px is below ${minimumGapPx}px` });
 
   if (chunk.requiresShield && chunk.minDistanceMeters < OBSTACLE_TUNING.forcedPatternMinimumDistanceMeters) {
     errors.push({ chunkId: chunk.id, reason: `shield-required chunk starts before ${OBSTACLE_TUNING.forcedPatternMinimumDistanceMeters}m` });
@@ -49,4 +44,25 @@ function toVerticalBlock(obstacle: ChunkObstacleSpec, playableHeight: number): V
   const center = obstacle.yRatio * playableHeight;
   const halfHeight = obstacle.heightRatio * playableHeight / 2;
   return { top: Math.max(0, center - halfHeight), bottom: Math.min(playableHeight, center + halfHeight), xMeters: obstacle.xMeters };
+}
+
+function groupByColumn(blocks: readonly VerticalBlock[]): VerticalBlock[][] {
+  const columns: VerticalBlock[][] = [];
+  blocks.forEach((block) => {
+    const column = columns.find((candidate) => Math.abs(candidate[0].xMeters - block.xMeters) <= 18);
+    if (column) column.push(block);
+    else columns.push([block]);
+  });
+  return columns;
+}
+
+function largestOpening(blocks: readonly VerticalBlock[], playableHeight: number): number {
+  const sorted = [...blocks].sort((left, right) => left.top - right.top);
+  let largestGap = 0;
+  let cursor = 0;
+  sorted.forEach((block) => {
+    largestGap = Math.max(largestGap, block.top - cursor);
+    cursor = Math.max(cursor, block.bottom);
+  });
+  return Math.max(largestGap, playableHeight - cursor);
 }

@@ -13,7 +13,11 @@ export const CHUNK_CATALOG: readonly GameChunk[] = [
   },
   {
     id: 'B', minDistanceMeters: 500, maxDistanceMeters: 2000, weight: 1, requiresShield: false,
-    obstacles: [{ patternId: 'horizontal-laser', xMeters: 84, yRatio: 0.32, heightRatio: 0.12, warning: true, forced: false }],
+    obstacles: [
+      { patternId: 'horizontal-laser', xMeters: 84, yRatio: 0.32, heightRatio: 0.12, warning: true, forced: false },
+      { patternId: 'missile', xMeters: 112, yRatio: 0.62, heightRatio: 0.14, warning: true, forced: false },
+      { patternId: 'electro-drone', xMeters: 52, yRatio: 0.78, heightRatio: 0.12, warning: true, forced: false },
+    ],
     collectibles: [
       { kind: 'coin', xMeters: 14, yRatio: 0.26, pattern: 'line' },
       { kind: 'coin', xMeters: 38, yRatio: 0.34, pattern: 'arc' },
