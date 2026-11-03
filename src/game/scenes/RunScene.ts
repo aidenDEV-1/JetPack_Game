@@ -19,6 +19,7 @@ import { ResultsController } from '../../features/results/ResultsController';
 import { registerGameTestApi } from '../test/GameTestApi';
 import { MOVEMENT_TUNING } from '../config/tuning/movement';
 import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
+import { BACKGROUND_TUNING } from '../config/tuning/background';
 import { BOOSTER_TUNING } from '../config/tuning/booster';
 import { audioController } from '../../services/audio/AudioController';
 import { CoworkerNpcField } from '../../features/world/CoworkerNpcField';
@@ -53,6 +54,7 @@ export class RunScene extends Phaser.Scene {
   private crashMotionElapsedMs = 0;
   private crashWorldSpeed: number = GAME_CONFIG.baseSpeed;
   private boosterWasActive = false;
+  private previewDistanceMeters: number | null = null;
 
   public constructor(bridge: GameBridge) {
     super('RunScene');
@@ -114,7 +116,7 @@ export class RunScene extends Phaser.Scene {
     this.runState.setSpeed(worldSpeed);
     this.runState.setBooster(boosterState.active, boosterState.remainingMs, boosterState.phase, boosterState.graceRemainingMs);
     this.runEffects.setSpeedLines(flight.active, progression.speedMultiplier);
-    this.backgroundController.update(delta, worldSpeed, state.distanceMeters);
+    this.backgroundController.update(delta, worldSpeed, this.previewDistanceMeters ?? state.distanceMeters);
     const motion = updateRunMotion({
       y: this.player.y,
       velocityY: this.playerVelocityY,
@@ -197,6 +199,7 @@ export class RunScene extends Phaser.Scene {
     this.collectibleField.reset();
     this.obstacleField.reset();
     this.backgroundController.reset();
+    this.previewDistanceMeters = null;
     this.chunkScheduler.reset();
     this.runEffects.reset();
     this.debugMetrics.reset();
@@ -233,6 +236,11 @@ export class RunScene extends Phaser.Scene {
   public getDebugSnapshot(): RunDebugSnapshot {
     const booster = this.boosterController.snapshot();
     return this.debugMetrics.snapshot(this.runState.snapshot().speed, this.chunkScheduler.snapshot().activeChunkId, booster.phase);
+  }
+  public previewBackgroundAt(distanceMeters: number): void {
+    if (!import.meta.env.DEV) return;
+    this.previewDistanceMeters = Math.max(0, distanceMeters);
+    this.backgroundController.update(BACKGROUND_TUNING.transitionDurationMs, 0, this.previewDistanceMeters);
   }
   public activateDemoBooster(): void {
     this.boosterController.activate();
@@ -354,6 +362,7 @@ export class RunScene extends Phaser.Scene {
       getCoworkerNpcSnapshot: () => this.coworkerNpcField.getDebugSnapshot(),
       toggleRunDebugOverlay: () => this.toggleRunDebugOverlay(),
       getDebugSnapshot: () => this.getDebugSnapshot(),
+      previewBackgroundAt: (distanceMeters: number) => this.previewBackgroundAt(distanceMeters),
     });
   }
 

@@ -9,6 +9,7 @@ test('로컬 플레이에서 장애물 충돌이 crash 상태를 만든다', asy
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getBoosterSnapshot?.().active), { timeout: 2_000 }).toBe(true);
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.deactivateBooster?.());
   await expect.poll(async () => page.evaluate(() => typeof window.__5PM_RUSH_TEST_API__?.spawnDemoObstacle)).toBe('function');
+  await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.clearDemoObstacles?.());
   await page.evaluate(() => window.__5PM_RUSH_TEST_API__?.spawnDemoLaser?.('vertical-laser'));
   await expect.poll(async () => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getObstacleVisualSnapshot?.().find((obstacle) => obstacle.orientation === 'vertical')), { timeout: 2_000 }).toMatchObject({
     orientation: 'vertical',

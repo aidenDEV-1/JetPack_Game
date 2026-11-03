@@ -1,0 +1,13 @@
+{
+  "viewport": "1280x720",
+  "phase": "running",
+  "auth": "development mock login",
+  "captures": [
+    { "distanceMeters": 0, "scene": "office", "file": "0m-start.png" },
+    { "distanceMeters": 1000, "scene": "security", "file": "1000m-security.png" },
+    { "distanceMeters": 2000, "scene": "city", "file": "2000m-city.png" },
+    { "distanceMeters": 3000, "scene": "subway-entrance", "file": "3000m-subway-entrance.png" },
+    { "distanceMeters": 3500, "scene": "subway-inside", "file": "3500m-subway-inside.png" },
+    { "distanceMeters": 4000, "scene": "rooftop", "file": "4000m-rooftop.png" }
+  ]
+}

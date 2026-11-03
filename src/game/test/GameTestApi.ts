@@ -86,6 +86,7 @@ export interface GameTestApi {
   getCoworkerNpcSnapshot?: () => { poolSize: number; activeCount: number; snapshots: CoworkerNpcSnapshot[] };
   toggleRunDebugOverlay?: () => boolean;
   getDebugSnapshot?: () => RunDebugSnapshot;
+  previewBackgroundAt?: (distanceMeters: number) => void;
 }
 
 export function registerGameTestApi(api: GameTestApi): void {

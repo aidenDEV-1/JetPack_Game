@@ -52,3 +52,12 @@
 - 서버 측 점수 검증
 - 모바일 터치 전용 UI
 - 인증·랭킹 구조 변경
+
+## 5PM RUSH 게임성 고도화 완료 상태
+
+- P01~P08의 T01~T16 구현·검증을 완료했다.
+- 일반 비행, 가방 일체형 부스터, 레이저/미사일/드론 장애물, 코인·토큰·방어막, 비충돌 동료 NPC, 런당 미션과 결과 보너스를 유지보수 가능한 영역별 코드로 분리했다.
+- 거리 구간 시각 회귀 캡처: [screenshots/T16/metadata.json](screenshots/T16/metadata.json)
+- 개발 전용 디버그 캡처: [screenshots/T15/debug-metrics.png](screenshots/T15/debug-metrics.png)
+- 결과 미션 캡처: [screenshots/T14/mission-result.png](screenshots/T14/mission-result.png)
+- 최종 검증 명령은 `README.md`의 품질 검증 절차를 따른다.

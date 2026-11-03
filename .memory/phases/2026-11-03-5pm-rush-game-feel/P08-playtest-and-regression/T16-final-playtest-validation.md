@@ -1,6 +1,6 @@
 # Task: T16 최종 플레이테스트와 회귀 검증
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -93,6 +93,6 @@ Task: T16-final-playtest-validation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)
