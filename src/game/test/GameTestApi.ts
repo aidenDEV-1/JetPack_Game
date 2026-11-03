@@ -2,6 +2,7 @@ import type { RunState } from '../state/GameState';
 import type { PlayerAnimation } from '../../features/player/playerTypes';
 import type { JetpackActivity } from '../../features/player/JetpackAttachment';
 import type { CoworkerNpcSnapshot } from '../../features/world/coworkerNpcTypes';
+import type { RunDebugSnapshot } from '../../features/debug/RunDebugOverlay';
 
 export interface BoosterTestSnapshot {
   active: boolean;
@@ -83,6 +84,8 @@ export interface GameTestApi {
   getBoosterSnapshot?: () => BoosterTestSnapshot;
   getChunkSnapshot?: () => { activeChunkId: string | null; nextDistanceMeters: number };
   getCoworkerNpcSnapshot?: () => { poolSize: number; activeCount: number; snapshots: CoworkerNpcSnapshot[] };
+  toggleRunDebugOverlay?: () => boolean;
+  getDebugSnapshot?: () => RunDebugSnapshot;
 }
 
 export function registerGameTestApi(api: GameTestApi): void {

@@ -22,6 +22,8 @@ import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
 import { BOOSTER_TUNING } from '../config/tuning/booster';
 import { audioController } from '../../services/audio/AudioController';
 import { CoworkerNpcField } from '../../features/world/CoworkerNpcField';
+import { RunDebugMetrics } from '../../features/debug/RunDebugMetrics';
+import type { RunDebugOverlay, RunDebugSnapshot } from '../../features/debug/RunDebugOverlay';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -40,6 +42,8 @@ export class RunScene extends Phaser.Scene {
   private obstacleField!: ObstacleField;
   private runEffects!: RunEffects;
   private coworkerNpcField!: CoworkerNpcField;
+  private readonly debugMetrics = new RunDebugMetrics();
+  private debugOverlay?: RunDebugOverlay;
   private lastSnapshotAt = -Infinity;
   private lastSnapshotKey = '';
   private crashHandled = false;
@@ -61,12 +65,18 @@ export class RunScene extends Phaser.Scene {
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.coworkerNpcField = new CoworkerNpcField(this);
+    if (import.meta.env.DEV) {
+      void import('../../features/debug/RunDebugOverlay').then(({ RunDebugOverlay: DebugOverlay }) => {
+        if (this.scene.isActive()) this.debugOverlay = new DebugOverlay(this);
+      });
+    }
     this.runEffects = new RunEffects(this);
     this.obstacleField = new ObstacleField(this, {
       onHit: (outcome) => this.handleObstacleHit(outcome),
       onWarning: () => { audioController.playSfx('laser-warning'); },
       onMissileLaunch: () => { audioController.playSfx('missile-launch'); },
       onMissileEvaded: () => { this.runState.recordMissileEvaded(); },
+      onSpawn: () => { this.debugMetrics.recordObstacle(); },
     });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
@@ -84,6 +94,7 @@ export class RunScene extends Phaser.Scene {
   public update(_time: number, delta: number): void {
     const state = this.runState.snapshot();
     if (this.keyboard.consumeDebugToggle()) this.player.toggleDebugOverlay();
+    if (import.meta.env.DEV && this.keyboard.consumeMetricsToggle()) this.debugOverlay?.toggle();
     if (this.pauseSystem.isPaused()) return;
     this.runEffects.update(delta);
     if (state.phase === 'crashed') {
@@ -91,6 +102,7 @@ export class RunScene extends Phaser.Scene {
       return;
     }
     if (state.phase !== 'running') return;
+    this.debugMetrics.update(delta);
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
     const boosterState = this.boosterController.snapshot();
@@ -156,6 +168,7 @@ export class RunScene extends Phaser.Scene {
       this.boosterController.isInvincible(),
       this.runState.snapshot().hasShield,
     );
+    if (import.meta.env.DEV) this.debugOverlay?.update(this.getDebugSnapshot());
     this.emitSnapshot();
   }
 
@@ -186,6 +199,7 @@ export class RunScene extends Phaser.Scene {
     this.backgroundController.reset();
     this.chunkScheduler.reset();
     this.runEffects.reset();
+    this.debugMetrics.reset();
     this.playerVelocityY = 0;
     this.wasGrounded = false;
     this.dustCooldownMs = 0;
@@ -215,6 +229,11 @@ export class RunScene extends Phaser.Scene {
   public spawnDemoLaser(patternId: string): void { this.obstacleField.spawnDemoLaser(patternId); }
   public clearDemoObstacles(): void { this.obstacleField.clearDemoObstacles(); }
   public getChunkSnapshot() { return this.chunkScheduler.snapshot(); }
+  public toggleRunDebugOverlay(): boolean { return import.meta.env.DEV ? Boolean(this.debugOverlay?.toggle()) : false; }
+  public getDebugSnapshot(): RunDebugSnapshot {
+    const booster = this.boosterController.snapshot();
+    return this.debugMetrics.snapshot(this.runState.snapshot().speed, this.chunkScheduler.snapshot().activeChunkId, booster.phase);
+  }
   public activateDemoBooster(): void {
     this.boosterController.activate();
     this.boosterFlight.activate();
@@ -249,6 +268,7 @@ export class RunScene extends Phaser.Scene {
     this.runEffects.emitPickup(kind, x, y);
     if (kind === 'coin') {
       this.runState.collectCoin(1);
+      this.debugMetrics.recordCoin();
       audioController.playSfx('coin');
     }
     if (kind === 'token') {
@@ -332,6 +352,8 @@ export class RunScene extends Phaser.Scene {
       },
       getChunkSnapshot: () => this.chunkScheduler.snapshot(),
       getCoworkerNpcSnapshot: () => this.coworkerNpcField.getDebugSnapshot(),
+      toggleRunDebugOverlay: () => this.toggleRunDebugOverlay(),
+      getDebugSnapshot: () => this.getDebugSnapshot(),
     });
   }
 

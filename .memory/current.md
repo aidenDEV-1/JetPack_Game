@@ -7,10 +7,10 @@
 [P08 플레이테스트와 회귀 검증](./phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/phase.md)
 
 ## Active Task
-[T15 디버그 오버레이와 결정적 플레이 시뮬레이션](./phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/T15-debug-overlay-and-simulation.md)
+[T16 최종 플레이테스트와 회귀 검증](./phases/2026-11-03-5pm-rush-game-feel/P08-playtest-and-regression/T16-final-playtest-validation.md)
 
 ## Status
-- T01~T14 구현·검증 완료
+- T01~T15 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T15 청사진을 읽고 F 디버그 오버레이와 결정적 플레이 시뮬레이션을 연결
+T16 청사진을 읽고 30초 체험 기준 전체 회귀·스크린샷·운영 검증을 완료

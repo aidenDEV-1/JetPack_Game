@@ -39,6 +39,16 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
   await page.waitForTimeout(600);
   const afterMotion = await getRunSnapshot(page);
   expect(afterMotion?.distanceMeters ?? 0).toBeGreaterThan(beforeMotion?.distanceMeters ?? 0);
+  await page.keyboard.press('f');
+  await expect.poll(() => page.evaluate(() => window.__5PM_RUSH_TEST_API__?.getDebugSnapshot?.()), { timeout: 2_000 }).toMatchObject({
+    activeChunkId: expect.any(String),
+    speedPxPerSecond: expect.any(Number),
+    coinsPerMinute: expect.any(Number),
+    obstacleDensityPerMinute: expect.any(Number),
+    boosterPhase: expect.any(String),
+  });
+  await page.screenshot({ path: testInfo.outputPath('debug-metrics.png') });
+  await page.keyboard.press('f');
   const screenshot = await page.screenshot({ path: testInfo.outputPath('hud-arcade.png') });
   diagnostics.screenshotBytes = screenshot.byteLength;
 

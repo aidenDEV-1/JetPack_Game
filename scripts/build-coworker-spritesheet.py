@@ -3,7 +3,7 @@ from PIL import Image, ImageChops
 
 
 root = Path(__file__).resolve().parents[1]
-source = root / "public/assets/world/source/coworker-npc-source.png"
+source = root / "scripts/assets/coworker-npc-source.png"
 target = root / "public/assets/world/coworker-npc-spritesheet.png"
 frame_width, frame_height, frame_count = 128, 170, 4
 

@@ -18,7 +18,6 @@ const requiredFiles = [
   'obstacles/obstacles-spritesheet.png',
   'obstacles/laser-emitter.png',
   'world/coworker-npc-spritesheet.png',
-  'world/source/coworker-npc-source.png',
   'ui/coin-icon.svg',
   'ui/dex-token-icon.svg',
   'ui/shield-icon.svg',
@@ -38,7 +37,6 @@ const requiredSpritesheetMetadata = {
 };
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
-  'world/source/coworker-npc-source.png': { width: 1199, height: 1312 },
 };
 const requiredBackgroundMetadata = Object.fromEntries(layeredBackgroundFiles.map((file) => [file, { width: 1280, height: 720 }]));
 const requiredReferenceMetadata = {

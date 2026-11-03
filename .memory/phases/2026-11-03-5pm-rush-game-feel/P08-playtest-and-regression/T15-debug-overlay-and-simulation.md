@@ -1,6 +1,6 @@
 # Task: T15 F 디버그 오버레이와 결정적 플레이 시뮬레이션
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -96,6 +96,6 @@ Task: T15-debug-overlay-and-simulation
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)

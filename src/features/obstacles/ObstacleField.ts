@@ -15,6 +15,7 @@ export interface ObstacleFieldEvents {
   onWarning?: (kind: string) => void;
   onMissileLaunch?: () => void;
   onMissileEvaded?: () => void;
+  onSpawn?: () => void;
 }
 
 export class ObstacleField {
@@ -110,6 +111,7 @@ export class ObstacleField {
       const y = pattern.laserSpan?.orientation === 'vertical' ? (GAME_CONFIG.ceilingY + GAME_CONFIG.floorY) / 2 : normalizedY;
       const geometry = pattern.laserSpan ? resolveLaserGeometry(pattern.laserSpan, GAME_CONFIG, this.random) : undefined;
       this.obstacles.push(new ObstacleEntity(this.scene, pattern, x, y, geometry));
+      this.events.onSpawn?.();
     });
   }
 
@@ -135,6 +137,7 @@ export class ObstacleField {
       ? (GAME_CONFIG.ceilingY + GAME_CONFIG.floorY) / 2
       : GAME_CONFIG.floorY - 180;
     this.obstacles.push(new ObstacleEntity(this.scene, pattern, GAME_CONFIG.width + OBSTACLE_TUNING.spawnXOffsetPx, y, geometry));
+    this.events.onSpawn?.();
   }
 
   public clearDemoObstacles(): void {
@@ -154,6 +157,7 @@ export class ObstacleField {
       ? resolveLaserGeometry(pattern.laserSpan, GAME_CONFIG, this.random)
       : undefined;
     this.obstacles.push(new ObstacleEntity(this.scene, pattern, GAME_CONFIG.width + OBSTACLE_TUNING.spawnXOffsetPx, y, laserGeometry));
+    this.events.onSpawn?.();
   }
 }
 
