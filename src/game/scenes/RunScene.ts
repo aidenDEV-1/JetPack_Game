@@ -66,6 +66,7 @@ export class RunScene extends Phaser.Scene {
       onHit: (outcome) => this.handleObstacleHit(outcome),
       onWarning: () => { audioController.playSfx('laser-warning'); },
       onMissileLaunch: () => { audioController.playSfx('missile-launch'); },
+      onMissileEvaded: () => { this.runState.recordMissileEvaded(); },
     });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),

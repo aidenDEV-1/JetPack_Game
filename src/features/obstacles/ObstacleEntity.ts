@@ -42,6 +42,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   public getCollisionCircles(): readonly Phaser.Geom.Circle[] { return this.nodeCircles; }
   public hasWarningArrow(): boolean { return this.warningIndicator !== undefined; }
   public isOffscreen(): boolean { return this.x < -160; }
+  public isMissileEvaded(): boolean { return Boolean(this.missile && this.missile.getPhase() !== 'warning' && this.isOffscreen()); }
 
   public updateWarning(timeMs: number, viewportWidth: number): void {
     this.updateVisual(timeMs, viewportWidth);

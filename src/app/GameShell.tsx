@@ -142,10 +142,11 @@ export function GameShell() {
 }
 
 function toGameRunResult(snapshot: RunState): GameRunResult {
+  const awardedCoins = snapshot.runCoins + snapshot.missions.bonusCoins;
   return {
     distanceMeters: snapshot.distanceMeters,
-    runCoins: snapshot.runCoins,
-    score: Math.floor(snapshot.distanceMeters) + snapshot.runCoins * 10,
+    runCoins: awardedCoins,
+    score: Math.floor(snapshot.distanceMeters) + awardedCoins * 10,
   };
 }
 

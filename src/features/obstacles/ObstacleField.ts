@@ -14,6 +14,7 @@ export interface ObstacleFieldEvents {
   onHit: (outcome: CollisionOutcome) => void;
   onWarning?: (kind: string) => void;
   onMissileLaunch?: () => void;
+  onMissileEvaded?: () => void;
 }
 
 export class ObstacleField {
@@ -76,6 +77,7 @@ export class ObstacleField {
         continue;
       }
       if (obstacle.isOffscreen()) {
+        if (obstacle.isMissileEvaded()) this.events.onMissileEvaded?.();
         obstacle.destroy();
         this.obstacles.splice(index, 1);
       }

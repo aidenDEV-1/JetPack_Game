@@ -11,24 +11,30 @@ export interface RunState {
   boosterRemainingMs: number;
   boosterPhase: BoosterPhase;
   boosterGraceRemainingMs: number;
+  missions: MissionSnapshot;
 }
 
 export class GameState {
   private state: RunState;
   private readonly baseSpeed: number;
+  private readonly missionTracker: MissionTracker;
 
-  public constructor(baseSpeed: number) {
+  public constructor(baseSpeed: number, random: () => number = Math.random) {
     this.baseSpeed = baseSpeed;
+    this.missionTracker = new MissionTracker(random);
     this.state = {
       phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: baseSpeed,
-      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0,
+      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0, missions: this.missionTracker.snapshot(),
     };
   }
 
-  public snapshot(): RunState { return { ...this.state }; }
+  public snapshot(): RunState { return { ...this.state, missions: this.missionTracker.snapshot() }; }
 
   public start(): void {
-    if (this.state.phase === 'ready' || this.state.phase === 'countdown') this.state.phase = 'running';
+    if (this.state.phase === 'ready' || this.state.phase === 'countdown') {
+      this.missionTracker.startRun();
+      this.state.phase = 'running';
+    }
   }
 
   public pause(): void {
@@ -48,7 +54,10 @@ export class GameState {
   }
 
   public addDistance(meters: number): void {
-    if (this.state.phase === 'running') this.state.distanceMeters += Math.max(0, meters);
+    if (this.state.phase === 'running') {
+      this.state.distanceMeters += Math.max(0, meters);
+      this.missionTracker.recordEvent({ type: 'distance-reached', meters: this.state.distanceMeters });
+    }
   }
 
   public addCrashDistance(meters: number): void {
@@ -57,7 +66,9 @@ export class GameState {
 
   public collectCoin(amount = 1): void {
     if (this.state.phase !== 'running') return;
-    this.state.runCoins += Math.max(0, amount);
+    const safeAmount = Math.max(0, amount);
+    this.state.runCoins += safeAmount;
+    this.missionTracker.recordEvent({ type: 'coin-collected', amount: safeAmount });
   }
 
   public collectToken(): void {
@@ -72,6 +83,7 @@ export class GameState {
   public setShield(value: boolean): void { this.state.hasShield = value; }
 
   public setBooster(active: boolean, remainingMs: number, phase: BoosterPhase = active ? 'boosting' : 'idle', graceRemainingMs = 0): void {
+    if (active && !this.state.boosterActive) this.missionTracker.recordEvent({ type: 'booster-activated' });
     this.state.boosterActive = active;
     this.state.boosterRemainingMs = active ? Math.max(0, remainingMs) : 0;
     this.state.boosterPhase = phase;
@@ -81,11 +93,18 @@ export class GameState {
   public reset(): void {
     this.state = {
       phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: this.baseSpeed,
-      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0,
+      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0, missions: this.missionTracker.snapshot(),
     };
+    this.missionTracker.reset();
+  }
+
+  public recordMissileEvaded(): void {
+    if (this.state.phase === 'running') this.missionTracker.recordEvent({ type: 'missile-evaded' });
   }
 
   public setSpeed(speed: number): void { this.state.speed = Math.max(0, speed); }
 }
 import type { BoosterPhase } from '../../features/booster/boosterTypes';
+import { MissionTracker } from '../../features/rewards/MissionTracker';
+import type { MissionSnapshot } from '../../features/rewards/missionTypes';
 

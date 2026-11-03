@@ -30,6 +30,7 @@ test('mock 로그인으로 시작·아이템·부스터·충돌·결과를 재�
 
   await expect(page.getByText('5:00:00')).toBeVisible({ timeout: 3_500 });
   await expect.poll(() => getRunSnapshot(page).then((snapshot) => snapshot?.phase), { timeout: 8_000 }).toBe('running');
+  expect((await getRunSnapshot(page))?.missions.missions).toHaveLength(3);
   await expect.poll(() => getBoosterSnapshot(page).then((snapshot) => snapshot?.active), { timeout: 2_000 }).toBe(true);
   await expect.poll(() => getEffectsSnapshot(page).then((snapshot) => snapshot?.dustPoolSize), { timeout: 2_000 }).toBe(12);
   const effects = await getEffectsSnapshot(page);

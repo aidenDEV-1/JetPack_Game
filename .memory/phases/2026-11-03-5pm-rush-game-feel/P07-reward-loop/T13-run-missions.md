@@ -1,6 +1,6 @@
 # Task: T13 런당 미션과 진행 보상 모델
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -97,6 +97,6 @@ Task: T13-run-missions
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)
