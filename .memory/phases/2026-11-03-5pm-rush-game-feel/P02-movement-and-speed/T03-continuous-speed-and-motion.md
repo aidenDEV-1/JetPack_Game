@@ -1,6 +1,6 @@
 # Task: T03 연속 속도 곡선과 비행 물리 튜닝
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -101,6 +101,6 @@ Task: T03-continuous-speed-and-motion
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

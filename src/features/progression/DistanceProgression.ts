@@ -7,12 +7,12 @@ export interface ProgressionSnapshot {
 }
 
 export function getProgression(distanceMeters: number): ProgressionSnapshot {
-  const safeDistance = Math.max(0, distanceMeters);
+  const safeDistance = Number.isFinite(distanceMeters) ? Math.max(0, distanceMeters) : 0;
   const segmentIndex = Math.floor(safeDistance / PROGRESSION_CONFIG.segmentLengthMeters);
-  const speedSegment = Math.min(segmentIndex, PROGRESSION_CONFIG.maxSpeedSegment);
+  const speedProgress = Math.min(safeDistance / PROGRESSION_CONFIG.segmentLengthMeters, PROGRESSION_CONFIG.maxSpeedSegment);
   return {
     distanceMeters: safeDistance,
-    speedMultiplier: PROGRESSION_CONFIG.speedIncreasePerSegment ** speedSegment,
+    speedMultiplier: PROGRESSION_CONFIG.speedIncreasePerSegment ** speedProgress,
     segmentIndex: Math.min(segmentIndex, 4),
   };
 }
