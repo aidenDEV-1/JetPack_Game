@@ -1,0 +1,32 @@
+import { describe, expect, it } from 'vitest';
+import { GAME_CONFIG } from '../../../game/config/gameConfig';
+import { CHUNK_CATALOG } from '../chunkCatalog';
+import { validateChunkReachability } from '../chunkReachability';
+import type { GameChunk } from '../chunkTypes';
+
+describe('game chunk reachability', () => {
+  it('validates every authored A-F chunk against the player-height gap', () => {
+    CHUNK_CATALOG.forEach((chunk) => expect(validateChunkReachability(chunk)).toEqual([]));
+  });
+
+  it('rejects an opening smaller than 1.6 player heights', () => {
+    const blocked: GameChunk = {
+      id: 'A', minDistanceMeters: 0, maxDistanceMeters: 1000, weight: 1, requiresShield: false,
+      obstacles: [
+        { patternId: 'top', xMeters: 10, yRatio: 0.2, heightRatio: 0.4, warning: false, forced: false },
+        { patternId: 'bottom', xMeters: 10, yRatio: 0.8, heightRatio: 0.4, warning: false, forced: false },
+      ],
+      collectibles: [],
+    };
+    expect(validateChunkReachability(blocked, GAME_CONFIG.obstacleScale.minPlayableGap)).toEqual([
+      expect.objectContaining({ chunkId: 'A', reason: expect.stringContaining('maximum opening') }),
+    ]);
+  });
+
+  it('rejects forced patterns before the shield threshold', () => {
+    const forcedBeforeShield = { ...CHUNK_CATALOG.find((chunk) => chunk.id === 'F')!, minDistanceMeters: 1000 };
+    expect(validateChunkReachability(forcedBeforeShield)).toEqual([
+      expect.objectContaining({ reason: expect.stringContaining('shield-required') }),
+    ]);
+  });
+});

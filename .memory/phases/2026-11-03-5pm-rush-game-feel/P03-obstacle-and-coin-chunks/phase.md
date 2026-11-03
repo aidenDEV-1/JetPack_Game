@@ -4,9 +4,9 @@
 
 | Task | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| T05 | `in_progress 🔵` | 청크 데이터 모델·거리 구간 풀·통과 가능성 검증 | [T05](./T05-chunk-schema-and-reachability.md) |
-| T06 | `pending` | 코인 패턴·미사일 추적·레이저 패턴을 실제 생성기에 연결 | [T06](./T06-chunk-spawner-and-hazards.md) |
+| T05 | `done ✅` | 청크 데이터 모델·거리 구간 풀·통과 가능성 검증 | [T05](./T05-chunk-schema-and-reachability.md) |
+| T06 | `in_progress 🔵` | 코인 패턴·미사일 추적·레이저 패턴을 실제 생성기에 연결 | [T06](./T06-chunk-spawner-and-hazards.md) |
 
 ## Progress
 
-- done: 0/2 (blocked until P02 complete)
+- done: 1/2 (active: T06)

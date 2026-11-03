@@ -6,4 +6,7 @@ export const OBSTACLE_TUNING = {
   spawnXOffsetPx: 100,
   floorYSpawnOffsetPx: 55,
   verticalSpawnMarginPx: 110,
+  minimumPlayableGap: 154,
+  forcedPatternMinimumDistanceMeters: 1100,
+  chunkWeights: { early: 1, mid: 1, late: 1 },
 } as const;

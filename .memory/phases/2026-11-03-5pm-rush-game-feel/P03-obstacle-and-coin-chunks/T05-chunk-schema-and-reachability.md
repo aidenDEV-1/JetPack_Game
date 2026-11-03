@@ -1,6 +1,6 @@
 # Task: T05 장애물·코인 청크 데이터 모델과 통과 가능성 검증
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -104,6 +104,6 @@ Task: T05-chunk-schema-and-reachability
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)

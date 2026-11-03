@@ -8,4 +8,6 @@ export const ITEM_TUNING = {
   tokenIntervalRandomMeters: 400,
   spawnYMinPx: 160,
   spawnYRangePx: 320,
+  coinClusterCount: 5,
+  tokenClusterCount: 3,
 } as const;

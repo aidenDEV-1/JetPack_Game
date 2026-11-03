@@ -1,5 +1,6 @@
 import { MOVEMENT_TUNING } from './tuning/movement';
 import { SPEED_TUNING } from './tuning/speed';
+import { OBSTACLE_TUNING } from './tuning/obstacles';
 
 export const PLAYER_HEIGHT = 96;
 
@@ -23,6 +24,6 @@ export const GAME_CONFIG = {
     laserGlowWidth: Math.round(PLAYER_HEIGHT * 0.42),
     laserMinLength: Math.round(PLAYER_HEIGHT * 2.25),
     laserMaxLength: Math.round(PLAYER_HEIGHT * 4),
-    minPlayableGap: Math.round(PLAYER_HEIGHT * 1.6),
+    minPlayableGap: OBSTACLE_TUNING.minimumPlayableGap,
   },
 } as const;
