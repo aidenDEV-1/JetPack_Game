@@ -1,6 +1,6 @@
 # Task: T09 사무실 L0~L3 레이어 에셋 제작
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -73,6 +73,6 @@ Task: T09-office-layer-assets
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)

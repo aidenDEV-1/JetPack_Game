@@ -2,7 +2,7 @@ import type { AssetDefinition } from '../../services/assetRegistry';
 import { PLAYER_SHEET_META } from './playerSheetMeta';
 
 const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'] as const;
-const backgroundLayers = ['far', 'mid', 'near'] as const;
+const backgroundLayers = ['l0', 'l1', 'l2', 'l3'] as const;
 const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> = {
   office: 'office',
   security: 'security',
@@ -12,6 +12,10 @@ const backgroundFileByScene: Record<(typeof backgroundScenes)[number], string> =
   'subway-exit': 'subway',
   rooftop: 'rooftop',
 };
+
+function getBackgroundPath(scene: (typeof backgroundScenes)[number], layer: (typeof backgroundLayers)[number]): string {
+  return scene === 'office' ? `/assets/backgrounds/office-${layer}.png` : `/assets/backgrounds/${backgroundFileByScene[scene]}.png`;
+}
 
 export const gameAssetKeys = {
   playerSheet: 'player-spritesheet',
@@ -27,7 +31,7 @@ export const gameAssetKeys = {
 
 const backgroundDefinitions: AssetDefinition[] = backgroundScenes.flatMap((scene) => backgroundLayers.map((layer) => ({
   key: gameAssetKeys.backgrounds[scene][layer],
-  path: `/assets/backgrounds/${backgroundFileByScene[scene]}.png`,
+  path: getBackgroundPath(scene, layer),
   kind: 'image' as const,
 })));
 

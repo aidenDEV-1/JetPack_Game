@@ -22,6 +22,10 @@ const requiredFiles = [
   'backgrounds/city.png',
   'backgrounds/subway.png',
   'backgrounds/rooftop.png',
+  'backgrounds/office-l0.png',
+  'backgrounds/office-l1.png',
+  'backgrounds/office-l2.png',
+  'backgrounds/office-l3.png',
 ];
 const requiredSpritesheetMetadata = {
   'generated/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },
@@ -29,6 +33,12 @@ const requiredSpritesheetMetadata = {
 };
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
+};
+const requiredBackgroundMetadata = {
+  'backgrounds/office-l0.png': { width: 1280, height: 720 },
+  'backgrounds/office-l1.png': { width: 1280, height: 720 },
+  'backgrounds/office-l2.png': { width: 1280, height: 720 },
+  'backgrounds/office-l3.png': { width: 1280, height: 720 },
 };
 const requiredReferenceMetadata = {
   '../docs/reference/game-feel/01-booster-reference.png': { width: 1600, height: 610 },
@@ -61,6 +71,17 @@ Object.entries(requiredImageMetadata).forEach(([file, metadata]) => {
   const width = bytes.readUInt32BE(16);
   const height = bytes.readUInt32BE(20);
   if (width !== metadata.width || height !== metadata.height) failures.push(`invalid image contract: ${file} (${width}x${height})`);
+});
+
+Object.entries(requiredBackgroundMetadata).forEach(([file, metadata]) => {
+  if (!existsSync(resolve(assetRoot, file))) return;
+  const bytes = readFileSync(resolve(assetRoot, file));
+  const width = bytes.readUInt32BE(16);
+  const height = bytes.readUInt32BE(20);
+  const colorType = bytes[25];
+  if (width !== metadata.width || height !== metadata.height || ![4, 6].includes(colorType)) {
+    failures.push(`invalid transparent background contract: ${file} (${width}x${height}, colorType ${colorType})`);
+  }
 });
 
 Object.entries(requiredReferenceMetadata).forEach(([file, metadata]) => {
