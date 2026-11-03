@@ -10,6 +10,8 @@ const renderHud = (overrides: Partial<Parameters<typeof GameHud>[0]> = {}) => re
     hasShield={false}
     boosterActive
     boosterRemainingMs={2500}
+    boosterPhase="boosting"
+    boosterGraceRemainingMs={0}
     paused={false}
     muted={false}
     onSettings={() => undefined}

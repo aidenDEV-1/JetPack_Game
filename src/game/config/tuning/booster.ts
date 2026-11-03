@@ -6,7 +6,7 @@ export const BOOSTER_TUNING = {
   speedMultiplier: 2.4,
   introDurationMs: 1500,
   initialBoostDurationMs: 1500,
-  graceDurationMs: 0,
+  graceDurationMs: 1000,
   flameLengthMultiplier: 2,
   particleMultiplier: 1.5,
   leanDegrees: -12,

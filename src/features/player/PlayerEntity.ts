@@ -28,6 +28,7 @@ export interface PlayerVisualDebugSnapshot {
   sparkEmitterCount: number;
   hasDetachedBoosterRoot: false;
   bodyTextureKey: string;
+  graceActive: boolean;
 }
 
 export class PlayerEntity extends Phaser.GameObjects.Container {
@@ -37,6 +38,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
   private currentAnimation: PlayerAnimation | null = null;
   private debugBounds?: Phaser.GameObjects.Graphics;
   private crashStarted = false;
+  private graceActive = false;
   private readonly initialX: number;
   private readonly initialY: number;
 
@@ -80,6 +82,16 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
 
   public getVisualState(): PlayerVisualState { return this.controller.snapshot(); }
 
+  public setGrace(active: boolean): void {
+    this.graceActive = active;
+    if (!active) {
+      this.setAlpha(1);
+      return;
+    }
+    const blinkOn = Math.floor(this.scene.time.now / 90) % 2 === 0;
+    this.setAlpha(blinkOn ? 0.62 : 1);
+  }
+
   public getVisualDebugSnapshot(): PlayerVisualDebugSnapshot {
     const bounds = this.getCollisionBounds();
     const booster = this.jetpack.getVisualSnapshot();
@@ -102,6 +114,7 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
       sparkEmitterCount: booster.sparkEmitterCount,
       hasDetachedBoosterRoot: booster.hasDetachedBoosterRoot,
       bodyTextureKey: this.sprite.texture.key,
+      graceActive: this.graceActive,
     };
   }
 
@@ -152,11 +165,13 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.y = this.initialY;
     this.angle = 0;
     this.crashStarted = false;
+    this.graceActive = false;
     this.controller.reset();
     this.currentAnimation = null;
     this.jetpack.reset();
     this.setAnimation('running');
     this.setBoosting(false);
+    this.setGrace(false);
   }
 
   private applyAnimation(state: PlayerAnimation): void {

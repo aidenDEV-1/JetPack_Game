@@ -83,11 +83,13 @@ export class RunScene extends Phaser.Scene {
     if (state.phase !== 'running') return;
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
+    const boosterState = this.boosterController.snapshot();
     const flight = this.boosterFlight.update(delta);
     const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier * flight.worldSpeedMultiplier;
     this.player.x = flight.playerX;
     this.runState.setSpeed(worldSpeed);
-    this.runState.setBooster(flight.active, flight.remainingMs);
+    this.runState.setBooster(boosterState.active, boosterState.remainingMs, boosterState.phase, boosterState.graceRemainingMs);
+    this.runEffects.setSpeedLines(flight.active, progression.speedMultiplier);
     this.backgroundController.update(delta, worldSpeed, state.distanceMeters);
     const motion = updateRunMotion({
       y: this.player.y,
@@ -111,6 +113,7 @@ export class RunScene extends Phaser.Scene {
     }
     this.wasGrounded = motion.grounded;
     this.player.setBoosting(flight.active);
+    this.player.setGrace(boosterState.phase === 'grace');
     this.player.updateMotionAnimation({
       grounded: motion.grounded,
       thrusting: this.keyboard.isThrusting(),
@@ -134,7 +137,7 @@ export class RunScene extends Phaser.Scene {
         forcedPatternUsedInSegment: false,
       },
       this.player.getCollisionBounds(),
-      flight.active,
+      this.boosterController.isInvincible(),
       this.runState.snapshot().hasShield,
     );
     this.emitSnapshot();
@@ -147,7 +150,7 @@ export class RunScene extends Phaser.Scene {
     this.boosterFlight.activate(BOOSTER_TUNING.initialBoostDurationMs);
     this.runEffects.emitBooster(this.player.x, this.player.y);
     const booster = this.boosterController.snapshot();
-    this.runState.setBooster(booster.active, booster.remainingMs);
+    this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
     this.player.setBoosting(true);
     this.emitSnapshot(true);
   }
@@ -158,6 +161,7 @@ export class RunScene extends Phaser.Scene {
     this.resultsController.reset();
     this.boosterController.reset();
     this.boosterFlight.reset();
+    this.player.setGrace(false);
     this.collectibleField.reset();
     this.obstacleField.reset();
     this.backgroundController.reset();
@@ -196,14 +200,16 @@ export class RunScene extends Phaser.Scene {
     this.boosterController.activate();
     this.boosterFlight.activate();
     this.runEffects.emitBooster(this.player.x, this.player.y);
-    this.runState.setBooster(true, this.boosterFlight.snapshot().remainingMs);
+    const booster = this.boosterController.snapshot();
+    this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
     this.emitSnapshot(true);
   }
 
   public deactivateDemoBooster(): void {
     this.boosterController.reset();
     this.boosterFlight.reset();
-    this.runState.setBooster(false, 0);
+    this.player.setGrace(false);
+    this.runState.setBooster(false, 0, 'idle', 0);
     this.emitSnapshot(true);
   }
 
@@ -233,7 +239,7 @@ export class RunScene extends Phaser.Scene {
       this.collectibleField.setShieldHeld(true);
     }
     const booster = this.boosterController.snapshot();
-    this.runState.setBooster(booster.active, booster.remainingMs);
+    this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
     this.emitSnapshot(true);
   }
 
@@ -283,7 +289,16 @@ export class RunScene extends Phaser.Scene {
       getObstacleVisualSnapshot: () => this.obstacleField.getVisualDebugSnapshot(),
       getEffectsSnapshot: () => this.runEffects.getDebugSnapshot(),
       getBackgroundSnapshot: () => this.backgroundController.getTransitionSnapshot(),
-      getBoosterSnapshot: () => this.boosterFlight.snapshot(),
+      getBoosterSnapshot: () => {
+        const flight = this.boosterFlight.snapshot();
+        const booster = this.boosterController.snapshot();
+        return {
+          ...flight,
+          boosterPhase: booster.phase,
+          graceRemainingMs: booster.graceRemainingMs,
+          invincible: this.boosterController.isInvincible(),
+        };
+      },
       getChunkSnapshot: () => this.chunkScheduler.snapshot(),
     });
   }

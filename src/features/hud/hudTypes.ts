@@ -5,6 +5,8 @@ export interface HudViewModel {
   hasShield: boolean;
   boosterActive: boolean;
   boosterRemainingMs: number;
+  boosterPhase: BoosterPhase;
+  boosterGraceRemainingMs: number;
   paused: boolean;
 }
 
@@ -15,5 +17,9 @@ export const initialHud: HudViewModel = {
   hasShield: false,
   boosterActive: false,
   boosterRemainingMs: 0,
+  boosterPhase: 'idle',
+  boosterGraceRemainingMs: 0,
   paused: false,
 };
+import type { BoosterPhase } from '../booster/boosterTypes';
+

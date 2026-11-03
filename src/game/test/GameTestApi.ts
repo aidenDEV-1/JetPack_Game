@@ -8,6 +8,9 @@ export interface BoosterTestSnapshot {
   playerX: number;
   worldSpeedMultiplier: number;
   remainingMs: number;
+  boosterPhase?: string;
+  graceRemainingMs?: number;
+  invincible?: boolean;
 }
 
 export interface GameTestApi {
@@ -68,6 +71,8 @@ export interface GameTestApi {
     boosterPoolSize: number;
     activeCount: number;
     hasPersistentTrail: false;
+    speedLinePoolSize: number;
+    speedLineActiveCount: number;
   };
   getBackgroundSnapshot?: () => {
     scene: string;

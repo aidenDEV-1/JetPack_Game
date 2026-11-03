@@ -29,6 +29,6 @@ describe('GameState', () => {
     state.collectCoin(2);
     state.setBooster(true, 1000);
     state.reset();
-    expect(state.snapshot()).toEqual({ phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: 300, hasShield: false, boosterActive: false, boosterRemainingMs: 0 });
+    expect(state.snapshot()).toEqual({ phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: 300, hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0 });
   });
 });

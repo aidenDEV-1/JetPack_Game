@@ -5,11 +5,16 @@ describe('booster controller', () => {
   it('starts with the configured short intro boost', () => {
     const controller = new BoosterController();
     controller.startInitial();
+    expect(controller.snapshot().phase).toBe('intro');
     expect(controller.isInvincible()).toBe(true);
     controller.tick(1499);
     expect(controller.isInvincible()).toBe(true);
     controller.tick(1);
+    expect(controller.isInvincible()).toBe(true);
+    expect(controller.snapshot().phase).toBe('grace');
+    controller.tick(1000);
     expect(controller.isInvincible()).toBe(false);
+    expect(controller.snapshot().phase).toBe('complete');
   });
 
   it('consumes three tokens and resets token count', () => {

@@ -9,6 +9,8 @@ export interface RunState {
   hasShield: boolean;
   boosterActive: boolean;
   boosterRemainingMs: number;
+  boosterPhase: BoosterPhase;
+  boosterGraceRemainingMs: number;
 }
 
 export class GameState {
@@ -19,7 +21,7 @@ export class GameState {
     this.baseSpeed = baseSpeed;
     this.state = {
       phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: baseSpeed,
-      hasShield: false, boosterActive: false, boosterRemainingMs: 0,
+      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0,
     };
   }
 
@@ -69,17 +71,21 @@ export class GameState {
 
   public setShield(value: boolean): void { this.state.hasShield = value; }
 
-  public setBooster(active: boolean, remainingMs: number): void {
+  public setBooster(active: boolean, remainingMs: number, phase: BoosterPhase = active ? 'boosting' : 'idle', graceRemainingMs = 0): void {
     this.state.boosterActive = active;
     this.state.boosterRemainingMs = active ? Math.max(0, remainingMs) : 0;
+    this.state.boosterPhase = phase;
+    this.state.boosterGraceRemainingMs = phase === 'grace' ? Math.max(0, graceRemainingMs) : 0;
   }
 
   public reset(): void {
     this.state = {
       phase: 'ready', distanceMeters: 0, runCoins: 0, tokenCount: 0, speed: this.baseSpeed,
-      hasShield: false, boosterActive: false, boosterRemainingMs: 0,
+      hasShield: false, boosterActive: false, boosterRemainingMs: 0, boosterPhase: 'idle', boosterGraceRemainingMs: 0,
     };
   }
 
   public setSpeed(speed: number): void { this.state.speed = Math.max(0, speed); }
 }
+import type { BoosterPhase } from '../../features/booster/boosterTypes';
+

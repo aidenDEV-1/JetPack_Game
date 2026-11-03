@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import type { ItemKind } from '../items/itemTypes';
 import { ITEM_PICKUP_COLORS, ITEM_PICKUP_LABELS } from '../items/ItemPickupFeedback';
 import { BOOSTER_FEEDBACK_COLOR, BOOSTER_FEEDBACK_LABEL } from '../booster/BoosterFeedback';
+import { SpeedLineEffect } from './SpeedLineEffect';
 
 type EffectKind = 'dust' | 'pickup' | 'crash' | 'booster';
 
@@ -12,6 +13,8 @@ export interface RunEffectsDebugSnapshot {
   boosterPoolSize: number;
   activeCount: number;
   hasPersistentTrail: false;
+  speedLinePoolSize: number;
+  speedLineActiveCount: number;
 }
 
 interface PooledVisual {
@@ -32,6 +35,7 @@ export class RunEffects {
   private readonly crashPool: PooledVisual[];
   private readonly boosterPool: PooledVisual[];
   private readonly pools: readonly PooledVisual[][];
+  private readonly speedLines: SpeedLineEffect;
   private dustIndex = 0;
   private pickupIndex = 0;
   private crashIndex = 0;
@@ -43,11 +47,18 @@ export class RunEffects {
     this.crashPool = this.createPool('crash', 16);
     this.boosterPool = this.createPool('booster', 2);
     this.pools = [this.dustPool, this.pickupPool, this.crashPool, this.boosterPool];
+    this.speedLines = new SpeedLineEffect(scene);
   }
 
   public update(deltaMs: number): void {
     const delta = Math.max(0, deltaMs);
     this.pools.forEach((pool) => pool.forEach((visual) => this.updateVisual(visual, delta)));
+    this.speedLines.update(delta);
+  }
+
+  public setSpeedLines(active: boolean, intensity = 1): void {
+    if (active) this.speedLines.start(intensity);
+    else this.speedLines.stop();
   }
 
   public emitRunDust(x: number, y: number): void {
@@ -95,6 +106,7 @@ export class RunEffects {
     this.pickupIndex = 0;
     this.crashIndex = 0;
     this.boosterIndex = 0;
+    this.speedLines.stop();
   }
 
   public getDebugSnapshot(): RunEffectsDebugSnapshot {
@@ -105,11 +117,14 @@ export class RunEffects {
       boosterPoolSize: this.boosterPool.length,
       activeCount: this.pools.reduce((count, pool) => count + pool.filter((visual) => visual.object.visible).length, 0),
       hasPersistentTrail: false,
+      speedLinePoolSize: this.speedLines.poolSize,
+      speedLineActiveCount: this.speedLines.activeCount,
     };
   }
 
   public destroy(): void {
     this.pools.forEach((pool) => pool.forEach((visual) => visual.object.destroy()));
+    this.speedLines.destroy();
   }
 
   private createPool(kind: EffectKind, count: number): PooledVisual[] {

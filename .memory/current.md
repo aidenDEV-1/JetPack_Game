@@ -4,13 +4,13 @@
 [5PM RUSH 게임성 고도화](./plans/2026-11-03-5pm-rush-game-feel.md)
 
 ## Active Phase
-[P04 부스터·플레이어 손맛](./phases/2026-11-03-5pm-rush-game-feel/P04-booster-and-player-feel/phase.md)
+[P05 배경 재구성](./phases/2026-11-03-5pm-rush-game-feel/P05-background-reconstruction/phase.md)
 
 ## Active Task
-[T08 부스터 유예 무적과 캐릭터 상태 포즈](./phases/2026-11-03-5pm-rush-game-feel/P04-booster-and-player-feel/T08-booster-grace-and-player-poses.md)
+[T09 사무실 구간 L0~L3 레이어 에셋과 타일 계약](./phases/2026-11-03-5pm-rush-game-feel/P05-background-reconstruction/T09-office-layer-assets.md)
 
 ## Status
-- T01~T07 구현·검증 완료
+- T01~T08 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T08 청사진을 읽고 부스터 종료 유예 무적, 속도선 풀, 캐릭터 포즈 정렬을 연결
+T09 청사진을 읽고 사무실 배경을 패럴랙스 레이어와 거리 구간에 연결

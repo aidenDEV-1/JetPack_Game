@@ -164,6 +164,8 @@ function toHudViewModel(snapshot: RunState) {
     hasShield: snapshot.hasShield,
     boosterActive: snapshot.boosterActive,
     boosterRemainingMs: snapshot.boosterRemainingMs,
+    boosterPhase: snapshot.boosterPhase,
+    boosterGraceRemainingMs: snapshot.boosterGraceRemainingMs,
     paused: snapshot.phase === 'paused',
   };
 }

@@ -7,12 +7,13 @@ interface GameHudProps extends HudViewModel {
 
 export const BOOSTER_MAX_MS = 5000;
 
-export function BoosterMeter({ active, remainingMs, maxMs }: { active: boolean; remainingMs: number; maxMs: number }) {
-  const ratio = active ? Math.max(0, Math.min(1, remainingMs / maxMs)) : 0;
+export function BoosterMeter({ active, phase, remainingMs, graceRemainingMs, maxMs }: { active: boolean; phase: 'idle' | 'intro' | 'boosting' | 'grace' | 'complete'; remainingMs: number; graceRemainingMs: number; maxMs: number }) {
+  const visible = active || phase === 'grace';
+  const ratio = active ? Math.max(0, Math.min(1, remainingMs / maxMs)) : phase === 'grace' ? Math.max(0, Math.min(1, graceRemainingMs / 1000)) : 0;
   const percent = Math.round(ratio * 100);
   return (
-    <div className={active ? 'hud-booster-meter active' : 'hud-booster-meter'} aria-label={`부스터 ${percent}%`}>
-      <div className="hud-meter-heading"><span className="hud-booster-label"><img src="/assets/ui/booster-icon.svg" alt="" />BOOSTER</span><strong>{active ? `${Math.ceil(Math.max(0, remainingMs) / 1000)}s` : '준비'}</strong></div>
+    <div className={visible ? 'hud-booster-meter active' : 'hud-booster-meter'} aria-label={phase === 'grace' ? `부스터 유예 무적 ${percent}%` : `부스터 ${percent}%`}>
+      <div className="hud-meter-heading"><span className="hud-booster-label"><img src="/assets/ui/booster-icon.svg" alt="" />{phase === 'grace' ? 'GRACE' : 'BOOSTER'}</span><strong>{active ? `${Math.ceil(Math.max(0, remainingMs) / 1000)}s` : phase === 'grace' ? `${Math.ceil(Math.max(0, graceRemainingMs) / 1000)}s` : '준비'}</strong></div>
       <div className="hud-meter-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
         <span className="hud-meter-fill" style={{ width: `${percent}%` }} />
       </div>
@@ -20,7 +21,7 @@ export function BoosterMeter({ active, remainingMs, maxMs }: { active: boolean; 
   );
 }
 
-export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, boosterActive, boosterRemainingMs, muted, paused, onSettings }: GameHudProps) {
+export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, boosterActive, boosterRemainingMs, boosterPhase, boosterGraceRemainingMs, muted, paused, onSettings }: GameHudProps) {
   const safeTokenCount = Math.max(0, Math.min(3, Math.floor(tokenCount)));
   return (
     <div className="game-hud" aria-label="게임 정보" data-muted={muted}>
@@ -40,7 +41,7 @@ export function GameHud({ distanceMeters, runCoins, tokenCount, hasShield, boost
             <img src="/assets/ui/shield-icon.svg" alt="" />
             <span><small>방어막</small><strong>{hasShield ? 'READY' : '없음'}</strong></span>
           </div>
-          <BoosterMeter active={boosterActive} remainingMs={boosterRemainingMs} maxMs={BOOSTER_MAX_MS} />
+          <BoosterMeter active={boosterActive} phase={boosterPhase} remainingMs={boosterRemainingMs} graceRemainingMs={boosterGraceRemainingMs} maxMs={BOOSTER_MAX_MS} />
           {paused ? <span className="hud-paused-badge">PAUSED</span> : null}
           <button className="hud-settings-button" type="button" aria-label="설정 열기" onClick={onSettings} title="설정 열기">⚙</button>
         </div>

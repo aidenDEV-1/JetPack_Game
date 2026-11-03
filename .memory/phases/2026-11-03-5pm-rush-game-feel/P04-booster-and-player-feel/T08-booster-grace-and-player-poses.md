@@ -1,6 +1,6 @@
 # Task: T08 부스터 유예 무적과 캐릭터 상태 포즈
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -82,6 +82,6 @@ Task: T08-booster-grace-and-player-poses
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (현재 task 커밋에서 기록)
