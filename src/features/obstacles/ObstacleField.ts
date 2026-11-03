@@ -12,6 +12,8 @@ import type { GameChunk } from '../chunks/chunkTypes';
 
 export interface ObstacleFieldEvents {
   onHit: (outcome: CollisionOutcome) => void;
+  onWarning?: (kind: string) => void;
+  onMissileLaunch?: () => void;
 }
 
 export class ObstacleField {
@@ -52,6 +54,8 @@ export class ObstacleField {
       obstacle.x -= context.speed * deltaSeconds;
       obstacle.updateHazardBehavior(deltaMs, this.scene.scale.width, playerBounds.centerY, context.speed);
       obstacle.updateVisual(this.scene.time.now, this.scene.scale.width);
+      if (obstacle.consumeWarningCue()) this.events.onWarning?.(obstacle.pattern.kind);
+      if (obstacle.consumeMissileLaunchCue()) this.events.onMissileLaunch?.();
       const intersects = intersectsObstacleGeometry(
         playerBounds,
         obstacle.x,

@@ -82,11 +82,13 @@ export function GameShell() {
   };
   const toggleMute = () => setMuted(audioController.toggleMute());
   const startGame = async () => {
+    void audioController.resume();
     const sequence = new StartSequence({
       onClockChange: (value) => { setClockValue(value); setClockVisible(true); },
-      onAlarm: () => undefined,
+      onAlarm: () => { audioController.playSfx('alarm'); },
       onComplete: () => { getRunScene()?.beginRun(); setClockVisible(false); setStarted(true); },
     });
+    void audioController.playMusic();
     await sequence.play();
   };
 

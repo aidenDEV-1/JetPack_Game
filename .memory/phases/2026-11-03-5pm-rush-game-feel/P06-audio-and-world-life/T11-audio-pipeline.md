@@ -1,6 +1,6 @@
 # Task: T11 효과음·배경음 파이프라인
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -84,6 +84,6 @@ Task: T11-audio-pipeline
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
-- commit: pending
+- [x] 구현 완료
+- [x] 검증 통과
+- commit: pending (to be recorded after commit)

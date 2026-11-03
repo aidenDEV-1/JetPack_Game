@@ -8,6 +8,7 @@ const requiredDirectories = ['player', 'generated', 'items', 'obstacles', 'backg
 const backgroundScenes = ['office', 'security', 'city', 'subway-entrance', 'subway-inside', 'subway-exit', 'rooftop'];
 const backgroundLayers = ['l0', 'l1', 'l2', 'l3'];
 const layeredBackgroundFiles = backgroundScenes.flatMap((scene) => backgroundLayers.map((layer) => `backgrounds/${scene}-${layer}.png`));
+const audioFiles = ['5pm-rush-loop.wav', 'alarm.wav', 'booster-start.wav', 'booster-end.wav', 'coin.wav', 'laser-warning.wav', 'missile-launch.wav', 'shield-hit.wav', 'crash.wav', 'result.wav'].map((file) => `audio/${file}`);
 const requiredFiles = [
   'generated/player-spritesheet.png',
   'player/booster-forms-spritesheet.png',
@@ -26,6 +27,7 @@ const requiredFiles = [
   'backgrounds/subway.png',
   'backgrounds/rooftop.png',
   ...layeredBackgroundFiles,
+  ...audioFiles,
 ];
 const requiredSpritesheetMetadata = {
   'generated/player-spritesheet.png': { width: 1536, height: 1190, frameWidth: 384, frameHeight: 170, frameCount: 28 },

@@ -18,6 +18,8 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private spriteVisual?: Phaser.GameObjects.Container;
   private spriteCore?: Phaser.GameObjects.Graphics;
   private motionElapsedMs = 0;
+  private warningCuePending = false;
+  private missileLaunchCuePending = false;
 
   public constructor(scene: Phaser.Scene, pattern: ObstaclePattern, x: number, y: number, laserGeometry?: ResolvedLaserGeometry) {
     super(scene, x, y);
@@ -47,9 +49,23 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
 
   public updateHazardBehavior(deltaMs: number, viewportWidth: number, playerY: number, worldSpeed: number): void {
     if (!this.missile) return;
+    const previousPhase = this.missile.getPhase();
     const movement = this.missile.update(deltaMs, this.x, this.y, playerY, viewportWidth, worldSpeed);
     this.x += movement.extraX;
     this.y = movement.nextY;
+    if (previousPhase === 'warning' && this.missile.getPhase() === 'launched') this.missileLaunchCuePending = true;
+  }
+
+  public consumeWarningCue(): boolean {
+    const pending = this.warningCuePending;
+    this.warningCuePending = false;
+    return pending;
+  }
+
+  public consumeMissileLaunchCue(): boolean {
+    const pending = this.missileLaunchCuePending;
+    this.missileLaunchCuePending = false;
+    return pending;
   }
 
   public updateVisual(timeMs: number, viewportWidth: number): void {
@@ -60,6 +76,7 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
       this.warningIndicator.hide();
       return;
     }
+    if (!this.warningIndicator.visible) this.warningCuePending = true;
     this.warningIndicator.show(viewportWidth, this.y);
     this.warningIndicator.update(timeMs, viewportWidth, this.y);
   }

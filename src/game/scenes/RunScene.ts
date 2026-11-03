@@ -20,6 +20,7 @@ import { registerGameTestApi } from '../test/GameTestApi';
 import { MOVEMENT_TUNING } from '../config/tuning/movement';
 import { ChunkScheduler } from '../../features/chunks/ChunkScheduler';
 import { BOOSTER_TUNING } from '../config/tuning/booster';
+import { audioController } from '../../services/audio/AudioController';
 
 export class RunScene extends Phaser.Scene {
   private readonly runState = new GameState(GAME_CONFIG.baseSpeed);
@@ -45,6 +46,7 @@ export class RunScene extends Phaser.Scene {
   private dustCooldownMs = 0;
   private crashMotionElapsedMs = 0;
   private crashWorldSpeed: number = GAME_CONFIG.baseSpeed;
+  private boosterWasActive = false;
 
   public constructor(bridge: GameBridge) {
     super('RunScene');
@@ -57,7 +59,11 @@ export class RunScene extends Phaser.Scene {
     this.floorLine = this.add.line(0, GAME_CONFIG.floorY, 0, 0, width, 0, 0xf7c948).setOrigin(0).setDepth(4);
     this.player = new PlayerEntity(this, { x: GAME_CONFIG.playerX, floorY: GAME_CONFIG.floorY, maxHeightY: GAME_CONFIG.ceilingY, scale: 1 });
     this.runEffects = new RunEffects(this);
-    this.obstacleField = new ObstacleField(this, { onHit: (outcome) => this.handleObstacleHit(outcome) });
+    this.obstacleField = new ObstacleField(this, {
+      onHit: (outcome) => this.handleObstacleHit(outcome),
+      onWarning: () => { audioController.playSfx('laser-warning'); },
+      onMissileLaunch: () => { audioController.playSfx('missile-launch'); },
+    });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
       onShieldPickupSpawned: () => this.obstacleField.setShieldPickupAhead(true),
@@ -84,6 +90,8 @@ export class RunScene extends Phaser.Scene {
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
     const boosterState = this.boosterController.snapshot();
+    if (this.boosterWasActive && !boosterState.active) audioController.playSfx('booster-end');
+    this.boosterWasActive = boosterState.active;
     const flight = this.boosterFlight.update(delta);
     const worldSpeed = GAME_CONFIG.baseSpeed * progression.speedMultiplier * flight.worldSpeedMultiplier;
     this.player.x = flight.playerX;
@@ -148,6 +156,8 @@ export class RunScene extends Phaser.Scene {
     this.runState.start();
     this.boosterController.startInitial();
     this.boosterFlight.activate(BOOSTER_TUNING.initialBoostDurationMs);
+    this.boosterWasActive = true;
+    audioController.playSfx('booster-start');
     this.runEffects.emitBooster(this.player.x, this.player.y);
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
@@ -161,6 +171,7 @@ export class RunScene extends Phaser.Scene {
     this.resultsController.reset();
     this.boosterController.reset();
     this.boosterFlight.reset();
+    this.boosterWasActive = false;
     this.player.setGrace(false);
     this.collectibleField.reset();
     this.obstacleField.reset();
@@ -199,6 +210,8 @@ export class RunScene extends Phaser.Scene {
   public activateDemoBooster(): void {
     this.boosterController.activate();
     this.boosterFlight.activate();
+    this.boosterWasActive = true;
+    audioController.playSfx('booster-start');
     this.runEffects.emitBooster(this.player.x, this.player.y);
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
@@ -208,6 +221,7 @@ export class RunScene extends Phaser.Scene {
   public deactivateDemoBooster(): void {
     this.boosterController.reset();
     this.boosterFlight.reset();
+    this.boosterWasActive = false;
     this.player.setGrace(false);
     this.runState.setBooster(false, 0, 'idle', 0);
     this.emitSnapshot(true);
@@ -225,11 +239,16 @@ export class RunScene extends Phaser.Scene {
 
   private handleItemCollect(kind: ItemKind, x: number, y: number): void {
     this.runEffects.emitPickup(kind, x, y);
-    if (kind === 'coin') this.runState.collectCoin(1);
+    if (kind === 'coin') {
+      this.runState.collectCoin(1);
+      audioController.playSfx('coin');
+    }
     if (kind === 'token') {
       this.runState.collectToken();
       if (this.boosterController.collectToken()) {
         this.boosterFlight.activate();
+        this.boosterWasActive = true;
+        audioController.playSfx('booster-start');
         this.runEffects.emitBooster(this.player.x, this.player.y);
       }
       this.runState.setTokenCount(this.boosterController.snapshot().tokenCount);
@@ -237,6 +256,7 @@ export class RunScene extends Phaser.Scene {
     if (kind === 'shield' && this.boosterController.collectShield()) {
       this.runState.setShield(true);
       this.collectibleField.setShieldHeld(true);
+      audioController.playSfx('shield-hit');
     }
     const booster = this.boosterController.snapshot();
     this.runState.setBooster(booster.active, booster.remainingMs, booster.phase, booster.graceRemainingMs);
@@ -245,6 +265,7 @@ export class RunScene extends Phaser.Scene {
 
   private handleObstacleHit(outcome: CollisionOutcome): void {
     if (outcome === 'blocked-by-shield' && this.boosterController.consumeShield()) {
+      audioController.playSfx('shield-hit');
       this.runState.setShield(false);
       this.collectibleField.setShieldHeld(false);
       this.emitSnapshot(true);
@@ -255,6 +276,7 @@ export class RunScene extends Phaser.Scene {
     this.crashHandled = true;
     this.crashMotionElapsedMs = 0;
     this.crashWorldSpeed = this.runState.snapshot().speed;
+    audioController.playSfx('crash');
     this.runEffects.emitCrash(this.player.x, this.player.y);
     this.resultsController.beginCrash();
     this.runState.crash();
@@ -264,6 +286,7 @@ export class RunScene extends Phaser.Scene {
       this.resultsController.finishCrash();
       if (this.resultsController.getPhase() !== 'results' || this.runEndNotified) return;
       this.runEndNotified = true;
+      audioController.playSfx('result');
       this.runState.finishResults();
       const snapshot = this.runState.snapshot();
       this.emitSnapshot(true);
