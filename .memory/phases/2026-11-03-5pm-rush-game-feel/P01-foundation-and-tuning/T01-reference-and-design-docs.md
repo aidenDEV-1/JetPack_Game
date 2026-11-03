@@ -1,6 +1,6 @@
 # Task: T01 참고 자료와 게임 설계 문서 체계 구축
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -104,6 +104,6 @@ Task: T01-reference-and-design-docs
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

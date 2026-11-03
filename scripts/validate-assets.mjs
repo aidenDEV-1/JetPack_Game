@@ -29,6 +29,12 @@ const requiredSpritesheetMetadata = {
 const requiredImageMetadata = {
   'obstacles/laser-emitter.png': { width: 256, height: 256 },
 };
+const requiredReferenceMetadata = {
+  '../docs/reference/game-feel/01-booster-reference.png': { width: 1600, height: 610 },
+  '../docs/reference/game-feel/02-obstacle-chunks.png': { width: 1600, height: 871 },
+  '../docs/reference/game-feel/03-speed-curve.png': { width: 1600, height: 649 },
+  '../docs/reference/game-feel/04-background-layers.png': { width: 1600, height: 857 },
+};
 
 const failures = [];
 requiredDirectories.forEach((directory) => {
@@ -54,6 +60,18 @@ Object.entries(requiredImageMetadata).forEach(([file, metadata]) => {
   const width = bytes.readUInt32BE(16);
   const height = bytes.readUInt32BE(20);
   if (width !== metadata.width || height !== metadata.height) failures.push(`invalid image contract: ${file} (${width}x${height})`);
+});
+
+Object.entries(requiredReferenceMetadata).forEach(([file, metadata]) => {
+  if (!existsSync(resolve(assetRoot, file))) {
+    const referencePath = resolve(process.cwd(), file.replace('../', ''));
+    if (!existsSync(referencePath)) failures.push(`missing reference file: ${file}`);
+    return;
+  }
+  const bytes = readFileSync(resolve(assetRoot, file));
+  const width = bytes.readUInt32BE(16);
+  const height = bytes.readUInt32BE(20);
+  if (width !== metadata.width || height !== metadata.height) failures.push(`invalid reference contract: ${file} (${width}x${height})`);
 });
 
 function walk(directory) {
