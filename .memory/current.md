@@ -4,13 +4,13 @@
 [5PM RUSH 게임성 고도화](./plans/2026-11-03-5pm-rush-game-feel.md)
 
 ## Active Phase
-[P02 이동 손맛과 속도](./phases/2026-11-03-5pm-rush-game-feel/P02-movement-and-speed/phase.md)
+[P03 장애물·코인 청크 시스템](./phases/2026-11-03-5pm-rush-game-feel/P03-obstacle-and-coin-chunks/phase.md)
 
 ## Active Task
-[T04 충돌 손맛과 사망 중 거리 처리](./phases/2026-11-03-5pm-rush-game-feel/P02-movement-and-speed/T04-crash-feel-and-distance.md)
+[T05 장애물·코인 청크 데이터 모델과 통과 가능성 검증](./phases/2026-11-03-5pm-rush-game-feel/P03-obstacle-and-coin-chunks/T05-chunk-schema-and-reachability.md)
 
 ## Status
-- T01~T03 구현·검증 완료
+- T01~T04 구현·검증 완료
 
 ## Next Step (IMPORTANT)
-T04 청사진을 읽고 충돌 hit-stop·2회 바운스·미끄러짐 중 거리 처리를 구현
+T05 청사진을 읽고 거리 기반 장애물·코인 청크와 통과 가능성 검증을 구현

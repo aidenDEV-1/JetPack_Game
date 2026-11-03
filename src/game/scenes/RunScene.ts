@@ -40,6 +40,8 @@ export class RunScene extends Phaser.Scene {
   private runEndNotified = false;
   private wasGrounded = false;
   private dustCooldownMs = 0;
+  private crashMotionElapsedMs = 0;
+  private crashWorldSpeed: number = GAME_CONFIG.baseSpeed;
 
   public constructor(bridge: GameBridge) {
     super('RunScene');
@@ -69,6 +71,10 @@ export class RunScene extends Phaser.Scene {
     if (this.keyboard.consumeDebugToggle()) this.player.toggleDebugOverlay();
     if (this.pauseSystem.isPaused()) return;
     this.runEffects.update(delta);
+    if (state.phase === 'crashed') {
+      this.updateCrashDistance(delta);
+      return;
+    }
     if (state.phase !== 'running') return;
     const progression = getProgression(state.distanceMeters);
     this.boosterController.tick(delta);
@@ -150,6 +156,8 @@ export class RunScene extends Phaser.Scene {
     this.dustCooldownMs = 0;
     this.crashHandled = false;
     this.runEndNotified = false;
+    this.crashMotionElapsedMs = 0;
+    this.crashWorldSpeed = GAME_CONFIG.baseSpeed;
     this.player.reset();
     this.emitSnapshot(true);
   }
@@ -226,6 +234,8 @@ export class RunScene extends Phaser.Scene {
     if (outcome !== 'crash') return;
     if (this.crashHandled) return;
     this.crashHandled = true;
+    this.crashMotionElapsedMs = 0;
+    this.crashWorldSpeed = this.runState.snapshot().speed;
     this.runEffects.emitCrash(this.player.x, this.player.y);
     this.resultsController.beginCrash();
     this.runState.crash();
@@ -272,6 +282,17 @@ export class RunScene extends Phaser.Scene {
     this.lastSnapshotAt = now;
     this.lastSnapshotKey = snapshotKey;
     this.bridge.onStateChange(snapshot);
+  }
+
+  private updateCrashDistance(deltaMs: number): void {
+    const previous = this.crashMotionElapsedMs;
+    this.crashMotionElapsedMs += Math.max(0, deltaMs);
+    const slideStart = MOVEMENT_TUNING.crash.hitStopMs + MOVEMENT_TUNING.crash.bounceCount * MOVEMENT_TUNING.crash.bounceDurationMs;
+    const previousSlideMs = Math.max(0, previous - slideStart);
+    const currentSlideMs = Math.min(MOVEMENT_TUNING.crash.slideDurationMs, Math.max(0, this.crashMotionElapsedMs - slideStart));
+    const activeSlideMs = Math.max(0, currentSlideMs - Math.min(MOVEMENT_TUNING.crash.slideDurationMs, previousSlideMs));
+    if (activeSlideMs > 0) this.runState.addCrashDistance((this.crashWorldSpeed * activeSlideMs / 1000) / GAME_CONFIG.pixelsPerMeter);
+    this.emitSnapshot();
   }
 
   public shutdown(): void {

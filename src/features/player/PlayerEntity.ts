@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { gameAssetKeys } from '../../content/assets/gameAssets';
 import { GAME_CONFIG } from '../../game/config/gameConfig';
+import { MOVEMENT_TUNING } from '../../game/config/tuning/movement';
 import { DEFAULT_BOOSTER_STYLE_ID, getBoosterStyle } from '../booster/boosterStyleCatalog';
 import { JetpackAttachment } from './JetpackAttachment';
 import type { BoosterFormMode, JetpackActivity } from './JetpackAttachment';
@@ -130,16 +131,17 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     this.crashStarted = true;
     this.applyAnimation('hit');
     this.jetpack.setBoosting(false);
-    await new Promise<void>((resolve) => {
-      this.scene.tweens.add({
-        targets: this,
-        angle: 1080,
-        y: this.y + 40,
-        duration: 1200,
-        ease: 'Cubic.easeIn',
-        onComplete: () => resolve(),
-      });
-    });
+    await this.wait(MOVEMENT_TUNING.crash.hitStopMs);
+    for (let bounce = 0; bounce < MOVEMENT_TUNING.crash.bounceCount; bounce += 1) {
+      const bounceHeight = MOVEMENT_TUNING.crash.bounceHeightPx * (bounce === 0 ? 1 : 0.58);
+      await this.tweenTo({ y: this.initialY - bounceHeight, angle: this.angle + 180 }, MOVEMENT_TUNING.crash.bounceDurationMs / 2, 'Quad.easeOut');
+      await this.tweenTo({ y: this.initialY, angle: this.angle + 180 }, MOVEMENT_TUNING.crash.bounceDurationMs / 2, 'Quad.easeIn');
+    }
+    await this.tweenTo({
+      x: this.x + MOVEMENT_TUNING.crash.slideSpeedPxPerSecond * MOVEMENT_TUNING.crash.slideDurationMs / 1000,
+      y: this.initialY,
+      angle: this.angle + 360,
+    }, MOVEMENT_TUNING.crash.slideDurationMs, 'Cubic.easeOut');
     this.controller.finishCrash();
     this.setAnimation('dead');
   }
@@ -202,6 +204,18 @@ export class PlayerEntity extends Phaser.GameObjects.Container {
     const bounds = this.getCollisionBounds();
     this.debugBounds.lineStyle(2, 0xff3d55, 0.95);
     this.debugBounds.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+  }
+
+  private wait(durationMs: number): Promise<void> {
+    return new Promise((resolve) => {
+      this.scene.time.delayedCall(durationMs, () => resolve());
+    });
+  }
+
+  private tweenTo(properties: Record<string, number>, duration: number, ease: string): Promise<void> {
+    return new Promise((resolve) => {
+      this.scene.tweens.add({ targets: this, ...properties, duration, ease, onComplete: () => resolve() });
+    });
   }
 }
 

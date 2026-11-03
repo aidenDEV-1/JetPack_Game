@@ -49,6 +49,10 @@ export class GameState {
     if (this.state.phase === 'running') this.state.distanceMeters += Math.max(0, meters);
   }
 
+  public addCrashDistance(meters: number): void {
+    if (this.state.phase === 'crashed') this.state.distanceMeters += Math.max(0, meters);
+  }
+
   public collectCoin(amount = 1): void {
     if (this.state.phase !== 'running') return;
     this.state.runCoins += Math.max(0, amount);

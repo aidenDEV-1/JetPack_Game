@@ -1,6 +1,6 @@
 # Task: T04 충돌 손맛과 사망 중 거리 처리
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -96,6 +96,6 @@ Task: T04-crash-feel-and-distance
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

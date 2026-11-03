@@ -14,6 +14,15 @@ describe('GameState', () => {
     expect(state.snapshot()).toMatchObject({ runCoins: 4, tokenCount: 1, hasShield: true, boosterActive: true, boosterRemainingMs: 5000 });
   });
 
+  it('counts only explicit crash-slide distance after the run enters crashed phase', () => {
+    const state = new GameState(300);
+    state.start();
+    state.crash();
+    state.addDistance(10);
+    state.addCrashDistance(12.5);
+    expect(state.snapshot().distanceMeters).toBe(12.5);
+  });
+
   it('resets all run counters without changing base speed', () => {
     const state = new GameState(300);
     state.start();

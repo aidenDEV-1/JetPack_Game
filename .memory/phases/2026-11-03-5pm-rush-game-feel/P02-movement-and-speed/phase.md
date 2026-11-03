@@ -5,8 +5,8 @@
 | Task | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
 | T03 | `done ✅` | 연속 속도 곡선과 비행 물리 튜닝 | [T03](./T03-continuous-speed-and-motion.md) |
-| T04 | `in_progress 🔵` | 충돌 hit-stop·바운스·미끄러짐 사망 연출 | [T04](./T04-crash-feel-and-distance.md) |
+| T04 | `done ✅` | 충돌 hit-stop·바운스·미끄러짐 사망 연출 | [T04](./T04-crash-feel-and-distance.md) |
 
 ## Progress
 
-- done: 1/2 (active: T04)
+- done: 2/2 (active: complete)
