@@ -19,7 +19,7 @@
 
 | Phase | Status | Summary | Blueprint |
 | :--- | :--- | :--- | :--- |
-| P01 | `in_progress` | 레이저를 플레이 가능한 길이로 축소하고 강제 즉사 패턴을 제거한 뒤, 미사일 빈도와 반응형 게임 프레임을 검증 | [P01](../phases/2026-11-06-obstacle-playability-responsive/P01-obstacle-playability-responsive/phase.md) |
+| P01 | `done ✅` | 레이저를 플레이 가능한 길이로 축소하고 강제 즉사 패턴을 제거한 뒤, 미사일 빈도와 반응형 게임 프레임을 검증 | [P01](../phases/2026-11-06-obstacle-playability-responsive/P01-obstacle-playability-responsive/phase.md) |
 
 ## Definition of Done
 

@@ -1,6 +1,6 @@
 # Task: T03 반응형 게임 프레임 및 Phaser 캔버스 확장
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -85,6 +85,6 @@ Task: T03-responsive-game-frame
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

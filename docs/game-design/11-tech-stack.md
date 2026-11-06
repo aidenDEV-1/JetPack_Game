@@ -8,6 +8,7 @@
 
 - React 19: shell, HUD, settings, results, missions
 - Phaser 3.90: game loop, rendering, input, collision geometry
+- Phaser logical viewport는 `1280×720`으로 유지하고 `Phaser.Scale.FIT`가 responsive CSS game frame에 비율을 맞춰 canvas를 확대한다. `RESIZE` 모드로 게임 월드 좌표를 브라우저 픽셀에 종속시키지 않는다.
 - TypeScript 5.9 + Vite 7: build/type safety
 - Vitest + Playwright: unit/E2E regression
 - Azure Static Web Apps/Functions/Cosmos + Entra ID: auth, score, leaderboard
@@ -16,6 +17,7 @@
 
 - `src/game/config/tuning/*.ts`
 - `scripts/validate-assets.mjs`
+- `src/styles/tokens.css`의 `.game-frame` — 브라우저 가용 너비를 사용하는 16:9 외부 게임 화면
 
 ## 담당 코드
 
