@@ -1,6 +1,6 @@
 # Task: T02 오른쪽 진입 미사일 빈도 증가
 
-## Status: pending
+## Status: done
 
 ## Goal
 
@@ -74,6 +74,6 @@ Task: T02-increase-incoming-obstacle-frequency
 
 ## Progress
 
-- [ ] 구현 완료
-- [ ] 검증 통과
+- [x] 구현 완료
+- [x] 검증 통과
 - commit: pending

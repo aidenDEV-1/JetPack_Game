@@ -27,4 +27,10 @@ describe('game chunk reachability', () => {
     expect(CHUNK_CATALOG.map((chunk) => chunk.id)).toEqual(['A', 'B', 'C', 'D', 'E']);
     expect(CHUNK_CATALOG.flatMap((chunk) => chunk.obstacles).some((obstacle) => obstacle.patternId === 'forced-crossfire')).toBe(false);
   });
+
+  it('places a warning missile in every normal distance chunk', () => {
+    CHUNK_CATALOG.forEach((chunk) => {
+      expect(chunk.obstacles.some((obstacle) => obstacle.patternId === 'missile' && obstacle.warning)).toBe(true);
+    });
+  });
 });

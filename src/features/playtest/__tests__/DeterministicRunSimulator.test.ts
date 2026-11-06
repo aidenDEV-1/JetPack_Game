@@ -7,7 +7,8 @@ describe('deterministic 30-second run simulation', () => {
     expect(result.durationMs).toBe(30000);
     expect(result.obstacleKinds.length).toBeGreaterThanOrEqual(3);
     expect(result.coinClusterCount).toBeGreaterThanOrEqual(4);
-    expect(result.missileWarningCount).toBeGreaterThanOrEqual(1);
+    expect(result.missileWarningCount).toBeGreaterThanOrEqual(3);
+    expect(result.obstacleKinds).not.toEqual(expect.arrayContaining(['forced-crossfire', 'vertical-laser-full', 'horizontal-laser-full']));
     expect(result.survived).toBe(true);
   });
 
