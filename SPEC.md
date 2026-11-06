@@ -30,7 +30,8 @@
 
 - 모든 변경 가능한 수치는 `src/game/config/tuning/`의 영역별 파일에서 관리한다. Scene/Field에 새 매직 넘버를 추가하지 않는다.
 - 현재 논리 viewport는 `1280×720`, 플레이어 높이 기준은 `PLAYER_HEIGHT=96px`이다.
-- 장애물 통과 간격은 플레이어 높이의 `1.6H` 이상이며, 강제 패턴은 1100m·방어막 선행 조건을 지킨다.
+- 장애물 통과 간격은 플레이어 높이의 `1.6H` 이상이며, 레이저 span은 플레이어 높이의 `1.5H~2.0H` 범위다. 방어막은 단일 충돌을 막는 아이템이며, 방어막 선행 강제 패턴은 사용하지 않는다.
+- 논리 게임 viewport는 `1280×720`으로 유지하지만 CSS 게임 프레임과 Phaser canvas는 브라우저 가용 너비에 맞춰 `16:9` 비율로 확대된다.
 - 기존 React 19 + Phaser 3.90 + TypeScript + Vite + Vitest + Playwright 구조를 유지한다.
 - Entra ID 인증, Azure Functions/Cosmos 기록 API, 랭킹 DTO와 저장 흐름을 변경하지 않는다.
 - 원작 Jetpack Joyride의 고유명사·캐릭터·로고·에셋을 사용하지 않는다.

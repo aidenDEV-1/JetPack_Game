@@ -8,7 +8,6 @@ import type { ChunkCollectiblePattern, GameChunk } from '../chunks/chunkTypes';
 
 export interface CollectibleFieldEvents {
   onCollect: (kind: ItemKind, x: number, y: number) => void;
-  onShieldPickupSpawned: (distanceMeters: number) => void;
 }
 
 export class CollectibleField {
@@ -19,7 +18,6 @@ export class CollectibleField {
   private nextTokenDistance = 120;
   private nextShieldDistance: number = MIN_SHIELD_DISTANCE;
   private shieldHeld = false;
-  private shieldPickupSpawned = false;
   private chunkSchedulingEnabled = false;
 
   public constructor(private readonly scene: Phaser.Scene, private readonly events: CollectibleFieldEvents, random: () => number = Math.random) {
@@ -53,14 +51,12 @@ export class CollectibleField {
     this.nextTokenDistance = 120;
     this.nextShieldDistance = MIN_SHIELD_DISTANCE;
     this.shieldHeld = false;
-    this.shieldPickupSpawned = false;
   }
 
   public setShieldHeld(value: boolean): void { this.shieldHeld = value; }
-  public hasShieldPickupAhead(): boolean { return this.shieldPickupSpawned; }
   public enableChunkScheduling(): void { this.chunkSchedulingEnabled = true; }
 
-  public spawnChunk(chunk: GameChunk, distanceMeters: number): void {
+  public spawnChunk(chunk: GameChunk): void {
     const playableHeight = GAME_CONFIG.floorY - GAME_CONFIG.ceilingY;
     chunk.collectibles.forEach((spec) => {
       const x = GAME_CONFIG.width + 80 + spec.xMeters * GAME_CONFIG.pixelsPerMeter;
@@ -69,8 +65,6 @@ export class CollectibleField {
       if (spec.kind === 'token') this.spawnTokenCluster(x, y, spec.pattern);
       if (spec.kind === 'shield' && !this.shieldHeld && !this.hasActiveShieldPickup()) {
         this.spawnShield(x, y);
-        this.shieldPickupSpawned = true;
-        this.events.onShieldPickupSpawned(distanceMeters);
       }
     });
   }
@@ -93,8 +87,6 @@ export class CollectibleField {
     if (distanceMeters >= this.nextShieldDistance && !this.shieldHeld && !this.hasActiveShieldPickup()) {
       this.spawnShield(GAME_CONFIG.width + 220, ITEM_TUNING.spawnYMinPx + this.random() * ITEM_TUNING.spawnYRangePx);
       this.nextShieldDistance = getNextShieldDistance(distanceMeters, this.random);
-      this.shieldPickupSpawned = true;
-      this.events.onShieldPickupSpawned(distanceMeters);
     }
   }
 

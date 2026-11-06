@@ -4,10 +4,9 @@ import { ObstacleSpawner } from '../ObstacleSpawner';
 import { intersectsObstacleGeometry } from '../obstacleCollisionGeometry';
 
 describe('obstacle field rules', () => {
-  it('does not allow forced crossfire before 1100m', () => {
+  it('does not expose forced crossfire after the playable-pattern cleanup', () => {
     const spawner = new ObstacleSpawner();
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1099, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(false);
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1100, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(true);
+    expect(spawner.choosePattern(() => 0.99)?.id).not.toBe('forced-crossfire');
   });
 
   it('prioritizes booster, then one shield, then crash', () => {

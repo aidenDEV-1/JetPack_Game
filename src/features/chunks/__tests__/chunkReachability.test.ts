@@ -11,10 +11,10 @@ describe('game chunk reachability', () => {
 
   it('rejects an opening smaller than 1.6 player heights', () => {
     const blocked: GameChunk = {
-      id: 'A', minDistanceMeters: 0, maxDistanceMeters: 1000, weight: 1, requiresShield: false,
+      id: 'A', minDistanceMeters: 0, maxDistanceMeters: 1000, weight: 1,
       obstacles: [
-        { patternId: 'top', xMeters: 10, yRatio: 0.2, heightRatio: 0.4, warning: false, forced: false },
-        { patternId: 'bottom', xMeters: 10, yRatio: 0.8, heightRatio: 0.4, warning: false, forced: false },
+        { patternId: 'top', xMeters: 10, yRatio: 0.2, heightRatio: 0.4, warning: false },
+        { patternId: 'bottom', xMeters: 10, yRatio: 0.8, heightRatio: 0.4, warning: false },
       ],
       collectibles: [],
     };
@@ -23,10 +23,8 @@ describe('game chunk reachability', () => {
     ]);
   });
 
-  it('rejects forced patterns before the shield threshold', () => {
-    const forcedBeforeShield = { ...CHUNK_CATALOG.find((chunk) => chunk.id === 'F')!, minDistanceMeters: 1000 };
-    expect(validateChunkReachability(forcedBeforeShield)).toEqual([
-      expect.objectContaining({ reason: expect.stringContaining('shield-required') }),
-    ]);
+  it('keeps the catalog free of shield-required forced chunks', () => {
+    expect(CHUNK_CATALOG.map((chunk) => chunk.id)).toEqual(['A', 'B', 'C', 'D', 'E']);
+    expect(CHUNK_CATALOG.flatMap((chunk) => chunk.obstacles).some((obstacle) => obstacle.patternId === 'forced-crossfire')).toBe(false);
   });
 });

@@ -21,11 +21,7 @@ export function validateChunkReachability(chunk: GameChunk, minimumGapPx: number
   const narrowestOpening = obstacleColumns.reduce((narrowest, column) => Math.min(narrowest, largestOpening(column, playableHeight)), playableHeight);
   if (narrowestOpening < minimumGapPx) errors.push({ chunkId: chunk.id, reason: `maximum opening ${Math.round(narrowestOpening)}px is below ${minimumGapPx}px` });
 
-  if (chunk.requiresShield && chunk.minDistanceMeters < OBSTACLE_TUNING.forcedPatternMinimumDistanceMeters) {
-    errors.push({ chunkId: chunk.id, reason: `shield-required chunk starts before ${OBSTACLE_TUNING.forcedPatternMinimumDistanceMeters}m` });
-  }
   chunk.obstacles.forEach((obstacle) => {
-    if (obstacle.forced && !chunk.requiresShield) errors.push({ chunkId: chunk.id, reason: `${obstacle.patternId} is forced without shield prerequisite` });
     if (obstacle.yRatio < 0 || obstacle.yRatio > 1 || obstacle.heightRatio <= 0 || obstacle.heightRatio > 1) {
       errors.push({ chunkId: chunk.id, reason: `${obstacle.patternId} has invalid normalized vertical geometry` });
     }

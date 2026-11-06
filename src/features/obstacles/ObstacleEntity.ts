@@ -136,20 +136,6 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
 
   private createHazard(scene: Phaser.Scene, pattern: ObstaclePattern): Phaser.GameObjects.GameObject {
     if (this.laserGeometry && pattern.laserVisual) {
-      if (pattern.id === 'forced-crossfire') {
-        const crossfire = new Phaser.GameObjects.Container(scene, 0, 0);
-        [-pattern.height * 0.28, pattern.height * 0.28].forEach((offsetY) => {
-          const laser = new LaserHazardVisual(scene, {
-            geometry: this.laserGeometry!,
-            visual: pattern.laserVisual!,
-            emitterTextureKey: gameAssetKeys.laserEmitter,
-          });
-          this.laserVisuals.push(laser);
-          laser.setPosition(0, offsetY);
-          crossfire.add(laser);
-        });
-        return crossfire;
-      }
       const laser = new LaserHazardVisual(scene, {
         geometry: this.laserGeometry,
         visual: pattern.laserVisual,
@@ -197,13 +183,6 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private createHitboxes(pattern: ObstaclePattern): Phaser.Geom.Rectangle[] {
     if (this.laserGeometry && pattern.laserVisual) {
       const beamWidth = pattern.laserVisual.beamWidth;
-      if (pattern.id === 'forced-crossfire') {
-        const offsetY = pattern.height * 0.28;
-        return [
-          new Phaser.Geom.Rectangle(this.laserGeometry.start, -offsetY - beamWidth / 2, this.laserGeometry.collisionLength, beamWidth),
-          new Phaser.Geom.Rectangle(this.laserGeometry.start, offsetY - beamWidth / 2, this.laserGeometry.collisionLength, beamWidth),
-        ];
-      }
       if (this.laserGeometry.orientation === 'vertical') {
         return [new Phaser.Geom.Rectangle(-beamWidth / 2, this.laserGeometry.start, beamWidth, this.laserGeometry.collisionLength)];
       }
@@ -217,15 +196,6 @@ export class ObstacleEntity extends Phaser.GameObjects.Container {
   private createNodeCircles(pattern: ObstaclePattern): Phaser.Geom.Circle[] {
     if (!this.laserGeometry || !pattern.laserVisual) return [];
     const radius = pattern.laserVisual.emitterWidth / 2;
-    if (pattern.id === 'forced-crossfire') {
-      const offsetY = pattern.height * 0.28;
-      return [
-        new Phaser.Geom.Circle(this.laserGeometry.start, -offsetY, radius),
-        new Phaser.Geom.Circle(this.laserGeometry.end, -offsetY, radius),
-        new Phaser.Geom.Circle(this.laserGeometry.start, offsetY, radius),
-        new Phaser.Geom.Circle(this.laserGeometry.end, offsetY, radius),
-      ];
-    }
     return this.laserGeometry.orientation === 'vertical'
       ? [new Phaser.Geom.Circle(0, this.laserGeometry.start, radius), new Phaser.Geom.Circle(0, this.laserGeometry.end, radius)]
       : [new Phaser.Geom.Circle(this.laserGeometry.start, 0, radius), new Phaser.Geom.Circle(this.laserGeometry.end, 0, radius)];

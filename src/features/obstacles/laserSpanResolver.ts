@@ -30,7 +30,6 @@ export function resolveLaserGeometry(
 }
 
 function resolveLength(spec: LaserSpanSpec, fullLength: number, random: () => number): number {
-  if (spec.mode === 'full') return fullLength;
   if (spec.mode === 'fixed') {
     if (!spec.length || spec.length <= 0) throw new Error('Fixed laser span requires a positive length');
     return Math.min(fullLength, spec.length);
@@ -39,8 +38,6 @@ function resolveLength(spec: LaserSpanSpec, fullLength: number, random: () => nu
     throw new Error('Random laser span requires valid minLength and maxLength');
   }
   if (spec.minLength > fullLength) throw new Error('Random laser span minLength exceeds the playable span');
-  const fullSpanChance = Math.max(0, Math.min(1, spec.fullSpanChance ?? 0));
-  if (random() < fullSpanChance) return fullLength;
   const maxLength = Math.min(fullLength, spec.maxLength);
   return spec.minLength + (maxLength - spec.minLength) * Math.max(0, Math.min(1, random()));
 }

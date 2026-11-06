@@ -1,4 +1,4 @@
-export type ChunkId = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+export type ChunkId = 'A' | 'B' | 'C' | 'D' | 'E';
 export type ChunkCollectibleKind = 'coin' | 'token' | 'shield';
 export type ChunkCollectiblePattern = 'line' | 'arc' | 'zigzag' | 'orbit';
 
@@ -9,7 +9,6 @@ export interface GameChunk {
   weight: number;
   obstacles: readonly ChunkObstacleSpec[];
   collectibles: readonly ChunkCollectibleSpec[];
-  requiresShield: boolean;
 }
 
 export interface ChunkObstacleSpec {
@@ -18,7 +17,6 @@ export interface ChunkObstacleSpec {
   yRatio: number;
   heightRatio: number;
   warning: boolean;
-  forced: boolean;
 }
 
 export interface ChunkCollectibleSpec {

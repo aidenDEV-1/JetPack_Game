@@ -82,7 +82,6 @@ export class RunScene extends Phaser.Scene {
     });
     this.collectibleField = new CollectibleField(this, {
       onCollect: (kind, x, y) => this.handleItemCollect(kind, x, y),
-      onShieldPickupSpawned: () => this.obstacleField.setShieldPickupAhead(true),
     });
     this.collectibleField.enableChunkScheduling();
     this.obstacleField.enableChunkScheduling();
@@ -154,7 +153,7 @@ export class RunScene extends Phaser.Scene {
     const distanceMeters = this.runState.snapshot().distanceMeters;
     while (this.chunkScheduler.isDue(distanceMeters)) {
       const chunk = this.chunkScheduler.next(distanceMeters);
-      this.collectibleField.spawnChunk(chunk, distanceMeters);
+      this.collectibleField.spawnChunk(chunk);
       this.obstacleField.spawnChunk(chunk);
     }
     this.collectibleField.update(delta, distanceMeters, worldSpeed, this.player.getCollisionBounds());
@@ -163,8 +162,6 @@ export class RunScene extends Phaser.Scene {
       {
         distanceMeters: this.runState.snapshot().distanceMeters,
         speed: worldSpeed,
-        hasShieldPickupAhead: this.collectibleField.hasShieldPickupAhead(),
-        forcedPatternUsedInSegment: false,
       },
       this.player.getCollisionBounds(),
       this.boosterController.isInvincible(),

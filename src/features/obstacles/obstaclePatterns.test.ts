@@ -16,38 +16,33 @@ describe('obstacle patterns', () => {
     });
   });
 
-  it('only exposes the forced pattern after a shield pickup and once per segment', () => {
+  it('selects only regular patterns regardless of shield state or distance', () => {
     const spawner = new ObstacleSpawner();
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: false, forcedPatternUsedInSegment: false })).toBe(false);
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1100, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(true);
-    const forced = spawner.choosePattern({ distanceMeters: 1100, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false }, () => 0.99);
-    expect(forced?.requiresShield).toBe(true);
-    expect(spawner.canUseForcedPattern({ distanceMeters: 1000, speed: 300, hasShieldPickupAhead: true, forcedPatternUsedInSegment: false })).toBe(false);
+    const pattern = spawner.choosePattern(() => 0.99);
+    expect(pattern).toBeDefined();
+    expect(pattern?.id).not.toBe('forced-crossfire');
   });
 
-  it('never emits an unshielded forced pattern over a 10000m simulation', () => {
+  it('never emits removed full-span or forced patterns over a 10000m simulation', () => {
     const spawner = new ObstacleSpawner();
     for (let distance = 0; distance <= 10000; distance += 100) {
-      const pattern = spawner.choosePattern({ distanceMeters: distance, speed: 300, hasShieldPickupAhead: distance >= 400, forcedPatternUsedInSegment: false }, () => 0.99);
-      if (pattern?.requiresShield) expect(distance).toBeGreaterThanOrEqual(1100);
+      const pattern = spawner.choosePattern(() => 0.99);
+      expect(['vertical-laser-full', 'horizontal-laser-full', 'forced-crossfire']).not.toContain(pattern?.id);
     }
   });
 
   it('requires a playable vertical gap for ordinary patterns', () => {
     expect(isReachablePattern([{ startY: 100, endY: 180 }])).toBe(false);
     expect(isReachablePattern([{ startY: 250, endY: 410 }])).toBe(true);
-    expect(obstaclePatterns.filter((pattern) => pattern.warningArrow).map((pattern) => pattern.id)).toEqual([
-      'vertical-laser-full',
-      'horizontal-laser-full',
-      'missile',
-      'electro-drone',
-      'rotor',
-    ]);
+    expect(obstaclePatterns.filter((pattern) => pattern.warningArrow).map((pattern) => pattern.id)).toEqual(['missile', 'electro-drone', 'rotor']);
   });
 
   it('defines full, fixed, or random spans for every laser pattern', () => {
     obstaclePatterns.filter((pattern) => pattern.kind.includes('laser')).forEach((pattern) => {
       expect(pattern.laserSpan).toBeDefined();
+      expect(pattern.laserSpan?.mode).toBe('random');
+      expect(pattern.laserSpan?.minLength).toBe(GAME_CONFIG.obstacleScale.laserMinLength);
+      expect(pattern.laserSpan?.maxLength).toBe(GAME_CONFIG.obstacleScale.laserMaxLength);
       expect(pattern.laserVisual?.glowWidth).toBeGreaterThan(pattern.laserVisual?.beamWidth ?? 0);
       expect(pattern.laserVisual?.beamWidth).toBeGreaterThanOrEqual(pattern.laserVisual?.coreWidth ?? 0);
       expect(pattern.laserVisual?.beamWidth).toBeLessThanOrEqual(GAME_CONFIG.playerHeight * 0.3);

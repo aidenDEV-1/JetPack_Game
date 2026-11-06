@@ -10,7 +10,7 @@ export interface ObstacleMotionSpec {
 }
 
 export type LaserOrientation = 'vertical' | 'horizontal';
-export type LaserSpanMode = 'full' | 'fixed' | 'random';
+export type LaserSpanMode = 'fixed' | 'random';
 export type LaserActivity = 'charging' | 'active';
 
 export interface LaserSpanSpec {
@@ -19,7 +19,6 @@ export interface LaserSpanSpec {
   length?: number;
   minLength?: number;
   maxLength?: number;
-  fullSpanChance?: number;
   margin: number;
 }
 
@@ -52,7 +51,6 @@ export interface ObstaclePattern {
   kind: ObstacleKind;
   visualId: ObstacleVisualId;
   motion: ObstacleMotionSpec;
-  requiresShield: boolean;
   warningArrow: boolean;
   width: number;
   height: number;
@@ -67,8 +65,6 @@ export interface ObstaclePattern {
 export interface SpawnContext {
   distanceMeters: number;
   speed: number;
-  hasShieldPickupAhead: boolean;
-  forcedPatternUsedInSegment: boolean;
 }
 
 export interface PlayableGap { startY: number; endY: number; }
